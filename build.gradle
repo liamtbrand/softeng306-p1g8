@@ -1,0 +1,40 @@
+plugins {
+	id 'application'
+	//Plugin to create fat jars, this will bundle all libraries into the jar file, and avoid having to distribute library files.
+	id 'com.github.johnrengelman.shadow' version '2.0.4'
+}
+
+//Change to test better Java versions
+sourceCompatibility = 8
+targetCompatibility = 8
+
+repositories {
+	mavenCentral()
+}
+
+mainClassName = 'INSERT MAIN CLASS HERE'
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src']
+		}
+		
+		resources {
+			srcDirs = ['res']
+		}
+	}
+}
+
+dependencies {
+	//Insert dependencies here, e.g.
+
+	//implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+	//implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
+}
+
+jar {
+	manifest {
+		attributes('Main-Class': mainClassName)
+	}
+}
