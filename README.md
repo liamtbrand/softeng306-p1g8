@@ -5,7 +5,7 @@ Tatai 8
 | GitHub Username | Full Name | UPI | Role |
 | --------------- | --------- | --- | ---- |
 | liamtbrand | Liam Brand | LBRA112 | |
-| Brownshome | James Brown | | |
+| Brownshome | James Brown | JBRO801 |  |
 | mollyfarrant | Molly Farrant | | |
-| robbierew | Robert Newcastle | | |
+| robbierew | Robert Newcastle | RREW898 | |
 | cyrus-raitava | Cyrus Raitava-Kumaar | | |
