@@ -6,6 +6,6 @@ Tatai 8
 | --------------- | --------- | --- | ---- |
 | liamtbrand | Liam Brand | LBRA112 | |
 | Brownshome | James Brown | JBRO801 |  |
-| mollyfarrant | Molly Farrant | | |
+| mollyfarrant | Molly Farrant | MFAR672 | |
 | robbierew | Robert Rewcastle | RREW898 | |
 | cyrus-raitava | Cyrus Raitava-Kumaar | | |
