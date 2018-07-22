@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gxl SYSTEM "http://www.gupro.de/GXL/gxl-1.0.dtd">
+<gxl>
+	<graph id="Random_Nodes_21_Density_1.86_CCR_0.10_WeightType_Random">
+		<attr name="Node concurrency">
+			<int>-1</int>
+		</attr>
+		<attr name="Number of processors">
+			<int>2</int>
+		</attr>
+		<attr name="Total schedule length">
+			<int>1146</int>
+		</attr>
+		<attr name="Total sequential time">
+			<int>2292</int>
+		</attr>
+		<attr name="Total idle time">
+			<int>0</int>
+		</attr>
+		<attr name="Total states created">
+			<int>11578</int>
+		</attr>
+		<attr name="Pruned using list schedule length">
+			<int>5801</int>
+		</attr>
+		<attr name="Duplicate states">
+			<int>1409</int>
+		</attr>
+		<attr name="States removed from OPEN">
+			<int>3556</int>
+		</attr>
+		<attr name="Max states in OPEN">
+			<int>189</int>
+		</attr>
+		<attr name="Time to schedule (ms)">
+			<int>403</int>
+		</attr>
+		<attr name="Modes">
+			<string>60000ms; partial expansion, ; Pruning: processor isomorphism, processor normalisation, task equivalence, equivalent schedule 2, ; F-value: new, DRT, ; Optimisation: list scheduling, </string>
+		</attr>
+		<node id="1">
+			<attr name="Start time">
+				<int>0</int>
+			</attr>
+			<attr name="Weight">
+				<int>164</int>
+			</attr>
+			<attr name="Finish time">
+				<int>164</int>
+			</attr>
+			<attr name="Processor">
+				<int>0</int>
+			</attr>
+		</node>
+		<node id="2">
+			<attr name="Start time">
+				<int>0</int>
+			</attr>
+			<attr name="Weight">
+				<int>98</int>
+			</attr>
+			<attr name="Finish time">
+				<int>98</int>
+			</attr>
+			<attr name="Processor">
+				<int>1</int>
+			</attr>
+		</node>
+		<node id="3">
+			<attr name="Start time">
+				<int>98</int>
+			</attr>
+			<attr name="Weight">
+				<int>115</int>
+			</attr>
+			<attr name="Finish time">
+				<int>213</int>
+			</attr>
+			<attr name="Processor">
+				<int>1</int>
+			</attr>
+		</node>
+		<node id="4">
+			<attr name="Start time">
+				<int>164</int>
+			</attr>
+			<attr name="Weight">
+				<int>33</int>
+			</attr>
+			<attr name="Finish time">
+				<int>197</int>
+			</attr>
+			<attr name="Processor">
+				<int>0</int>
+			</attr>
+		</node>
+		<node id="5">
+			<attr name="Start time">
+				<int>197</int>
+			</attr>
+			<attr name="Weight">
+				<int>65</int>
+			</attr>
+			<attr name="Finish time">
+				<int>262</int>
+			</attr>
+			<attr name="Processor">
+				<int>0</int>
+			</attr>
+		</node>
+		<node id="6">
+			<attr name="Start time">
+				<int>867</int>
+			</attr>
+			<attr name="Weight">
+				<int>115</int>
+			</attr>
+			<attr name="Finish time">
+				<int>982</int>
+			</attr>
+			<attr name="Processor">
+				<int>1</int>
+			</attr>
+		</node>
+		<node id="7">
+			<attr name="Start time">
+				<int>213</int>
+			</attr>
+			<attr name="Weight">
+				<int>49</int>
+			</attr>
+			<attr name="Finish time">
+				<int>262</int>
+			</attr>
+			<attr name="Processor">
+				<int>1</int>
+			</attr>
+		</node>
+		<node id="8">
+			<attr name="Start time">
+				<int>262</int>
+			</attr>
+			<attr name="Weight">
+				<int>147</int>
+			</attr>
+			<attr name="Finish time">
+				<int>409</int>
+			</attr>
+			<attr name="Processor">
+				<int>0</int>
+			</attr>
+		</node>
+		<node id="9">
+			<attr name="Start time">
+				<int>262</int>
+			</attr>
+			<attr name="Weight">
+				<int>147</int>
+			</attr>
+			<attr name="Finish time">
+				<int>409</int>
+			</attr>
+			<attr name="Processor">
+				<int>1</int>
+			</attr>
+		</node>
+		<node id="10">
+			<attr name="Start time">
+				<int>409</int>
+			</attr>
+			<attr name="Weight">
+				<int>131</int>
+			</attr>
+			<attr name="Finish time">
+				<int>540</int>
+			</attr>
+			<attr name="Processor">
+				<int>1</int>
+			</attr>
+		</node>
+		<node id="11">
+			<attr name="Start time">
+				<int>589</int>
+			</attr>
+			<attr name="Weight">
+				<int>82</int>
+			</attr>
+			<attr name="Finish time">
+				<int>671</int>
+			</attr>
+			<attr name="Processor">
+				<int>0</int>
+			</attr>
+		</node>
+		<node id="12">
+			<attr name="Start time">
+				<int>540</int>
+			</attr>
+			<attr name="Weight">
+				<int>82</int>
+			</attr>
+			<attr name="Finish time">
+				<int>622</int>
+			</attr>
+			<attr name="Processor">
+				<int>1</int>
+			</attr>
+		</node>
+		<node id="13">
+			<attr name="Start time">
+				<int>671</int>
+			</attr>
+			<attr name="Weight">
+				<int>98</int>
+			</attr>
+			<attr name="Finish time">
+				<int>769</int>
+			</attr>
+			<attr name="Processor">
+				<int>0</int>
+			</attr>
+		</node>
+		<node id="14">
+			<attr name="Start time">
+				<int>409</int>
+			</attr>
+			<attr name="Weight">
+				<int>115</int>
+			</attr>
+			<attr name="Finish time">
+				<int>524</int>
+			</attr>
+			<attr name="Processor">
+				<int>0</int>
+			</attr>
+		</node>
+		<node id="15">
+			<attr name="Start time">
+				<int>769</int>
+			</attr>
+			<attr name="Weight">
+				<int>131</int>
+			</attr>
+			<attr name="Finish time">
+				<int>900</int>
+			</attr>
+			<attr name="Processor">
+				<int>0</int>
+			</attr>
+		</node>
+		<node id="16">
+			<attr name="Start time">
+				<int>524</int>
+			</attr>
+			<attr name="Weight">
+				<int>65</int>
+			</attr>
+			<attr name="Finish time">
+				<int>589</int>
+			</attr>
+			<attr name="Processor">
+				<int>0</int>
+			</attr>
+		</node>
+		<node id="17">
+			<attr name="Start time">
+				<int>720</int>
+			</attr>
+			<attr name="Weight">
+				<int>147</int>
+			</attr>
+			<attr name="Finish time">
+				<int>867</int>
+			</attr>
+			<attr name="Processor">
+				<int>1</int>
+			</attr>
+		</node>
+		<node id="18">
+			<attr name="Start time">
+				<int>622</int>
+			</attr>
+			<attr name="Weight">
+				<int>98</int>
+			</attr>
+			<attr name="Finish time">
+				<int>720</int>
+			</attr>
+			<attr name="Processor">
+				<int>1</int>
+			</attr>
+		</node>
+		<node id="19">
+			<attr name="Start time">
+				<int>982</int>
+			</attr>
+			<attr name="Weight">
+				<int>164</int>
+			</attr>
+			<attr name="Finish time">
+				<int>1146</int>
+			</attr>
+			<attr name="Processor">
+				<int>1</int>
+			</attr>
+		</node>
+		<node id="20">
+			<attr name="Start time">
+				<int>900</int>
+			</attr>
+			<attr name="Weight">
+				<int>82</int>
+			</attr>
+			<attr name="Finish time">
+				<int>982</int>
+			</attr>
+			<attr name="Processor">
+				<int>0</int>
+			</attr>
+		</node>
+		<node id="21">
+			<attr name="Start time">
+				<int>982</int>
+			</attr>
+			<attr name="Weight">
+				<int>164</int>
+			</attr>
+			<attr name="Finish time">
+				<int>1146</int>
+			</attr>
+			<attr name="Processor">
+				<int>0</int>
+			</attr>
+		</node>
+		<edge from="1" to="13">
+			<attr name="Weight">
+				<int>9</int>
+			</attr>
+		</edge>
+		<edge from="1" to="15">
+			<attr name="Weight">
+				<int>6</int>
+			</attr>
+		</edge>
+		<edge from="1" to="17">
+			<attr name="Weight">
+				<int>8</int>
+			</attr>
+		</edge>
+		<edge from="1" to="19">
+			<attr name="Weight">
+				<int>4</int>
+			</attr>
+		</edge>
+		<edge from="1" to="20">
+			<attr name="Weight">
+				<int>3</int>
+			</attr>
+		</edge>
+		<edge from="2" to="6">
+			<attr name="Weight">
+				<int>4</int>
+			</attr>
+		</edge>
+		<edge from="2" to="9">
+			<attr name="Weight">
+				<int>9</int>
+			</attr>
+		</edge>
+		<edge from="2" to="12">
+			<attr name="Weight">
+				<int>9</int>
+			</attr>
+		</edge>
+		<edge from="2" to="14">
+			<attr name="Weight">
+				<int>4</int>
+			</attr>
+		</edge>
+		<edge from="2" to="16">
+			<attr name="Weight">
+				<int>8</int>
+			</attr>
+		</edge>
+		<edge from="2" to="20">
+			<attr name="Weight">
+				<int>2</int>
+			</attr>
+		</edge>
+		<edge from="3" to="6">
+			<attr name="Weight">
+				<int>6</int>
+			</attr>
+		</edge>
+		<edge from="3" to="11">
+			<attr name="Weight">
+				<int>7</int>
+			</attr>
+		</edge>
+		<edge from="3" to="19">
+			<attr name="Weight">
+				<int>5</int>
+			</attr>
+		</edge>
+		<edge from="4" to="21">
+			<attr name="Weight">
+				<int>2</int>
+			</attr>
+		</edge>
+		<edge from="5" to="10">
+			<attr name="Weight">
+				<int>8</int>
+			</attr>
+		</edge>
+		<edge from="5" to="15">
+			<attr name="Weight">
+				<int>10</int>
+			</attr>
+		</edge>
+		<edge from="5" to="20">
+			<attr name="Weight">
+				<int>4</int>
+			</attr>
+		</edge>
+		<edge from="7" to="12">
+			<attr name="Weight">
+				<int>2</int>
+			</attr>
+		</edge>
+		<edge from="7" to="13">
+			<attr name="Weight">
+				<int>9</int>
+			</attr>
+		</edge>
+		<edge from="7" to="16">
+			<attr name="Weight">
+				<int>4</int>
+			</attr>
+		</edge>
+		<edge from="7" to="17">
+			<attr name="Weight">
+				<int>5</int>
+			</attr>
+		</edge>
+		<edge from="7" to="21">
+			<attr name="Weight">
+				<int>4</int>
+			</attr>
+		</edge>
+		<edge from="8" to="17">
+			<attr name="Weight">
+				<int>8</int>
+			</attr>
+		</edge>
+		<edge from="8" to="18">
+			<attr name="Weight">
+				<int>8</int>
+			</attr>
+		</edge>
+		<edge from="8" to="19">
+			<attr name="Weight">
+				<int>5</int>
+			</attr>
+		</edge>
+		<edge from="10" to="11">
+			<attr name="Weight">
+				<int>8</int>
+			</attr>
+		</edge>
+		<edge from="10" to="20">
+			<attr name="Weight">
+				<int>7</int>
+			</attr>
+		</edge>
+		<edge from="11" to="13">
+			<attr name="Weight">
+				<int>8</int>
+			</attr>
+		</edge>
+		<edge from="11" to="15">
+			<attr name="Weight">
+				<int>2</int>
+			</attr>
+		</edge>
+		<edge from="12" to="15">
+			<attr name="Weight">
+				<int>4</int>
+			</attr>
+		</edge>
+		<edge from="12" to="17">
+			<attr name="Weight">
+				<int>2</int>
+			</attr>
+		</edge>
+		<edge from="12" to="19">
+			<attr name="Weight">
+				<int>2</int>
+			</attr>
+		</edge>
+		<edge from="13" to="15">
+			<attr name="Weight">
+				<int>9</int>
+			</attr>
+		</edge>
+		<edge from="15" to="19">
+			<attr name="Weight">
+				<int>6</int>
+			</attr>
+		</edge>
+		<edge from="15" to="21">
+			<attr name="Weight">
+				<int>6</int>
+			</attr>
+		</edge>
+		<edge from="17" to="20">
+			<attr name="Weight">
+				<int>9</int>
+			</attr>
+		</edge>
+		<edge from="18" to="21">
+			<attr name="Weight">
+				<int>7</int>
+			</attr>
+		</edge>
+		<edge from="20" to="21">
+			<attr name="Weight">
+				<int>6</int>
+			</attr>
+		</edge>
+	</graph>
+</gxl>
