@@ -77,5 +77,5 @@ if(!isWindows) {
 
 	clean.dependsOn cleanDotFiles
 } else {
-	println 'Not dot file manipulation can be done on Windows'
+	println 'No dot file manipulation can be done on Windows'
 }
