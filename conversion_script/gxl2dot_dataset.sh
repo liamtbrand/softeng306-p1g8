@@ -6,6 +6,8 @@
 #the input graph will be placed in the input folder
 #the output graph will be placed in the output folder
 
+OUTPUT_DIR="$1"
+shift
 for FILE_NAME in "$@"
 do
     RESULT_NAME="`basename $FILE_NAME .gxl`.dot"
@@ -24,7 +26,7 @@ do
     sed -i -E 's/"Finish time"=([0-9]*),//g' $RESULT_NAME
 
     #copy the output file into the output folder
-    cp $RESULT_NAME ../dataset/output/$RESULT_NAME
+    cp $RESULT_NAME $OUTPUT_DIR/output/$RESULT_NAME
 
     #remove the start time parameter from the input graph
     sed -i -E 's/Start=([0-9]*),//g' $RESULT_NAME
@@ -32,7 +34,7 @@ do
     #remove the processor parameter from the input graph
     sed -i -E 's/Processor=([0-9]*),//g' $RESULT_NAME
 
-    mv $RESULT_NAME ../dataset/input/$RESULT_NAME
+    mv $RESULT_NAME $OUTPUT_DIR/input/$RESULT_NAME
 
 done
     

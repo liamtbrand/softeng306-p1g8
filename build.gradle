@@ -4,6 +4,8 @@ plugins {
 	id 'com.github.johnrengelman.shadow' version '2.0.4'
 }
 
+boolean isWindows = System.properties.'os.name'.toLowerCase().contains('windows');
+
 //Change to test better Java versions
 sourceCompatibility = 8
 targetCompatibility = 8
@@ -37,4 +39,43 @@ jar {
 	manifest {
 		attributes('Main-Class': mainClassName)
 	}
+}
+
+if(!isWindows) {
+	task generateDotFiles(type: Exec) {
+		standardOutput = new ByteArrayOutputStream()
+		errorOutput = new ByteArrayOutputStream()
+
+		def script = 'gxl2dot_dataset.sh'
+		def input = 'gxl_dataset'
+		def output = 'dataset'	
+
+		workingDir 'conversion_script'	
+
+		inputs.dir "conversion_script/$input"
+		inputs.file "conversion_script/$script"
+	    outputs.dir output
+
+		doFirst {
+			mkdir "$output"
+			mkdir "$output/input"
+			mkdir "$output/output"
+		}
+
+		commandLine 'bash', '-c', "bash $script ../$output $input/*"
+	}
+
+	task cleanDotFiles(type: Delete) {
+		delete 'dataset'
+	}
+
+	task rebuildDotFiles {
+		dependsOn 'cleanDotFiles'
+		dependsOn 'generateDotFiles'
+		generateDotFiles.mustRunAfter 'cleanDotFiles'
+	}
+
+	clean.dependsOn cleanDotFiles
+} else {
+	println 'Not dot file manipulation can be done on Windows'
 }
