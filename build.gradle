@@ -41,41 +41,36 @@ jar {
 	}
 }
 
-if(!isWindows) {
-	task generateDotFiles(type: Exec) {
-		standardOutput = new ByteArrayOutputStream()
-		errorOutput = new ByteArrayOutputStream()
+task generateDotFiles(type: Exec) {
+	//standardOutput = new ByteArrayOutputStream()
+	//errorOutput = new ByteArrayOutputStream()
 
-		def script = 'gxl2dot_dataset.sh'
-		def input = 'gxl_dataset'
-		def output = 'dataset'	
+	def script = 'gxl2dot_dataset.sh'
+	def input = 'gxl_dataset'
+	def output = 'dataset'	
 
-		workingDir 'conversion_script'	
+	workingDir 'conversion_script'	
 
-		inputs.dir "conversion_script/$input"
-		inputs.file "conversion_script/$script"
-	    outputs.dir output
+	inputs.dir "conversion_script/$input"
+	inputs.file "conversion_script/$script"
+    outputs.dir output
 
-		doFirst {
-			mkdir "$output"
-			mkdir "$output/input"
-			mkdir "$output/output"
-		}
-
-		commandLine 'bash', '-c', "bash $script ../$output $input/*"
+	doFirst {
+		mkdir "$output"
+		mkdir "$output/input"
+		mkdir "$output/output"
 	}
-
-	task cleanDotFiles(type: Delete) {
-		delete 'dataset'
-	}
-
-	task rebuildDotFiles {
-		dependsOn 'cleanDotFiles'
-		dependsOn 'generateDotFiles'
-		generateDotFiles.mustRunAfter 'cleanDotFiles'
-	}
-
-	clean.dependsOn cleanDotFiles
-} else {
-	println 'No dot file manipulation can be done on Windows'
+	commandLine 'bash', '-c', "bash $script ../$output $input/*"
 }
+
+task cleanDotFiles(type: Delete) {
+	delete 'dataset'
+}
+
+task rebuildDotFiles {
+	dependsOn 'cleanDotFiles'
+	dependsOn 'generateDotFiles'
+	generateDotFiles.mustRunAfter 'cleanDotFiles'
+}
+
+clean.dependsOn cleanDotFiles
