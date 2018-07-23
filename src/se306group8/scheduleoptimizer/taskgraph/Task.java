@@ -19,29 +19,29 @@ public class Task {
 		this.cost = cost;
 	}
 	
-	/**
-	 * 
-	 * @return Returns the name of this task.
+	/** 
+	 * Returns the name of this task. 
 	 */
 	public String getName() {
 		return name;
 	}
 	
-	/**
-	 * 
-	 * @return Returns a collection of tasks that depend on this task.
+	/** 
+	 * Returns all of the tasks that depend on this task. 
 	 */
 	public Collection<Dependency> getChildren() {
 		return children;
 	}
 	
+	/** 
+	 * Returns all of the tasks that this task depends on. 
+	 */
 	public Collection<Dependency> getParents() {
 		return parents;
 	}
 	
-	/**
-	 * 
-	 * @return Returns the time units this task requires.
+	/** 
+	 * Returns the time units this task requires. 
 	 */
 	public int getCost() {
 		return cost;

@@ -8,6 +8,7 @@ public class Dependency {
 	private final Task parent;
 	private final int cost;
 	
+	//TODO limit creation to where needed.
 	public Dependency(Task child, Task parent, int cost) {
 		this.child = child;
 		this.parent = parent;

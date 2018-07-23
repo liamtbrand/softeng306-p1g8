@@ -3,7 +3,7 @@ package se306group8.scheduleoptimizer.algorithm;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 /**
- * The root interface for all algorithms for computing a schedule. The only gurantee is that the schedule will be valid and complete.
+ * The root interface for all algorithms for computing a schedule. The only guarantee is that the schedule will be valid and complete.
  * Subclasses may stipulate that they return optimal solutions.
  */
 public interface Algorithm {
@@ -20,7 +20,7 @@ public interface Algorithm {
 	/**
 	 * Sets the monitor that is used to display intermediate results.
 	 * 
-	 * @param monitor The monitor to use, it this is null the monitor is unset.
+	 * @param monitor The monitor to use, it this is null the monitor is un-set.
 	 */
 	void setMonitor(RuntimeMonitor monitor);
 }
