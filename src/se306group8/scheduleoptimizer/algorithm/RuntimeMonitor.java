@@ -1,9 +1,7 @@
-package se306group8.scheduleoptimizer;
+package se306group8.scheduleoptimizer.algorithm;
 
 /**
- * 
  * This component listens to the Algorithm and get updates as the algorithm progresses.
- *
  */
 public interface RuntimeMonitor {
 
