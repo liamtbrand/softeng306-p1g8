@@ -17,7 +17,7 @@ public class DOTFileHandler {
 	 * @throws IOException If the file cannot be read, or the file is not in the format prescribed in class.
 	 */
 	public TaskGraph read(Path path) throws IOException {
-
+		return null;
 	}
 	
 	/**

@@ -8,10 +8,8 @@ import java.util.List;
  * TaskGraph is an immutable representation of the DAG, including the weight annotations.
  *
  */
-public class TaskGraph {
-	
-	//This could be replaced with a builder
-	public TaskGraph(Collection<Task> tasks) {
+public final class TaskGraph {
+	TaskGraph(Collection<Task> tasks) {
 		
 	}
 	
@@ -19,14 +17,16 @@ public class TaskGraph {
 	 * Returns a List containing a topological ordering of all tasks.
 	 */
 	public List<Task> getAll() {
-		
+		assert false : "Not done yet";
+		return null;
 	}
 	
 	/**
 	 * Returns a Collection of all tasks with no dependents.
 	 */
 	public Collection<Task> getRoots() {
-		
+		assert false : "Not done yet";
+		return null;
 	}
 	
 }

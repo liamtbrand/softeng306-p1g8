@@ -65,7 +65,7 @@ public final class Schedule implements Iterable<List<Task>> {
 	 * @return The start time of the given task.
 	 */
 	public int getStartTime(Task task) {
-		
+		return 0;
 	}
 	
 	/**
@@ -75,13 +75,13 @@ public final class Schedule implements Iterable<List<Task>> {
 	 * @return The processor number.
 	 */
 	public int getProcessorNumber(Task task) {
-		
+		return 0;
 	}
 	
 	/** 
 	 * Returns the total runtime of this schedule. 
 	 */
 	public int getTotalRuntime() {
-		
+		return 0;
 	}
 }

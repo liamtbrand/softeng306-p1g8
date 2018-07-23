@@ -16,23 +16,26 @@ repositories {
 
 mainClassName = 'INSERT MAIN CLASS HERE'
 
-sourceSets {
+sourceSets { 
 	main {
-		java {
-			srcDirs = ['src']
-		}
-		
-		resources {
-			srcDirs = ['res']
-		}
+		java.srcDirs = ['src/main']
+		resources.srcDirs = ['res/main'] 
+	} 
+
+	test {
+		java.srcDirs = ['src/test']
 	}
 }
 
 dependencies {
-	//Insert dependencies here, e.g.
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
+	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.2.0'
+}
 
-	//implementation group: 'commons-io', name: 'commons-io', version: '2.6'
-	//implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
+test {
+	useJUnitPlatform {
+		includeEngines 'junit-jupiter'
+	}
 }
 
 jar {

@@ -5,19 +5,11 @@ import java.util.Collections;
 /**
  * Represents a single task in a task graph, with a weight, name and dependencies.
  */
-public class Task {
+public final class Task {
 	private final String name;
 	private Collection<Dependency> children;
 	private Collection<Dependency> parents;
 	private final int cost;
-	
-	//TODO limit the construction of tasks only to the taskgraph package
-	public Task(String name, Collection<Dependency> children, Collection<Dependency> parents, int cost ) {
-		this.name = name;
-		this.children = Collections.unmodifiableCollection(children);
-		this.parents = Collections.unmodifiableCollection(parents);
-		this.cost = cost;
-	}
 	
 	Task(String name, int cost){
 		this.name = name;
