@@ -7,8 +7,8 @@ import java.util.Collections;
  */
 public class Task {
 	private final String name;
-	private final Collection<Dependency> children;
-	private final Collection<Dependency> parents;
+	private Collection<Dependency> children;
+	private Collection<Dependency> parents;
 	private final int cost;
 	
 	//TODO limit the construction of tasks only to the taskgraph package
@@ -17,6 +17,19 @@ public class Task {
 		this.children = Collections.unmodifiableCollection(children);
 		this.parents = Collections.unmodifiableCollection(parents);
 		this.cost = cost;
+	}
+	
+	Task(String name, int cost){
+		this.name = name;
+		this.cost = cost;
+	}
+	
+	void setChildDependencies(Collection<Dependency> children){
+		this.children = Collections.unmodifiableCollection(children);
+	}
+	
+	void setParentDependencies(Collection<Dependency> children){
+		this.children = Collections.unmodifiableCollection(children);
 	}
 	
 	/** 
