@@ -11,6 +11,7 @@ public class TaskGraphBuilder {
 	private Map<String,Task> taskMap;
 	private Map<String, Collection<Dependency>> parentMap;
 	private Map<String, Collection<Dependency>> childMap;
+	private String name;
 	
 	public TaskGraphBuilder(){
 		taskMap = new HashMap<String,Task>();
@@ -18,17 +19,19 @@ public class TaskGraphBuilder {
 		childMap = new HashMap<String, Collection<Dependency>>();
 	}
 	
-	public void addTask(String name, int cost){
+	public TaskGraphBuilder addTask(String name, int cost){
 		taskMap.put(name, new Task(name,cost));
 		parentMap.put(name, new ArrayList<Dependency>());
 		childMap.put(name, new ArrayList<Dependency>());
+		return this;
 		
 	}
 	
-	public void addDependecy(String parent, String child, int cost){
+	public TaskGraphBuilder addDependecy(String parent, String child, int cost){
 		Dependency dep = new Dependency(taskMap.get(parent),taskMap.get(child), cost);
 		parentMap.get(child).add(dep);
 		childMap.get(parent).add(dep);
+		return this;
 	}
 	
 	public TaskGraph buildGraph(){
@@ -38,8 +41,12 @@ public class TaskGraphBuilder {
 			t.setChildDependencies(childMap.get(task));
 			t.setParentDependencies(parentMap.get(task));
 		}
-		return new TaskGraph(taskMap.values());
+		return new TaskGraph(name, taskMap.values());
 		
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

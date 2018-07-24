@@ -9,7 +9,7 @@ import java.util.List;
  *
  */
 public final class TaskGraph {
-	TaskGraph(Collection<Task> tasks) {
+	TaskGraph(String name, Collection<Task> tasks) {
 		
 	}
 	
