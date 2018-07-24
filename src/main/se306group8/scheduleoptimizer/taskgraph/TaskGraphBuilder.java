@@ -18,17 +18,19 @@ public class TaskGraphBuilder {
 		childMap = new HashMap<String, Collection<Dependency>>();
 	}
 	
-	public void addTask(String name, int cost){
+	public TaskGraphBuilder addTask(String name, int cost){
 		taskMap.put(name, new Task(name,cost));
 		parentMap.put(name, new ArrayList<Dependency>());
 		childMap.put(name, new ArrayList<Dependency>());
+		return this;
 		
 	}
 	
-	public void addDependecy(String parent, String child, int cost){
+	public TaskGraphBuilder addDependecy(String parent, String child, int cost){
 		Dependency dep = new Dependency(taskMap.get(parent),taskMap.get(child), cost);
 		parentMap.get(child).add(dep);
 		childMap.get(parent).add(dep);
+		return this;
 	}
 	
 	public TaskGraph buildGraph(){
