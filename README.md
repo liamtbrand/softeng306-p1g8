@@ -1,5 +1,7 @@
-# se306p1g8
+# softeng306-p1g8
 Tatai 8
+
+[Wiki / Documentation](https://github.com/liamtbrand/softeng306-p1g8/wiki)
 
 # Team
 | GitHub Username | Full Name | UPI | Role |
