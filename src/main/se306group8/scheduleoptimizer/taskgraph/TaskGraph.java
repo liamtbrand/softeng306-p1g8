@@ -28,5 +28,15 @@ public final class TaskGraph {
 		assert false : "Not done yet";
 		return null;
 	}
+
+	public Collection<Dependency> getEdges() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

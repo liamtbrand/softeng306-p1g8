@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import se306group8.scheduleoptimizer.algorithm.Schedule;
+import se306group8.scheduleoptimizer.taskgraph.Dependency;
+import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilder;
 
@@ -85,10 +87,58 @@ public class DOTFileHandler {
 			}
 		}
 		
-		int nodeWeight;
-		int edgeWeight;
-		int startTime;
-		int processor;
+		public Attributes(Task task, int processorNumber, int startTime) {
+			this.startTime = startTime;
+			this.processor = processorNumber;
+			this.nodeWeight = task.getCost();
+		}
+
+		public Attributes(Dependency edge) {
+			edgeWeight = edge.getCommunicationCost();
+		}
+
+		int nodeWeight = -1;
+		int edgeWeight = -1;
+		int startTime = -1;
+		int processor = -1;
+		
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			
+			boolean isNotFirstAttribute = false;
+			
+			if(nodeWeight != -1) {
+				builder.append(nodeWeightAttribute).append("=").append(Integer.toString(nodeWeight));
+				isNotFirstAttribute = true;
+			}
+			
+			if(edgeWeight != -1) {
+				if(isNotFirstAttribute)
+					builder.append(',');
+				
+				builder.append(edgeWeightAttribute).append("=").append(Integer.toString(edgeWeight));
+				isNotFirstAttribute = true;
+			}
+			
+			if(processor != -1) {
+				if(isNotFirstAttribute)
+					builder.append(',');
+				
+				builder.append(processorAttribute).append("=").append(Integer.toString(processor));
+				isNotFirstAttribute = true;
+			}
+			
+			if(startTime != -1) {
+				if(isNotFirstAttribute)
+					builder.append(',');
+				
+				builder.append(startTimeAttribute).append("=").append(Integer.toString(startTime));
+				isNotFirstAttribute = true;
+			}
+			
+			return builder.toString();
+		}
 	}
 	
 	private void parseLine(String line, TaskGraphBuilder builder) throws IOException {
@@ -129,6 +179,28 @@ public class DOTFileHandler {
 	 * @throws IOException If the file cannot be written to for some reason.
 	 */
 	public void write(Path path, Schedule schedule) throws IOException {
+		StringBuilder output = new StringBuilder();
 		
+		TaskGraph graph = schedule.getGraph();
+		
+		output.append("digraph \"").append(graph.getName()).append("\" {");
+		
+		for(Task task : graph.getAll()) {
+			Attributes attr = new Attributes(task, schedule.getProcessorNumber(task), schedule.getStartTime(task));
+			
+			output
+			.append('\t').append(task.getName())
+			.append('\t').append(attr.toString()).append(";\n");
+		}
+		
+		for(Dependency edge : graph.getEdges()) {
+			Attributes attr = new Attributes(edge);
+			
+			output
+			.append('\t').append(edge.getParent().getName()).append(" -> ").append(edge.getChild().getName())
+			.append('\t').append(attr.toString()).append(";\n");
+		}
+		
+		output.append("}");
 	}
 }
