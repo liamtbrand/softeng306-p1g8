@@ -4,26 +4,26 @@ package se306group8.scheduleoptimizer.taskgraph;
  * Represents a data dependency between two tasks, and a communication cost.
  */
 public final class Dependency {
-	private final Task child;
-	private final Task parent;
-	private final int cost;
+	private final Task source;
+	private final Task target;
+	private final int communicationCost;
 	
-	Dependency(Task child, Task parent, int cost) {
-		this.child = child;
-		this.parent = parent;
-		this.cost = cost;
+	Dependency(Task source, Task target, int communicationCost) {
+		this.source = source;
+		this.target = target;
+		this.communicationCost = communicationCost;
 	}
 	
-	public Task getChild() {
-		return child;
+	public Task getTarget() {
+		return target;
 	}
 	
-	public Task getParent() {
-		return parent;
+	public Task getSource() {
+		return source;
 	}
 	
 	public int getCommunicationCost() {
-		return cost;
+		return communicationCost;
 	}
 	
 }
