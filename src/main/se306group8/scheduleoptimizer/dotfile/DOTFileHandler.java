@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import se306group8.scheduleoptimizer.algorithm.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Dependency;
+import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilder;
@@ -197,7 +197,7 @@ public class DOTFileHandler {
 			Attributes attr = new Attributes(edge);
 			
 			output
-			.append('\t').append(edge.getParent().getName()).append(" -> ").append(edge.getChild().getName())
+			.append('\t').append(edge.getSource().getName()).append(" -> ").append(edge.getTarget().getName())
 			.append('\t').append(attr.toString()).append(";\n");
 		}
 		

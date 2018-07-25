@@ -1,4 +1,5 @@
 package se306group8.scheduleoptimizer.taskgraph;
+
 import java.util.Collection;
 import java.util.Collections;
 
