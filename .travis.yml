@@ -8,3 +8,7 @@ before_install:
 - unzip gradle-4.9-bin.zip
 - export GRADLE_HOME=$PWD/gradle-4.9
 - export PATH=$GRADLE_HOME/bin:$PATH
+
+branches:
+  only:
+  - master
