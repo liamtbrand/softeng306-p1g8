@@ -9,7 +9,7 @@ import java.util.List;
  *
  */
 public final class TaskGraph {
-	TaskGraph(Collection<Task> tasks) {
+	TaskGraph(String name, Collection<Task> tasks) {
 		
 	}
 	
@@ -26,6 +26,16 @@ public final class TaskGraph {
 	 */
 	public Collection<Task> getRoots() {
 		assert false : "Not done yet";
+		return null;
+	}
+
+	public Collection<Dependency> getEdges() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getName() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 	
