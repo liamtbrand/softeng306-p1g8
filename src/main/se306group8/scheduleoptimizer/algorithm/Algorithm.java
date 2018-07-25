@@ -12,7 +12,7 @@ public interface Algorithm {
 	 * Starts the computation process for computing a valid complete schedule, returning when the computation is complete.
 	 * 
 	 * @param graph The task graph, must be nonNull
-	 * @param numberOfProcessors The maximum number of processors that the algorithm can assign tasks to, must be > 0
+	 * @param numberOfProcessors The maximum number of processors that the algorithm can assign tasks to, must be positive.
 	 * @return The complete schedule.
 	 */
 	Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors);
