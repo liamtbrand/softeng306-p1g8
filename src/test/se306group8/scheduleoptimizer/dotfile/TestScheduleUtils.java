@@ -1,10 +1,12 @@
-package se306group8.scheduleoptimizer.algorithm;
+package se306group8.scheduleoptimizer.dotfile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import se306group8.scheduleoptimizer.dotfile.ScheduleFromFile;
+import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
@@ -23,6 +25,6 @@ public class TestScheduleUtils {
 			i++;
 		}
 		
-		return new Schedule(graph, lists);
+		return new ScheduleFromFile(graph, lists);
 	}
 }

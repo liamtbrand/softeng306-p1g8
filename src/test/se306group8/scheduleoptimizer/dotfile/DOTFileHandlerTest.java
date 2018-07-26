@@ -7,8 +7,7 @@ import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
-import se306group8.scheduleoptimizer.algorithm.Schedule;
-import se306group8.scheduleoptimizer.algorithm.TestScheduleUtils;
+import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 class DOTFileHandlerTest {
