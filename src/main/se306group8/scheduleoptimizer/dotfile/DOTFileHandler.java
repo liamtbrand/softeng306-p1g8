@@ -22,6 +22,7 @@ public class DOTFileHandler {
 	private final String startTimeAttribute;
 	private final String processorAttribute;
 	
+	/** Creates a file reader with the default parameters. */
 	public DOTFileHandler() {
 		nodeWeightAttribute = "Weight";
 		edgeWeightAttribute = "Weight";

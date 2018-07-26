@@ -1,13 +1,14 @@
 package se306group8.scheduleoptimizer.dotfile;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
+import se306group8.scheduleoptimizer.algorithm.Schedule;
+import se306group8.scheduleoptimizer.algorithm.TestScheduleUtils;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 class DOTFileHandlerTest {
@@ -24,8 +25,14 @@ class DOTFileHandlerTest {
 	}
 
 	@Test
-	void testWrite() {
-		fail("Not yet implemented");
+	void testWrite() throws IOException {
+		Schedule output = TestScheduleUtils.createTestScheduleA();
+		
+		DOTFileHandler handler = new DOTFileHandler();
+		
+		Path tmpFolder = Files.createTempDirectory("testGraphs");
+		handler.write(tmpFolder.resolve("a.dot"), output);
+		
+		//TODO add output validation
 	}
-
 }
