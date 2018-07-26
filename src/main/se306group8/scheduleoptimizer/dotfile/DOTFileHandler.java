@@ -1,9 +1,11 @@
 package se306group8.scheduleoptimizer.dotfile;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -105,6 +107,8 @@ public class DOTFileHandler {
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
 			
+			builder.append('[');
+			
 			boolean isNotFirstAttribute = false;
 			
 			if(nodeWeight != -1) {
@@ -135,6 +139,8 @@ public class DOTFileHandler {
 				builder.append(startTimeAttribute).append("=").append(Integer.toString(startTime));
 				isNotFirstAttribute = true;
 			}
+			
+			builder.append(']');
 			
 			return builder.toString();
 		}
@@ -182,14 +188,14 @@ public class DOTFileHandler {
 		
 		TaskGraph graph = schedule.getGraph();
 		
-		output.append("digraph \"").append(graph.getName()).append("\" {");
+		output.append("digraph \"").append(graph.getName()).append("\" {").append(System.lineSeparator());
 		
 		for(Task task : graph.getAll()) {
 			Attributes attr = new Attributes(task, schedule.getProcessorNumber(task), schedule.getStartTime(task));
 			
 			output
 			.append('\t').append(task.getName())
-			.append('\t').append(attr.toString()).append(";\n");
+			.append('\t').append(attr.toString()).append(";").append(System.lineSeparator());
 		}
 		
 		for(Dependency edge : graph.getEdges()) {
@@ -197,9 +203,13 @@ public class DOTFileHandler {
 			
 			output
 			.append('\t').append(edge.getSource().getName()).append(" -> ").append(edge.getTarget().getName())
-			.append('\t').append(attr.toString()).append(";\n");
+			.append('\t').append(attr.toString()).append(";").append(System.lineSeparator());
 		}
 		
-		output.append("}");
+		output.append("}").append(System.lineSeparator());
+		
+		try (BufferedWriter reader = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
+			reader.write(output.toString());
+		}
 	}
 }

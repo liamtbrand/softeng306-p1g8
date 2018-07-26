@@ -77,7 +77,7 @@ public final class ScheduleFromFile implements Schedule {
 				time = otherAlloc.startTime + otherTask.getCost();
 			}
 			
-			if(time < startTime) {
+			if(time > startTime) {
 				startTime = time;
 			}
 		}
