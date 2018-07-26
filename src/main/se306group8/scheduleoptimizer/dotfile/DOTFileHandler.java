@@ -48,8 +48,6 @@ public class DOTFileHandler {
 		
 		String tmp;
 		while(iterator.hasNext() && !(tmp = iterator.next().trim()).equals("}")) {
-			tmp = iterator.next().trim();
-			
 			if(!tmp.isEmpty())
 				parseLine(tmp, builder);
 		}
