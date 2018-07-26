@@ -1,10 +1,19 @@
-digraph "Graph a" {
+//Hel/lo
+
+strict digraph "Graph a" {
 	a	 [Weight=2];
-	b	 [Weight=3];
-	a -> b	[Weight=1];
+	b	 [Weight=3] a -> b	[Weight=1] //Pff who needs semi-colons
 	c	 [Weight=3];
-	a -> c	[Weight=2];
+	/* REMOVED THIS LINE TO SCREW UP THINGS*/a -> c	[Weight=2];
 	d	 [Weight=2];
-	b -> d	[Weight=2];
-	c -> d	[Weight=1];
+	b -> d	[Weight=2]c ->
+	d	[Weight=1]
+	"Node name with
+	carriage returns in it :D, and quotes \" \\ "
+#          asdasd \\\sad
+
+/** */
+
+//
+
 }
