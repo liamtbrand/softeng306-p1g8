@@ -21,8 +21,8 @@ public final class Task {
 		this.children = Collections.unmodifiableCollection(children);
 	}
 	
-	void setParentDependencies(Collection<Dependency> children){
-		this.children = Collections.unmodifiableCollection(children);
+	void setParentDependencies(Collection<Dependency> parents){
+		this.parents = Collections.unmodifiableCollection(parents);
 	}
 	
 	/** 
