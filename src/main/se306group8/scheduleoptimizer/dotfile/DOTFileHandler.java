@@ -59,7 +59,7 @@ public class DOTFileHandler {
 		try {
 			return parseTokens(tokens.listIterator(), builder);
 		} catch(NoSuchElementException nsee) {
-			throw new IOException("Expected token");
+			throw new IOException("Expected token", nsee);
 		}
 	}
 	
@@ -118,7 +118,7 @@ public class DOTFileHandler {
 		}
 	}
 
-	/** A token is a single coherant unit, such as a comment, [, ], ;, graph, ->, ect... */
+	/** A token is a single coherent unit, such as a comment, [, ], ;, graph, ->, ect... */
 	private Token readToken(PushbackReader reader) throws IOException {
 		int c;
 		while((c = reader.read()) != -1) {
@@ -170,7 +170,12 @@ public class DOTFileHandler {
 	private class Attributes {
 		/** iter.next should return [ when the function returns next will return the token after ] */
 		Attributes(ListIterator<Token> iter) throws IOException {
-			iter.next(); //Ignore the [
+			if(iter.next().value.equals("[")) {
+				//Ignore the [
+			} else {
+				iter.previous();
+				return;
+			}
 			
 			while(true) {
 				if(iter.next().value.equals("]")) {

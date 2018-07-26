@@ -3,6 +3,9 @@ package se306group8.scheduleoptimizer.dotfile;
 import java.io.IOException;
 import java.io.PushbackReader;
 
+/** This is an inner class for tokenizing the .dot files. There are existing classes such as StringTokenizer that do this job
+ * already, but the .dot format has multi-line strings in it's format, making it too difficult to use. This class generally takes
+ * a reader and reads until the end of the token. */
 class Token {
 	enum Type {
 		EOF,
@@ -18,6 +21,7 @@ class Token {
 	final String value;
 	final Type type;
 	
+	/** Creates a token from one control character. This is not to be used for single character IDs or QUOTES */
 	Token(int c) throws IOException {
 		switch(c) {
 		case ':':
@@ -40,10 +44,16 @@ class Token {
 		value = new String(Character.toChars(c));
 	}
 	
-	Token(String s) {
-		if(s.isEmpty()) {
-			type = Type.EOF;
-		} else if(isKeyword(s)) {
+	/** Creates an EOF token. */
+	Token() {
+		value = "EOF";
+		type = Type.EOF;
+	}
+	
+	/** Creates a token from a string, such as a comment, ID, QUOTE, or KEYWORD.
+	 * Internally used by the readComment and readKeyword methods. */
+	private Token(String s) {
+		if(isKeyword(s)) {
 			type = Type.KEYWORD;
 		} else if(isIgnored(s)) {
 			type = Type.IGNORED;
@@ -58,6 +68,7 @@ class Token {
 		this.value = s;
 	}
 
+	/** Reads data from the reader until the end of the quote has been reached. */
 	static Token quote(PushbackReader reader) throws IOException {
 		//Read until the next non-escaped quote is reached
 		
@@ -93,6 +104,7 @@ class Token {
 		}
 	}
 
+	/** Reads an edge-op -> from the reader */
 	static Token edgeOp(PushbackReader reader) throws IOException {
 		switch(reader.read()) {
 		case '>':
@@ -104,6 +116,7 @@ class Token {
 		throw new IOException("Invalid DOT File");
 	}
 
+	/** Reads a comment from the reader. The reader will have already read one / */
 	static Token comment(PushbackReader reader) throws IOException {
 		//check if next char is a * or a / If it is neither it is an error.
 		
@@ -122,6 +135,7 @@ class Token {
 		
 		//Read until the end of the comment
 		if(block) {
+			//Block comments
 			builder.append("/*");
 			
 			int c;
@@ -147,6 +161,7 @@ class Token {
 				builder.appendCodePoint(c);
 			}
 		} else {
+			//Line comments
 			builder.append("//");
 			
 			int c;
@@ -162,6 +177,7 @@ class Token {
 		}
 	}
 
+	/** Reads an unquoted string term such as an ID or a KEYWORD. It accepts numbers and letters. */
 	static Token readIDOrKeyword(PushbackReader reader) throws IOException {
 		StringBuilder builder = new StringBuilder();
 		
@@ -190,10 +206,12 @@ class Token {
 		return new Token(text);
 	}
 
+	/** Creates and EOF token */
 	static Token EOF() {
-		return new Token("");
+		return new Token();
 	}
 	
+	/** Gets an identifier from a textual token, unwrapping the string if needed. */
 	String getID() throws IOException {
 		if(type == Type.QUOTE) {
 			return value.substring(1, value.length() - 1);
@@ -204,11 +222,13 @@ class Token {
 		}
 	}
 
-	static boolean isIgnored(String s) {
+	/** Returns true if the string shoud be ignored. */
+	private static boolean isIgnored(String s) {
 		return s.startsWith("/") || s.toLowerCase().equals("strict");
 	}
 	
-	static boolean isKeyword(String s) {
+	/** Returns true if the string is a keyword. */
+	private static boolean isKeyword(String s) {
 		switch(s) {
 		case "node":
 		case "edge":
