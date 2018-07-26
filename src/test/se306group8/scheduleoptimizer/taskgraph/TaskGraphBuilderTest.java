@@ -52,10 +52,19 @@ class TaskGraphBuilderTest {
 				
 	}
 	
-//	@Test
-//	void testTopologicalOrder() {
-//		List<Task> topologicalOrder = smallGraph.getAll();
-//		
-//		assertEqual(topologicalOrder.get(0))
-//	}
+	@Test
+	void testTopologicalOrder() {
+		List<Task> topologicalOrder = smallGraph.getAll();
+		
+		assertTrue(smallGraph.getRoots().contains(topologicalOrder.get(0)));
+		List<Task> secondLevel = topologicalOrder.subList(1, 2);
+		
+		for (Dependency rootChildren:topologicalOrder.get(0).getChildren()) {
+			assertTrue(secondLevel.contains(rootChildren.getChild()));
+		}
+		
+		assertEquals(topologicalOrder.get(3).getName(),"d");
+		assertEquals(topologicalOrder.get(3).getCost(),"1");
+		
+	}
 }
