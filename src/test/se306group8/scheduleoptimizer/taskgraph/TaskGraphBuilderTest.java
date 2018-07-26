@@ -45,10 +45,10 @@ class TaskGraphBuilderTest {
 		assertEquals(rootChildren.size(), 2);
 		
 		Dependency dep = rootChildren.iterator().next();
-		
-		assertEquals(dep.getParent(), root);
-		assertEquals(dep.getChild().getName(),"d");
-		assertEquals(dep.getChild().getCost(),"1");
+		Task sink = dep.getTarget().getChildren().iterator().next().getTarget();
+		assertEquals(dep.getSource(), root);
+		assertEquals(sink.getName(),"d");
+		assertEquals(sink.getCost(),2);
 				
 	}
 	
@@ -57,14 +57,14 @@ class TaskGraphBuilderTest {
 		List<Task> topologicalOrder = smallGraph.getAll();
 		
 		assertTrue(smallGraph.getRoots().contains(topologicalOrder.get(0)));
-		List<Task> secondLevel = topologicalOrder.subList(1, 2);
+		List<Task> secondLevel = topologicalOrder.subList(1, 3);
 		
 		for (Dependency rootChildren:topologicalOrder.get(0).getChildren()) {
-			assertTrue(secondLevel.contains(rootChildren.getChild()));
+			assertTrue(secondLevel.contains(rootChildren.getTarget()));
 		}
 		
 		assertEquals(topologicalOrder.get(3).getName(),"d");
-		assertEquals(topologicalOrder.get(3).getCost(),"1");
+		assertEquals(topologicalOrder.get(3).getCost(),2);
 		
 	}
 }
