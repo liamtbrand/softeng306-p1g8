@@ -1,4 +1,5 @@
 package se306group8.scheduleoptimizer.taskgraph;
+
 import java.util.Collection;
 import java.util.Collections;
 
@@ -20,8 +21,8 @@ public final class Task {
 		this.children = Collections.unmodifiableCollection(children);
 	}
 	
-	void setParentDependencies(Collection<Dependency> children){
-		this.children = Collections.unmodifiableCollection(children);
+	void setParentDependencies(Collection<Dependency> parents){
+		this.parents = Collections.unmodifiableCollection(parents);
 	}
 	
 	/** 

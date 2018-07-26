@@ -7,10 +7,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * 
+ * @brief Create an object representation of a task graph.
+ *
+ */
 public class TaskGraphBuilder {
 	private Map<String,Task> taskMap;
 	private Map<String, Collection<Dependency>> parentMap;
 	private Map<String, Collection<Dependency>> childMap;
+	private String name;
 	
 	public TaskGraphBuilder(){
 		taskMap = new HashMap<String,Task>();
@@ -26,10 +32,10 @@ public class TaskGraphBuilder {
 		
 	}
 	
-	public TaskGraphBuilder addDependecy(String parent, String child, int cost){
-		Dependency dep = new Dependency(taskMap.get(parent),taskMap.get(child), cost);
-		parentMap.get(child).add(dep);
-		childMap.get(parent).add(dep);
+	public TaskGraphBuilder addDependecy(String sourceTaskName, String targetTaskName, int cost){
+		Dependency dep = new Dependency(taskMap.get(sourceTaskName),taskMap.get(targetTaskName), cost);
+		parentMap.get(targetTaskName).add(dep);
+		childMap.get(sourceTaskName).add(dep);
 		return this;
 	}
 	
@@ -40,8 +46,12 @@ public class TaskGraphBuilder {
 			t.setChildDependencies(childMap.get(task));
 			t.setParentDependencies(parentMap.get(task));
 		}
-		return new TaskGraph(taskMap.values());
+		return new TaskGraph(name, taskMap.values());
 		
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
