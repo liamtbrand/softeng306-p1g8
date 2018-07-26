@@ -86,7 +86,7 @@ public class DOTFileHandler {
 
 	/** Reads the list of statements, that may or may not be separated by semi-colons */
 	private void readStatementList(ListIterator<Token> iter, TaskGraphBuilder builder) throws IOException {
-		//Ignore the openning {
+		//Ignore the opening {
 		iter.next();
 		
 		Token t;
@@ -184,6 +184,8 @@ public class DOTFileHandler {
 						iter.previous(); //rollback
 						return;
 					}
+					
+					continue;
 				} else {
 					//Rollback the check
 					iter.previous();
@@ -193,7 +195,7 @@ public class DOTFileHandler {
 				
 				Token next = iter.next();
 				if(next.value.equals(";") || next.value.equals(",")) {
-					//Ignore seperators
+					//Ignore separators
 				} else {
 					iter.previous();
 				}

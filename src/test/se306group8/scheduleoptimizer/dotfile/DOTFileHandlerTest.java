@@ -13,7 +13,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 class DOTFileHandlerTest {
 
 	@Test
-	void testRead() throws IOException {
+	void testReadValidation() throws IOException {
 		Path path = Paths.get("res", "test", "testgraphs", "a.dot");
 		System.out.println(path.toAbsolutePath().toString());
 	
@@ -21,6 +21,15 @@ class DOTFileHandlerTest {
 		TaskGraph graph = handler.read(path);
 		
 		//TODO add input validation
+	}
+	
+	@Test
+	void testReadCoverage() throws IOException {
+		Path path = Paths.get("res", "test", "testgraphs", "graph_with_coverage.dot");
+		System.out.println(path.toAbsolutePath().toString());
+	
+		DOTFileHandler handler = new DOTFileHandler();
+		handler.read(path);
 	}
 
 	@Test
