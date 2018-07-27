@@ -219,14 +219,18 @@ public class DOTFileHandler {
 			
 			if(attr.equals(nodeWeightAttribute)) {
 				nodeWeight = number;
-			} else if(attr.equals(edgeWeightAttribute)) {
+			}
+			
+			if(attr.equals(edgeWeightAttribute)) {
 				edgeWeight = number;
-			} else if(attr.equals(startTimeAttribute)) {
+			}
+			
+			if(attr.equals(startTimeAttribute)) {
 				startTime = number;
-			} else if(attr.equals(processorAttribute)) {
+			}
+
+			if(attr.equals(processorAttribute)) {
 				processor = number;
-			} else {
-				throw new IOException("Unknown attribute");
 			}
 		}
 
