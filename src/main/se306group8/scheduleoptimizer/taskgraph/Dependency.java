@@ -27,6 +27,11 @@ public final class Dependency implements GraphEquality<Dependency> {
 	public int getCommunicationCost() {
 		return communicationCost;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s -> %s", source.toString(), target.toString());
+	}
 
 	@Override
 	public boolean equalsIgnoringParents(Dependency other) {
@@ -35,7 +40,7 @@ public final class Dependency implements GraphEquality<Dependency> {
 
 	@Override
 	public boolean equalsIgnoringChildren(Dependency other) {
-		return other.communicationCost == communicationCost && other.target.equalsIgnoringChildren(source);
+		return other.communicationCost == communicationCost && other.source.equalsIgnoringChildren(source);
 	}
 	
 	@Override
@@ -48,19 +53,9 @@ public final class Dependency implements GraphEquality<Dependency> {
 		
 		return dep.communicationCost == communicationCost && dep.target.equalsIgnoringParents(target) && dep.source.equalsIgnoringChildren(source);
 	}
-
-	@Override
-	public int hashCodeIgnoringParents() {
-		return Objects.hash(communicationCost, target.hashCodeIgnoringParents());
-	}
-
-	@Override
-	public int hashCodeIgnoringChildren() {
-		return Objects.hash(communicationCost, source.hashCodeIgnoringChildren());
-	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(communicationCost, source.hashCodeIgnoringChildren(), target.hashCodeIgnoringParents());
+		return Objects.hash(communicationCost, source.getName(), target.getName());
 	}
 }

@@ -1,7 +1,7 @@
 package se306group8.scheduleoptimizer.taskgraph;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -19,17 +19,22 @@ public final class Task implements GraphEquality<Task> {
 	}
 	
 	void setChildDependencies(Collection<Dependency> children){
-		this.children = new HashSet<>(children);
+		this.children = Collections.unmodifiableCollection(children);
 	}
 	
 	void setParentDependencies(Collection<Dependency> parents){
-		this.parents = new HashSet<>(parents);
+		this.parents = Collections.unmodifiableCollection(parents);
 	}
 	
 	/** 
 	 * Returns the name of this task. 
 	 */
 	public String getName() {
+		return name;
+	}
+	
+	@Override
+	public String toString() {
 		return name;
 	}
 	
@@ -56,37 +61,27 @@ public final class Task implements GraphEquality<Task> {
 	
 	@Override
 	public boolean equalsIgnoringParents(Task other) {
-		return other.communicationCost == communicationCost && other.target.equalsIgnoringParents(target);
+		return other.cost == cost && GraphEqualityUtils.setsEqualIgnoringParents(children, other.children);
 	}
 
 	@Override
 	public boolean equalsIgnoringChildren(Task other) {
-		return other.communicationCost == communicationCost && other.target.equalsIgnoringChildren(source);
+		return other.cost == cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, other.parents);
 	}
 	
 	@Override
 	public boolean equals(Object other) {
-		if(!(other instanceof Dependency)) {
+		if(!(other instanceof Task)) {
 			return false;
 		}
 		
-		Dependency dep = (Dependency) other;
+		Task task = (Task) other;
 		
-		return dep.communicationCost == communicationCost && dep.target.equalsIgnoringParents(target) && dep.source.equalsIgnoringChildren(source);
+		return cost == task.cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, task.parents) && GraphEqualityUtils.setsEqualIgnoringParents(children, task.children);
 	}
 
-	@Override
-	public int hashCodeIgnoringParents() {
-		return Objects.hash(communicationCost, target.hashCodeIgnoringParents());
-	}
-
-	@Override
-	public int hashCodeIgnoringChildren() {
-		return Objects.hash(communicationCost, source.hashCodeIgnoringChildren());
-	}
-	
 	@Override
 	public int hashCode() {
-		return Objects.hash(communicationCost, source.hashCodeIgnoringChildren(), target.hashCodeIgnoringParents());
+		return Objects.hash(cost, name, children.size(), parents.size());
 	}
 }

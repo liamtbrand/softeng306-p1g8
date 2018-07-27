@@ -4,6 +4,4 @@ package se306group8.scheduleoptimizer.taskgraph;
 interface GraphEquality<T extends GraphEquality<?>> {
 	boolean equalsIgnoringParents(T other);
 	boolean equalsIgnoringChildren(T other);
-	int hashCodeIgnoringParents();
-	int hashCodeIgnoringChildren();
 }
