@@ -43,6 +43,7 @@ class DOTFileHandlerTest {
 		Path tmpFolder = Files.createTempDirectory("testGraphs");
 		handler.write(tmpFolder.resolve("a.dot"), output);
 		
-		//TODO add output validation
+		//Test if the non schedule data matches
+		Assertions.assertEquals(handler.read(tmpFolder.resolve("a.dot")), TestGraphUtils.buildTestGraphA());
 	}
 }
