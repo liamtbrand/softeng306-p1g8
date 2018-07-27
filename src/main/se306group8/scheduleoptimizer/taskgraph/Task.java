@@ -1,12 +1,13 @@
 package se306group8.scheduleoptimizer.taskgraph;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * Represents a single task in a task graph, with a weight, name and dependencies.
  */
-public final class Task {
+public final class Task implements GraphEquality<Task> {
 	private final String name;
 	private Collection<Dependency> children;
 	private Collection<Dependency> parents;
@@ -18,11 +19,11 @@ public final class Task {
 	}
 	
 	void setChildDependencies(Collection<Dependency> children){
-		this.children = Collections.unmodifiableCollection(children);
+		this.children = new HashSet<>(children);
 	}
 	
 	void setParentDependencies(Collection<Dependency> parents){
-		this.parents = Collections.unmodifiableCollection(parents);
+		this.parents = new HashSet<>(parents);
 	}
 	
 	/** 
@@ -53,4 +54,39 @@ public final class Task {
 		return cost;
 	}
 	
+	@Override
+	public boolean equalsIgnoringParents(Task other) {
+		return other.communicationCost == communicationCost && other.target.equalsIgnoringParents(target);
+	}
+
+	@Override
+	public boolean equalsIgnoringChildren(Task other) {
+		return other.communicationCost == communicationCost && other.target.equalsIgnoringChildren(source);
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof Dependency)) {
+			return false;
+		}
+		
+		Dependency dep = (Dependency) other;
+		
+		return dep.communicationCost == communicationCost && dep.target.equalsIgnoringParents(target) && dep.source.equalsIgnoringChildren(source);
+	}
+
+	@Override
+	public int hashCodeIgnoringParents() {
+		return Objects.hash(communicationCost, target.hashCodeIgnoringParents());
+	}
+
+	@Override
+	public int hashCodeIgnoringChildren() {
+		return Objects.hash(communicationCost, source.hashCodeIgnoringChildren());
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(communicationCost, source.hashCodeIgnoringChildren(), target.hashCodeIgnoringParents());
+	}
 }

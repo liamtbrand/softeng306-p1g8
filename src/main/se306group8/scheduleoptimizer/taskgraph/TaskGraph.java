@@ -2,8 +2,10 @@ package se306group8.scheduleoptimizer.taskgraph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -13,15 +15,15 @@ import java.util.stream.Collectors;
  */
 public final class TaskGraph {
 	private final List<Task> topologicalOrder;
-	private final Collection<Task> roots;
-	private final Collection<Dependency> edges;
+	private final Set<Task> roots;
+	private final Set<Dependency> edges;
 	private final String name;
 	
 	TaskGraph(String name, Collection<Task> tasks) {
 		assert tasks.stream().noneMatch(Objects::isNull);
 		
 		topologicalOrder = new ArrayList<>();
-		roots = new ArrayList<>();
+		roots = new HashSet<>();
 		this.name = name;
 		
 		for(Task task : tasks) {
@@ -33,7 +35,7 @@ public final class TaskGraph {
 		
 		edges = tasks.stream()
 				.flatMap(t -> t.getChildren().stream())
-				.collect(Collectors.toList());
+				.collect(Collectors.toSet());
 	}
 	
 	private void addTask(Task parent) {
@@ -71,4 +73,20 @@ public final class TaskGraph {
 		return name;
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof TaskGraph)) {
+			return false;
+		}
+		
+		TaskGraph otherGraph = (TaskGraph) other;
+		
+		//Compare two graphs by comparing the tasks
+		return name.equals(otherGraph.name) && roots.equals(otherGraph.roots);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, roots);
+	}
 }

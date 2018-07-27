@@ -1,9 +1,11 @@
 package se306group8.scheduleoptimizer.taskgraph;
 
+import java.util.Objects;
+
 /**
  * Represents a data dependency between two tasks, and a communication cost.
  */
-public final class Dependency {
+public final class Dependency implements GraphEquality<Dependency> {
 	private final Task source;
 	private final Task target;
 	private final int communicationCost;
@@ -25,5 +27,40 @@ public final class Dependency {
 	public int getCommunicationCost() {
 		return communicationCost;
 	}
+
+	@Override
+	public boolean equalsIgnoringParents(Dependency other) {
+		return other.communicationCost == communicationCost && other.target.equalsIgnoringParents(target);
+	}
+
+	@Override
+	public boolean equalsIgnoringChildren(Dependency other) {
+		return other.communicationCost == communicationCost && other.target.equalsIgnoringChildren(source);
+	}
 	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof Dependency)) {
+			return false;
+		}
+		
+		Dependency dep = (Dependency) other;
+		
+		return dep.communicationCost == communicationCost && dep.target.equalsIgnoringParents(target) && dep.source.equalsIgnoringChildren(source);
+	}
+
+	@Override
+	public int hashCodeIgnoringParents() {
+		return Objects.hash(communicationCost, target.hashCodeIgnoringParents());
+	}
+
+	@Override
+	public int hashCodeIgnoringChildren() {
+		return Objects.hash(communicationCost, source.hashCodeIgnoringChildren());
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(communicationCost, source.hashCodeIgnoringChildren(), target.hashCodeIgnoringParents());
+	}
 }
