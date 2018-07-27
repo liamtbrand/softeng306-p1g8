@@ -71,4 +71,20 @@ public final class TaskGraph {
 		return name;
 	}
 	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof TaskGraph)) {
+			return false;
+		}
+		
+		TaskGraph otherGraph = (TaskGraph) other;
+		
+		//Compare two graphs by comparing the tasks
+		return name.equals(otherGraph.name) && GraphEqualityUtils.setsEqualIgnoringParents(roots, otherGraph.roots);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, topologicalOrder.size(), edges.size());
+	}
 }

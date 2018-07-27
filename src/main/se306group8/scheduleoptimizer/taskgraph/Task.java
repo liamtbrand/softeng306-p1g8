@@ -2,11 +2,12 @@ package se306group8.scheduleoptimizer.taskgraph;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Represents a single task in a task graph, with a weight, name and dependencies.
  */
-public final class Task {
+public final class Task implements GraphEquality<Task> {
 	private final String name;
 	private Collection<Dependency> children;
 	private Collection<Dependency> parents;
@@ -32,6 +33,11 @@ public final class Task {
 		return name;
 	}
 	
+	@Override
+	public String toString() {
+		return name;
+	}
+	
 	/** 
 	 * Returns all of the tasks that depend on this task. 
 	 */
@@ -53,4 +59,29 @@ public final class Task {
 		return cost;
 	}
 	
+	@Override
+	public boolean equalsIgnoringParents(Task other) {
+		return other.cost == cost && GraphEqualityUtils.setsEqualIgnoringParents(children, other.children);
+	}
+
+	@Override
+	public boolean equalsIgnoringChildren(Task other) {
+		return other.cost == cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, other.parents);
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof Task)) {
+			return false;
+		}
+		
+		Task task = (Task) other;
+		
+		return cost == task.cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, task.parents) && GraphEqualityUtils.setsEqualIgnoringParents(children, task.children);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(cost, name, children.size(), parents.size());
+	}
 }

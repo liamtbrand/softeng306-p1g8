@@ -5,10 +5,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 class DOTFileHandlerTest {
 
@@ -20,7 +22,7 @@ class DOTFileHandlerTest {
 		DOTFileHandler handler = new DOTFileHandler();
 		TaskGraph graph = handler.read(path);
 		
-		//TODO add input validation
+		Assertions.assertEquals(graph, TestGraphUtils.buildTestGraphA());
 	}
 	
 	@Test
