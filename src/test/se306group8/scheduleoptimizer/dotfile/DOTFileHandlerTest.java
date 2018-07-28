@@ -35,6 +35,26 @@ class DOTFileHandlerTest {
 	}
 
 	@Test
+	void testReadInputDataset() throws IOException {
+		DOTFileHandler handler = new DOTFileHandler();
+		for(Path p : Files.newDirectoryStream(Paths.get("dataset", "input"), "*.dot")) {
+			try {
+				handler.read(p);
+			} catch(IOException ioex) {
+				Assertions.fail("Failed to read: " + p, ioex);
+			}
+		}
+		
+		for(Path p : Files.newDirectoryStream(Paths.get("dataset", "canvasinput"), "*.dot")) {
+			try {
+				handler.read(p);
+			} catch(IOException ioex) {
+				Assertions.fail("Failed to read: " + p, ioex);
+			}
+		}
+	}
+	
+	@Test
 	void testWrite() throws IOException {
 		Schedule output = TestScheduleUtils.createTestScheduleA();
 		

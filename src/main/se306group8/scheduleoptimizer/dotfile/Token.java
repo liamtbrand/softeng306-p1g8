@@ -2,14 +2,18 @@ package se306group8.scheduleoptimizer.dotfile;
 
 import java.io.IOException;
 import java.io.PushbackReader;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 /** This is an inner class for tokenizing the .dot files. There are existing classes such as StringTokenizer that do this job
  * already, but the .dot format has multi-line strings in it's format, making it too difficult to use. This class generally takes
  * a reader and reads until the end of the token. */
 class Token {
+	private static final Predicate<String> isString = Pattern.compile("[_a-zA-Z\200-\377][_a-zA-Z0-9\200-\377]*").asPredicate();
+	private static final Predicate<String> isNumber = Pattern.compile("-?(.[0-9]+|[0-9]+(\\.[0-9]*)?)").asPredicate();
+	
 	enum Type {
 		EOF,
-		QUOTE,
 		ID,
 		KEYWORD,
 		BRACKET,
@@ -51,18 +55,25 @@ class Token {
 	}
 	
 	/** Creates a token from a string, such as a comment, ID, QUOTE, or KEYWORD.
-	 * Internally used by the readComment and readKeyword methods. */
-	private Token(String s) {
+	 * Internally used by the readComment and readKeyword methods. 
+	 * @throws IOException */
+	private Token(String s) throws IOException {
 		if(isKeyword(s)) {
 			type = Type.KEYWORD;
 		} else if(isIgnored(s)) {
 			type = Type.IGNORED;
 		} else if(s.startsWith("\"")) {
-			type = Type.QUOTE;
+			type = Type.ID;
+			value = s.substring(1, s.length() - 1);
+			return;
 		} else if(s.equals("->")) {
 			type = Type.EDGE_OP;
-		} else {
+		} else if(s.equals("--")) { 
+			throw new IOException("Undirected graphs are not allowed");
+		} else if(isNumber.test(s) || isString.test(s)) {
 			type = Type.ID;
+		} else {
+			throw new IOException("Invalid Token");
 		}
 		
 		this.value = s;
@@ -102,18 +113,6 @@ class Token {
 				break;
 			}
 		}
-	}
-
-	/** Reads an edge-op -> from the reader */
-	static Token edgeOp(PushbackReader reader) throws IOException {
-		switch(reader.read()) {
-		case '>':
-			return new Token("->");
-		case '-':
-			throw new IOException("Undirected graphs are not allowed");
-		}
-		
-		throw new IOException("Invalid DOT File");
 	}
 
 	/** Reads a comment from the reader. The reader will have already read one / */
@@ -177,15 +176,19 @@ class Token {
 		}
 	}
 
-	/** Reads an unquoted string term such as an ID or a KEYWORD. It accepts numbers and letters. */
-	static Token readIDOrKeyword(PushbackReader reader) throws IOException {
+	/** Reads an unquoted string term such as an ID or a KEYWORD, or EDGE_OP. It accepts numbers and letters. */
+	static Token readIDOrKeywordOrEdgeOp(PushbackReader reader) throws IOException {
 		StringBuilder builder = new StringBuilder();
 		
 		int c;
 		while(true) {
 			c = reader.read();
 			
-			if(Character.isAlphabetic(c) || Character.isDigit(c) || c == '_') {
+			if(('0' <= c && c <= '9') //Digits 
+					|| c == '_' || c == '.' || c == '-' || c == '>' //Decimal points, edge ops and underscores
+					|| ('a' <= c && c <= 'z') //lowercase
+					|| ('A' <= c && c <= 'Z') //uppercase
+					|| ('\200' <= c && c <= '\377')) { //Extended characters
 				builder.appendCodePoint(c);
 			} else {
 				if(c != -1)
@@ -210,17 +213,6 @@ class Token {
 	static Token EOF() {
 		return new Token();
 	}
-	
-	/** Gets an identifier from a textual token, unwrapping the string if needed. */
-	String getID() throws IOException {
-		if(type == Type.QUOTE) {
-			return value.substring(1, value.length() - 1);
-		} else if(type == Type.ID) {
-			return value;
-		} else {
-			throw new IOException("Invalid token: " + value);
-		}
-	}
 
 	/** Returns true if the string shoud be ignored. */
 	private static boolean isIgnored(String s) {
@@ -242,6 +234,13 @@ class Token {
 	
 	@Override
 	public String toString() {
+		return value;
+	}
+
+	String getID() throws IOException {
+		if(type != Type.ID)
+			throw new IOException("Expected ID, found " + type.name());
+		
 		return value;
 	}
 }
