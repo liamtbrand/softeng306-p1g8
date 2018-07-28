@@ -64,7 +64,7 @@ public final class Task implements GraphEquality<Task> {
 		if(other == this)
 			return true;
 		
-		return other.cost == cost && GraphEqualityUtils.setsEqualIgnoringParents(children, other.children);
+		return other.name.equals(name) && other.cost == cost && GraphEqualityUtils.setsEqualIgnoringParents(children, other.children);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public final class Task implements GraphEquality<Task> {
 		if(other == this)
 			return true;
 		
-		return other.cost == cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, other.parents);
+		return other.name.equals(name) && other.cost == cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, other.parents);
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ public final class Task implements GraphEquality<Task> {
 		
 		Task task = (Task) other;
 		
-		return cost == task.cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, task.parents) && GraphEqualityUtils.setsEqualIgnoringParents(children, task.children);
+		return task.name.equals(name) && cost == task.cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, task.parents) && GraphEqualityUtils.setsEqualIgnoringParents(children, task.children);
 	}
 
 	@Override

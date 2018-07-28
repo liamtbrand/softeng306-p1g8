@@ -36,4 +36,20 @@ class TaskGraphEqualsTest {
 		Assertions.assertEquals(b1, b2);
 		Assertions.assertNotEquals(a1, b1);
 	}
+	
+	/** Checks for two tasks with the cost, and dependencies but differing names. */
+	@Test
+	void testNotEquals() {
+		TaskGraphBuilder builder = new TaskGraphBuilder();
+		builder.addTask("a", 1);
+		builder.addTask("b", 1);
+		
+		TaskGraph graph = builder.buildGraph();
+		
+		for(Task t1 : graph.getAll()) {
+			for(Task t2 : graph.getAll()) {
+				Assertions.assertEquals(t1.equals(t2), t1 == t2);
+			}
+		}
+	}
 }

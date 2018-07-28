@@ -69,4 +69,17 @@ class TaskGraphBuilderTest {
 		assertEquals(topologicalOrder.get(3).getCost(),2);
 		
 	}
+	
+	@Test
+	void testBuilderWithNoLinks() {
+		TaskGraphBuilder builder = new TaskGraphBuilder();
+		builder.addTask("a", 1);
+		builder.addTask("b", 1);
+		
+		TaskGraph graph = builder.buildGraph();
+		
+		assertEquals(2, graph.getAll().size());
+		assertEquals(2, graph.getRoots().size());
+		assertEquals(0, graph.getEdges().size());
+	}
 }
