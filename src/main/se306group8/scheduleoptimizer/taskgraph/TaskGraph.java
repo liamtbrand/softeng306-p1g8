@@ -46,7 +46,9 @@ public final class TaskGraph {
 			}
 		}
 		
+		if(!topologicalOrder.contains(parent)) {
 		topologicalOrder.add(parent);
+	}
 	}
 	
 	/**

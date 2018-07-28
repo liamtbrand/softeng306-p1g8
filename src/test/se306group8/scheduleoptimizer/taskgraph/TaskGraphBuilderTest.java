@@ -56,6 +56,8 @@ class TaskGraphBuilderTest {
 	void testTopologicalOrder() {
 		List<Task> topologicalOrder = smallGraph.getAll();
 		
+		assertTrue(topologicalOrder.size() == 4);
+		
 		assertTrue(smallGraph.getRoots().contains(topologicalOrder.get(0)));
 		List<Task> secondLevel = topologicalOrder.subList(1, 3);
 		
