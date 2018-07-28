@@ -71,8 +71,8 @@ public class DOTFileHandler {
 			throw new IOException("Only digraphs are supported.");
 		
 		Token next = iter.next();
-		if(next.type == Type.QUOTE || next.type == Type.ID) {
-			builder.setName(next.getID());
+		if(next.type == Type.ID) {
+			builder.setName(next.value);
 		} else if(next.value.equals("{")) {
 			builder.setName("");
 		} else {
@@ -153,15 +153,13 @@ public class DOTFileHandler {
 				return new Token(c);
 			case '"':
 				return Token.quote(reader);
-			case '-':
-				return Token.edgeOp(reader);
 			case '/': //There is no valid / symbol in the syntax, either it is a comment of an error
 				return Token.comment(reader);
 			}
 			
-			//We are now reading ID or KEYWORD
+			//We are now reading ID or KEYWORD, or EDGE_OP
 			reader.unread(c);
-			return Token.readIDOrKeyword(reader);
+			return Token.readIDOrKeywordOrEdgeOp(reader);
 		}
 		
 		return Token.EOF();
@@ -211,11 +209,18 @@ public class DOTFileHandler {
 			
 			Token value = iter.next();
 			
-			addAttribute(name.getID(), value.getID());
+			try {
+				addAttribute(name.getID(), value.getID());
+			} catch(IOException unused) { /* Ignore malformed attribute values. */ }
 		}
 		
 		private void addAttribute(String attr, String value) throws IOException {
-			int number = Integer.parseInt(value);
+			int number;
+			try {
+				number = Integer.parseInt(value);
+			} catch(NumberFormatException nfe) {
+				throw new IOException("Unexpected non-integer attribute");
+			}
 			
 			if(attr.equals(nodeWeightAttribute)) {
 				nodeWeight = number;
