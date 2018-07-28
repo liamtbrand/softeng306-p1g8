@@ -27,6 +27,11 @@ public final class ScheduleFromFile implements Schedule {
 			this.endTime = endTime;
 			this.processor = processor;
 		}
+		
+		@Override
+		public String toString() {
+			return "P[" + processor + "](" + startTime + ", " + endTime + ")";
+		}
 	}
 	
 	private final TaskGraph graph;
@@ -56,8 +61,9 @@ public final class ScheduleFromFile implements Schedule {
 		}
 		
 		int processor = 1;
+		int index = -1;
 		for(List<Task> list : taskLists) {
-			if(list.contains(task)) {
+			if((index = list.indexOf(task)) != -1) {
 				break;
 			}
 			
@@ -65,6 +71,10 @@ public final class ScheduleFromFile implements Schedule {
 		}
 		
 		int startTime = 0;
+		
+		if(index != 0) {
+			startTime = computeAllocation(taskLists.get(processor - 1).get(index - 1)).endTime;
+		}
 		
 		for(Dependency dep : task.getParents()) {
 			int time;
