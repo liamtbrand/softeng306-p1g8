@@ -1,5 +1,8 @@
 package se306group8.scheduleoptimizer.algorithm.greedy;
 
+/**
+ * Internal representation of a task allocation onto a processor used by greedy algorithm
+ */
 class ProcessAllocation {
 	final int startTime;
 	final int processor;
