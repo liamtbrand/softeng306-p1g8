@@ -20,6 +20,7 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 	
 	
 	private Map<Task, ProcessAllocation> allocations; 
+	private int[] processorStart;
 	
 	public GreedySchedulingAlgorithm() {
 		//monitor= new MockRuntimeMonitor();
@@ -30,10 +31,11 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 		allocations = new HashMap<Task, ProcessAllocation>();
 		List<List<Task>> schedule = new ArrayList<List<Task>>(numberOfProcessors);
 		for (int i=0;i<numberOfProcessors;i++) {
-			schedule.set(i, new ArrayList<Task>());
+			schedule.add( new ArrayList<Task>());
 		}
 		
 		List<Task> partialOrder = graph.getAll();
+		processorStart = new int[schedule.size()];
 		
 		for (Task task:partialOrder) {
 			allocatePosition(schedule,task);
@@ -47,6 +49,7 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 		
 		int bestTime = 0;
 		int bestProcessor = 0;
+		
 		for (int i=0;i<schedule.size();i++) {
 			int startTime =0;
 			
@@ -55,9 +58,10 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 				ProcessAllocation parentAllocation = allocations.get(parent);
 				int time;
 				if (parentAllocation.processor==i) {
-					time = parentAllocation.endTime;
+					time = processorStart[i];
 				}else {
-					time = parentAllocation.endTime + dep.getCommunicationCost();
+					int comStart = parentAllocation.endTime + dep.getCommunicationCost();
+					time = (comStart>processorStart[i])?comStart:processorStart[i];
 				}
 				
 				if (time > startTime) {
@@ -65,7 +69,7 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 				}
 			}
 			
-			if (startTime < bestTime) {
+			if (startTime < bestTime || i==0) {
 				bestTime = startTime;
 				bestProcessor = i;
 			}
@@ -76,8 +80,8 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 			}
 			
 		}
-		
-		ProcessAllocation greedyAllocation = new ProcessAllocation(bestTime,bestTime+task.getCost(),bestProcessor);
+		processorStart[bestProcessor]=bestTime+task.getCost();
+		ProcessAllocation greedyAllocation = new ProcessAllocation(bestTime,processorStart[bestProcessor],bestProcessor);
 		allocations.put(task, greedyAllocation);
 		schedule.get(bestProcessor).add(task);
 	}
