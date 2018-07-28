@@ -10,10 +10,8 @@ strict digraph "Graph a" {
 	/* REMOVED THIS LINE TO SCREW UP THINGS*/a -> c	[Weight=2];
 	d	 [Weight=2];
 	b -> d	[Weight=2]c -> d
-	[Weight=1]
-	abbacus
-	"Node name with
-	carriage returns in it :D, and quotes \" \\ " []
+	[Weight=1][	"Node name with
+	carriage returns in it :D, and quotes \" \\ " = 45]
 #          asdasd \\\sad []
 
 /** */

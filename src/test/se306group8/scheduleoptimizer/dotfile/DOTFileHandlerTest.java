@@ -17,10 +17,9 @@ class DOTFileHandlerTest {
 	@Test
 	void testReadValidation() throws IOException {
 		Path path = Paths.get("res", "test", "testgraphs", "a.dot");
-		System.out.println(path.toAbsolutePath().toString());
-	
+		
 		DOTFileHandler handler = new DOTFileHandler();
-		TaskGraph graph = handler.read(path);
+		TaskGraph graph = handler.readTaskGraph(path);
 		
 		Assertions.assertEquals(graph, TestGraphUtils.buildTestGraphA());
 	}
@@ -28,10 +27,9 @@ class DOTFileHandlerTest {
 	@Test
 	void testReadCoverage() throws IOException {
 		Path path = Paths.get("res", "test", "testgraphs", "graph_with_coverage.dot");
-		System.out.println(path.toAbsolutePath().toString());
-	
+		
 		DOTFileHandler handler = new DOTFileHandler();
-		handler.read(path);
+		Assertions.assertEquals(handler.readTaskGraph(path), TestGraphUtils.buildTestGraphA());
 	}
 
 	@Test
@@ -39,7 +37,7 @@ class DOTFileHandlerTest {
 		DOTFileHandler handler = new DOTFileHandler();
 		for(Path p : Files.newDirectoryStream(Paths.get("dataset", "input"), "*.dot")) {
 			try {
-				handler.read(p);
+				handler.readTaskGraph(p);
 			} catch(IOException ioex) {
 				Assertions.fail("Failed to read: " + p, ioex);
 			}
@@ -47,11 +45,20 @@ class DOTFileHandlerTest {
 		
 		for(Path p : Files.newDirectoryStream(Paths.get("dataset", "canvasinput"), "*.dot")) {
 			try {
-				handler.read(p);
+				handler.readTaskGraph(p);
 			} catch(IOException ioex) {
 				Assertions.fail("Failed to read: " + p, ioex);
 			}
 		}
+	}
+	
+	@Test
+	void testReadSchedule() throws IOException {
+		DOTFileHandler handler = new DOTFileHandler();
+		
+		Path schedule = Paths.get("res", "test", "testgraphs", "a_schedule.dot");
+		
+		Assertions.assertEquals(TestScheduleUtils.createTestScheduleA(), handler.readSchedule(schedule));
 	}
 	
 	@Test
@@ -63,7 +70,6 @@ class DOTFileHandlerTest {
 		Path tmpFolder = Files.createTempDirectory("testGraphs");
 		handler.write(tmpFolder.resolve("a.dot"), output);
 		
-		//Test if the non schedule data matches
-		Assertions.assertEquals(handler.read(tmpFolder.resolve("a.dot")), TestGraphUtils.buildTestGraphA());
+		Assertions.assertEquals(handler.readSchedule(tmpFolder.resolve("a.dot")), TestScheduleUtils.createTestScheduleA());
 	}
 }

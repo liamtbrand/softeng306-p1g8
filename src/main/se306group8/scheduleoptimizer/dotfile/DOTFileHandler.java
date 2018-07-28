@@ -8,9 +8,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.TreeMap;
+import java.util.stream.Stream;
 
 import se306group8.scheduleoptimizer.dotfile.Token.Type;
 import se306group8.scheduleoptimizer.taskgraph.Dependency;
@@ -43,9 +47,51 @@ public class DOTFileHandler {
 	 * @return The parsed TaskGraph, it will not be null.
 	 * @throws IOException If the file cannot be read, or the file is not in the format prescribed in class.
 	 */
-	public TaskGraph read(Path path) throws IOException {
-		List<Token> tokens = new ArrayList<>();
+	public TaskGraph readTaskGraph(Path path) throws IOException {
 		TaskGraphBuilder builder = new TaskGraphBuilder();
+		
+		read(path, builder, null);
+		
+		return builder.buildGraph();
+	}
+
+	/**
+	 * Reads a .dot file from the disk.
+	 * 
+	 * @param path The path to find the file at. It must not be null.
+	 * @return The parsed Schedule, it will not be null.
+	 * @throws IOException If the file cannot be read, or the file is not in the format prescribed in class.
+	 */
+	public Schedule readSchedule(Path path) throws IOException {
+		TaskGraphBuilder builder = new TaskGraphBuilder();
+		TreeMap<Integer, TreeMap<Integer, String>> processorMapping = new TreeMap<>();
+		
+		read(path, builder, processorMapping);
+		
+		TaskGraph graph = builder.buildGraph();
+		HashMap<String, Task> taskMapping = new HashMap<>();
+		
+		for(Task t : graph.getAll()) {
+			taskMapping.put(t.getName(), t);
+		}
+		
+		List<List<Task>> processorAllocation = new ArrayList<>();
+		
+		for(TreeMap<Integer, String> map : processorMapping.values()) {
+			ArrayList<Task> list = new ArrayList<>();
+			processorAllocation.add(list);
+			
+			for(String taskName : map.values()) {
+				list.add(taskMapping.get(taskName));
+			}
+		}
+		
+		return new ScheduleFromFile(graph, processorAllocation);
+	}
+	
+	/** Internal method to read a dot file from a map into a designated builder. Mapping may be null, in which case processor information is ignored. */
+	private void read(Path path, TaskGraphBuilder builder, TreeMap<Integer, TreeMap<Integer, String>> mapping) throws IOException {
+		List<Token> tokens = new ArrayList<>();
 		
 		try(PushbackReader reader = new PushbackReader(Files.newBufferedReader(path, StandardCharsets.UTF_8))) {
 			Token token;
@@ -57,14 +103,14 @@ public class DOTFileHandler {
 		}
 		
 		try {
-			return parseTokens(tokens.listIterator(), builder);
+			parseTokens(tokens.listIterator(), builder, mapping);
 		} catch(NoSuchElementException nsee) {
 			throw new IOException("Expected token", nsee);
 		}
 	}
 	
-	/** Takes a list of tokens and parses it into a graph. */
-	private TaskGraph parseTokens(ListIterator<Token> iter, TaskGraphBuilder builder) throws IOException {
+	/** Takes a list of tokens and populates the builder. */
+	private void parseTokens(ListIterator<Token> iter, TaskGraphBuilder builder, TreeMap<Integer, TreeMap<Integer, String>> processorMapping) throws IOException {
 		//Read the header
 		Token graphType = iter.next();
 		if(!graphType.value.toLowerCase().equals("digraph"))
@@ -79,13 +125,12 @@ public class DOTFileHandler {
 			throw new IOException("Expected ID or QUOTE or {");
 		}
 		
-		readStatementList(iter, builder);
-		
-		return builder.buildGraph();
+		readStatementList(iter, builder, processorMapping);
 	}
 
-	/** Reads the list of statements, that may or may not be separated by semi-colons */
-	private void readStatementList(ListIterator<Token> iter, TaskGraphBuilder builder) throws IOException {
+	/** Reads the list of statements, that may or may not be separated by semi-colons. If processorMapping is not null
+	 * it will be populated with the start time and processor allocations. */
+	private void readStatementList(ListIterator<Token> iter, TaskGraphBuilder builder, TreeMap<Integer, TreeMap<Integer, String>> processorMapping) throws IOException {
 		//Ignore the opening {
 		iter.next();
 		
@@ -107,6 +152,10 @@ public class DOTFileHandler {
 					
 					Attributes attr = new Attributes(iter);
 					builder.addTask(itemName, attr.nodeWeight);
+					
+					if(processorMapping != null && attr.processor != -1 && attr.startTime != -1) {
+						processorMapping.computeIfAbsent(attr.processor, i -> new TreeMap<Integer, String>()).put(attr.startTime, itemName);
+					}
 				}
 			}
 			
