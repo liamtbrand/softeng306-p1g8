@@ -35,16 +35,25 @@ public final class Dependency implements GraphEquality<Dependency> {
 
 	@Override
 	public boolean equalsIgnoringParents(Dependency other) {
+		if(other == this)
+			return true;
+		
 		return other.communicationCost == communicationCost && other.target.equalsIgnoringParents(target);
 	}
 
 	@Override
 	public boolean equalsIgnoringChildren(Dependency other) {
+		if(other == this)
+			return true;
+		
 		return other.communicationCost == communicationCost && other.source.equalsIgnoringChildren(source);
 	}
 	
 	@Override
 	public boolean equals(Object other) {
+		if(other == this)
+			return true;
+		
 		if(!(other instanceof Dependency)) {
 			return false;
 		}

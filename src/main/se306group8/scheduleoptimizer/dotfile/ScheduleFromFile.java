@@ -125,6 +125,11 @@ public final class ScheduleFromFile implements Schedule {
 				.orElse(0);						//If there are no items return 0
 	}
 	
+	@Override
+	public String toString() {
+		return "S: " + taskLists.toString() + "(" + getTotalRuntime() + ")";
+	}
+	
 	/** Two schedules are considered equal if the two graphs are equal and the processors have the same named tasks in the same order on them. */
 	@Override
 	public boolean equals(Object obj) {

@@ -61,16 +61,25 @@ public final class Task implements GraphEquality<Task> {
 	
 	@Override
 	public boolean equalsIgnoringParents(Task other) {
+		if(other == this)
+			return true;
+		
 		return other.cost == cost && GraphEqualityUtils.setsEqualIgnoringParents(children, other.children);
 	}
 
 	@Override
 	public boolean equalsIgnoringChildren(Task other) {
+		if(other == this)
+			return true;
+		
 		return other.cost == cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, other.parents);
 	}
 	
 	@Override
 	public boolean equals(Object other) {
+		if(other == this)
+			return true;
+		
 		if(!(other instanceof Task)) {
 			return false;
 		}

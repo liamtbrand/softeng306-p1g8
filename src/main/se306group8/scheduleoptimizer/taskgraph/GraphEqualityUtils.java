@@ -14,6 +14,9 @@ class GraphEqualityUtils {
 
 		@Override
 		public boolean equals(Object other) {
+			if(other == this)
+				return true;
+			
 			if(!(other instanceof IgnoreChildContainer)) {
 				return false;
 			}
@@ -44,6 +47,9 @@ class GraphEqualityUtils {
 
 		@Override
 		public boolean equals(Object other) {
+			if(other == this)
+				return true;
+			
 			if(!(other instanceof IgnoreParentContainer)) {
 				return false;
 			}
@@ -66,6 +72,9 @@ class GraphEqualityUtils {
 	}
 
 	static <T extends GraphEquality<?>> boolean setsEqualIgnoringParents(Collection<? extends T> aSet, Collection<? extends T> bSet) {
+		if(aSet == bSet)
+			return true;
+		
 		Set<IgnoreParentContainer<T>> aTransformed = aSet.stream().map((T a) -> new IgnoreParentContainer<>(a)).collect(Collectors.toSet());
 		Set<IgnoreParentContainer<T>> bTransformed = bSet.stream().map((T a) -> new IgnoreParentContainer<>(a)).collect(Collectors.toSet());
 		
@@ -73,6 +82,9 @@ class GraphEqualityUtils {
 	}
 	
 	static <T extends GraphEquality<?>> boolean setsEqualIgnoringChildren(Collection<? extends T> aSet, Collection<? extends T> bSet) {
+		if(aSet == bSet)
+			return true;
+		
 		Set<IgnoreChildContainer<T>> aTransformed = aSet.stream().map((T a) -> new IgnoreChildContainer<>(a)).collect(Collectors.toSet());
 		Set<IgnoreChildContainer<T>> bTransformed = bSet.stream().map((T a) -> new IgnoreChildContainer<>(a)).collect(Collectors.toSet());
 		

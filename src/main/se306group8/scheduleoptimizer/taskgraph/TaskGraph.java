@@ -47,8 +47,8 @@ public final class TaskGraph {
 		}
 		
 		if(!topologicalOrder.contains(parent)) {
-		topologicalOrder.add(parent);
-	}
+			topologicalOrder.add(parent);
+		}
 	}
 	
 	/**
@@ -75,6 +75,9 @@ public final class TaskGraph {
 	
 	@Override
 	public boolean equals(Object other) {
+		if(other == this)
+			return true;
+		
 		if(!(other instanceof TaskGraph)) {
 			return false;
 		}
