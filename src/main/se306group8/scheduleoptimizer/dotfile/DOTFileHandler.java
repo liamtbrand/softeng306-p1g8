@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
+import se306group8.scheduleoptimizer.algorithm.ListSchedule;
 import se306group8.scheduleoptimizer.dotfile.Token.Type;
 import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
@@ -86,7 +87,7 @@ public class DOTFileHandler {
 			}
 		}
 		
-		return new ScheduleFromFile(graph, processorAllocation);
+		return new ListSchedule(graph, processorAllocation);
 	}
 	
 	/** Internal method to read a dot file from a map into a designated builder. Mapping may be null, in which case processor information is ignored. */
