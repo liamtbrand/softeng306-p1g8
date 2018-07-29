@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
-import se306group8.scheduleoptimizer.algorithm.MockRuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
-import se306group8.scheduleoptimizer.dotfile.ScheduleFromFile;
 import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
