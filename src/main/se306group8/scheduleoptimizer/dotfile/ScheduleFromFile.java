@@ -1,6 +1,7 @@
 package se306group8.scheduleoptimizer.dotfile;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -25,6 +26,11 @@ public final class ScheduleFromFile implements Schedule {
 			this.startTime = startTime;
 			this.endTime = endTime;
 			this.processor = processor;
+		}
+		
+		@Override
+		public String toString() {
+			return "P[" + processor + "](" + startTime + ", " + endTime + ")";
 		}
 	}
 	
@@ -54,9 +60,10 @@ public final class ScheduleFromFile implements Schedule {
 			return alloc;
 		}
 		
-		int processor = 0;
+		int processor = 1;
+		int index = -1;
 		for(List<Task> list : taskLists) {
-			if(list.contains(task)) {
+			if((index = list.indexOf(task)) != -1) {
 				break;
 			}
 			
@@ -64,6 +71,10 @@ public final class ScheduleFromFile implements Schedule {
 		}
 		
 		int startTime = 0;
+		
+		if(index != 0) {
+			startTime = computeAllocation(taskLists.get(processor - 1).get(index - 1)).endTime;
+		}
 		
 		for(Dependency dep : task.getParents()) {
 			int time;
@@ -97,7 +108,7 @@ public final class ScheduleFromFile implements Schedule {
 	}
 	
 	public List<Task> getTasksOnProcessor(int processor) {
-		return taskLists.get(processor);
+		return taskLists.get(processor - 1);
 	}
 
 	@Override
@@ -122,5 +133,43 @@ public final class ScheduleFromFile implements Schedule {
 				.mapToInt(x -> x.endTime)		//Extracts the endTime from each allocation
 				.max()							//Gets the maximum endTime
 				.orElse(0);						//If there are no items return 0
+	}
+	
+	@Override
+	public String toString() {
+		return "S: " + taskLists.toString() + "(" + getTotalRuntime() + ")";
+	}
+	
+	/** Two schedules are considered equal if the two graphs are equal and the processors have the same named tasks in the same order on them. */
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Schedule)) {
+			return false;
+		}
+		
+		Schedule other = (Schedule) obj;
+		
+		if(getNumberOfUsedProcessors() != other.getNumberOfUsedProcessors() || !graph.equals(other.getGraph())) {
+			return false;
+		}
+		
+		for(int i = 1; i <= getNumberOfUsedProcessors(); i++) {
+			List<Task> listA = getTasksOnProcessor(i);
+			List<Task> listB = other.getTasksOnProcessor(i);
+			
+			if(listA.size() != listB.size())
+				return false;
+			
+			Iterator<Task> iterA = listA.iterator();
+			Iterator<Task> iterB = listB.iterator();
+			
+			for(; iterA.hasNext(); ) {
+				if(!iterA.next().getName().equals(iterB.next().getName())) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	}
 }

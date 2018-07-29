@@ -67,7 +67,8 @@ task generateDotFiles(type: Exec) {
 }
 
 task cleanDotFiles(type: Delete) {
-	delete 'dataset'
+	delete 'dataset/output'
+	delete 'dataset/input'
 }
 
 task rebuildDotFiles {
@@ -75,5 +76,3 @@ task rebuildDotFiles {
 	dependsOn 'generateDotFiles'
 	generateDotFiles.mustRunAfter 'cleanDotFiles'
 }
-
-clean.dependsOn cleanDotFiles

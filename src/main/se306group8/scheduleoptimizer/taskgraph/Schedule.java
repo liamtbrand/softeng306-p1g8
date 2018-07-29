@@ -22,7 +22,7 @@ public interface Schedule extends Iterable<List<Task>> {
 	/**
 	 * Gets the list of tasks scheduled on a particular processor.
 	 * 
-	 * @param processor The processor number to query. Must be positive and less than the number of used processors.
+	 * @param processor The processor number to query. Must be positive and less than or equal to the number of used processors.
 	 * @return The list of tasks. This list will not be empty.
 	 */
 	public List<Task> getTasksOnProcessor(int processor);
