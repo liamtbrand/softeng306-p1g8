@@ -101,7 +101,9 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 	 * @return
 	 */
 	private int timeAtPosition(Task task, int processor) {
-		int startTime = 0;
+		
+		//in case the task before is not a dependency
+		int startTime = processorEndtime[processor];
 
 		for (Dependency dep : task.getParents()) {
 			Task parent = dep.getSource();

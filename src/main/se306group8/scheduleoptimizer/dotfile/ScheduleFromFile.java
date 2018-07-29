@@ -39,7 +39,7 @@ public final class ScheduleFromFile implements Schedule {
 	 * @param taskLists The list of tasks that is assigned to each processor. Each task must be included in the graph, and each task must
 	 *        be used once and only once.
 	 */
-	ScheduleFromFile(TaskGraph graph, List<List<Task>> taskLists) {
+	public ScheduleFromFile(TaskGraph graph, List<List<Task>> taskLists) {
 		assert graph != null && taskLists != null;
 		
 		this.graph = graph;
