@@ -33,7 +33,7 @@ public class TestGreedy {
 		List<Task> tasks= graph.getAll();
 		for (Task t:tasks) {
 			assertEquals(s1.getStartTime(t),s2.getStartTime(t));
-			//assertEquals(s1.getProcessorNumber(t),s2.getProcessorNumber(t));
+			assertEquals(s1.getProcessorNumber(t),s2.getProcessorNumber(t));
 		}
 	}
 	
