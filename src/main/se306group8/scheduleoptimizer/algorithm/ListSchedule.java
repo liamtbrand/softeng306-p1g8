@@ -72,7 +72,6 @@ public final class ListSchedule implements Schedule {
 		
 		for(int i = 0; i < maxProcessor; i++) {
 			sortedLists.add(new ArrayList<>());
-			result.add(new ArrayList<>());
 		}
 		
 		for(Entry<Task, ProcessorAllocation> entry : allocation.entrySet()) {
