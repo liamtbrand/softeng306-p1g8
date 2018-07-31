@@ -1,10 +1,16 @@
-package se306group8.scheduleoptimizer.dotfile;
+package se306group8.scheduleoptimizer.algorithm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
@@ -13,16 +19,18 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 /**
  * Represents an allocation of tasks to different processors in a specific order. 
+ * This may not be complete, as it is often used to view partial solutions.
  * 
- * This is the result object that is returned from the algorithm.
+ * This is a simple implementation of schedule that takes stores a mapping of tasks to a processorAllocation
  */
-public final class ScheduleFromFile implements Schedule {
-	private class ProcessAllocation {
-		final int startTime;
-		final int processor;
-		final int endTime;
+public final class ListSchedule implements Schedule {
+	/** This class represents an allocation for a single task. It is used as an input to one of the constructors */
+	public static class ProcessorAllocation {
+		public final int startTime;
+		public final int processor;
+		public final int endTime;
 		
-		public ProcessAllocation(int startTime, int endTime, int processor) {
+		public ProcessorAllocation(int startTime, int endTime, int processor) {
 			this.startTime = startTime;
 			this.endTime = endTime;
 			this.processor = processor;
@@ -36,7 +44,7 @@ public final class ScheduleFromFile implements Schedule {
 	
 	private final TaskGraph graph;
 	private final List<List<Task>> taskLists;
-	private final Map<Task, ProcessAllocation> allocations; 
+	private final Map<Task, ProcessorAllocation> allocations;
 	
 	/**
 	 * Creates a schedule.
@@ -45,16 +53,84 @@ public final class ScheduleFromFile implements Schedule {
 	 * @param taskLists The list of tasks that is assigned to each processor. Each task must be included in the graph, and each task must
 	 *        be used once and only once.
 	 */
-	ScheduleFromFile(TaskGraph graph, List<List<Task>> taskLists) {
-		assert graph != null && taskLists != null;
+	public ListSchedule(TaskGraph graph, List<List<Task>> taskLists) {
+		this(graph, new HashMap<>(), taskLists);
+	}
+
+	public ListSchedule(TaskGraph graph, Map<Task, ProcessorAllocation> allocation) {
+		this(graph, allocation, convertToLists(allocation));
+	}
+
+	private static List<List<Task>> convertToLists(Map<Task, ProcessorAllocation> allocation) {
+		List<List<Entry<Task, ProcessorAllocation>>> sortedLists = new ArrayList<>();
+		List<List<Task>> result = new ArrayList<>();
+		
+		int maxProcessor = 0;
+		for(ProcessorAllocation value : allocation.values()) {
+			maxProcessor = Math.max(maxProcessor, value.processor);
+		}
+		
+		for(int i = 0; i < maxProcessor; i++) {
+			sortedLists.add(new ArrayList<>());
+		}
+		
+		for(Entry<Task, ProcessorAllocation> entry : allocation.entrySet()) {
+			sortedLists.get(entry.getValue().processor - 1).add(entry);
+		}
+		
+		for(List<Entry<Task, ProcessorAllocation>> list : sortedLists) {
+			list.sort((a, b) -> a.getValue().startTime - b.getValue().startTime);
+			
+			result.add(list.stream()
+			.map(Entry::getKey)
+			.collect(Collectors.toList()));
+		}
+		
+		return result;
+	}
+
+	protected ListSchedule(TaskGraph graph, Map<Task, ProcessorAllocation> allocation, List<List<Task>> taskLists) {
+		assert graph != null && taskLists != null && allocation != null && checkConsistency(graph, allocation, taskLists);
 		
 		this.graph = graph;
 		this.taskLists = taskLists;
-		allocations = new HashMap<>();
+		allocations = allocation;
+	}
+	
+	/** This method checks that all 3 arguments are consistent with each other in their representation. */
+	private static boolean checkConsistency(TaskGraph graph, Map<Task, ProcessorAllocation> allocation, List<List<Task>> taskLists) {
+		IdentityHashMap<Task, Object> identityHashSet = new IdentityHashMap<>();
+		Object value = new Object();
+		for(Task t : graph.getAll()) {
+			identityHashSet.put(t, value);
+		}
+		
+		//Check if the tasks are consistent.
+		//GRAPH >= allocation
+		if(!identityHashSet.keySet().containsAll(allocation.keySet())) {
+			return false;
+		}
+		
+		HashSet<Task> taskListTasks = new HashSet<>();
+		for(List<Task> list : taskLists) {
+			taskListTasks.addAll(list);
+		}
+		
+		//GRAPH >= taskList
+		if(!identityHashSet.keySet().containsAll(taskListTasks)) {
+			return false;
+		}
+		
+		//taskList >= allocation
+		if(!taskListTasks.containsAll(allocation.keySet())) {
+			return false;
+		}
+		
+		return true;
 	}
 
-	private ProcessAllocation computeAllocation(Task task) {
-		ProcessAllocation alloc = allocations.get(task);
+	private ProcessorAllocation computeAllocation(Task task) {
+		ProcessorAllocation alloc = allocations.get(task);
 		
 		if(alloc != null) {
 			return alloc;
@@ -80,7 +156,7 @@ public final class ScheduleFromFile implements Schedule {
 			int time;
 			
 			Task otherTask = dep.getSource();
-			ProcessAllocation otherAlloc = computeAllocation(otherTask);
+			ProcessorAllocation otherAlloc = computeAllocation(otherTask);
 			
 			if(processor != otherAlloc.processor) {
 				time = otherAlloc.startTime + otherTask.getCost() + dep.getCommunicationCost();
@@ -93,7 +169,7 @@ public final class ScheduleFromFile implements Schedule {
 			}
 		}
 		
-		alloc = new ProcessAllocation(startTime, startTime + task.getCost(), processor);
+		alloc = new ProcessorAllocation(startTime, startTime + task.getCost(), processor);
 		allocations.put(task, alloc);
 		
 		return alloc;
@@ -138,6 +214,11 @@ public final class ScheduleFromFile implements Schedule {
 	@Override
 	public String toString() {
 		return "S: " + taskLists.toString() + "(" + getTotalRuntime() + ")";
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(graph, taskLists);
 	}
 	
 	/** Two schedules are considered equal if the two graphs are equal and the processors have the same named tasks in the same order on them. */
