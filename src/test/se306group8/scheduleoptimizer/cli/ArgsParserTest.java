@@ -1,4 +1,4 @@
-package se306group8.scheduleoptimizer;
+package se306group8.scheduleoptimizer.cli;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -17,6 +17,29 @@ public class ArgsParserTest {
 	@BeforeAll
 	static void setup() {
 		parser = new ArgsParser();
+	}
+	
+	@Test
+	void testMissingCompulsoryArgumentsIsInvalid() {
+		
+		String[] args = {};
+		
+		try {
+			parser.parse(args);
+			fail();
+		} catch (ArgumentException e) {
+			assertEquals("Must pass arguments for parameters INPUT.dot and P.",e.getMessage());
+		}
+		
+		String[] args1 = { "myfile" };
+		
+		try {
+			parser.parse(args1);
+			fail();
+		} catch (ArgumentException e) {
+			assertEquals("Must pass arguments for parameters INPUT.dot and P.",e.getMessage());
+		}
+		
 	}
 	
 	@Test
@@ -55,7 +78,7 @@ public class ArgsParserTest {
 		String[] args = { "somefile", "1" };
 		
 		try {
-			Config config = parser.parse(args);
+			parser.parse(args);
 			fail();
 		} catch (ArgumentException e) {
 			assertEquals("Input file must be a .dot file.",e.getMessage());
@@ -69,7 +92,7 @@ public class ArgsParserTest {
 		String[] args = { "infile.dot", "foo" };
 		
 		try {
-			Config config = parser.parse(args);
+			parser.parse(args);
 			fail();
 		} catch (ArgumentException e) {
 			assertEquals("P must be an integer.",e.getMessage());
@@ -83,7 +106,7 @@ public class ArgsParserTest {
 		String[] args = { "infile.dot", "0" };
 		
 		try {
-			Config config = parser.parse(args);
+			parser.parse(args);
 			fail();
 		} catch (ArgumentException e) {
 			assertEquals("P must be a +ve integer value.",e.getMessage());
@@ -92,7 +115,7 @@ public class ArgsParserTest {
 		String[] args1 = { "infile.dot", "-1" };
 		
 		try {
-			Config config = parser.parse(args1);
+			parser.parse(args1);
 			fail();
 		} catch (ArgumentException e) {
 			assertEquals("P must be a +ve integer value.",e.getMessage());
@@ -106,7 +129,7 @@ public class ArgsParserTest {
 		String[] args = { "infile.dot", "1", "-p", "foo" };
 		
 		try {
-			Config config = parser.parse(args);
+			parser.parse(args);
 			fail();
 		} catch (ArgumentException e) {
 			assertEquals("N must be an integer.",e.getMessage());
@@ -120,7 +143,7 @@ public class ArgsParserTest {
 		String[] args = { "infile.dot", "1", "-p", "0" };
 		
 		try {
-			Config config = parser.parse(args);
+			parser.parse(args);
 			fail();
 		} catch (ArgumentException e) {
 			assertEquals("N must be a +ve integer value.",e.getMessage());
@@ -129,7 +152,7 @@ public class ArgsParserTest {
 		String[] args1 = { "infile.dot", "1", "-p", "-1" };
 		
 		try {
-			Config config = parser.parse(args1);
+			parser.parse(args1);
 			fail();
 		} catch (ArgumentException e) {
 			assertEquals("N must be a +ve integer value.",e.getMessage());
@@ -143,7 +166,7 @@ public class ArgsParserTest {
 		String[] args = { "infile.dot", "1", "-p" };
 		
 		try {
-			Config config = parser.parse(args);
+			parser.parse(args);
 			fail();
 		} catch (ArgumentException e) {
 			assertEquals("Unable to parse malformed arguments.",e.getMessage());
@@ -151,6 +174,94 @@ public class ArgsParserTest {
 		
 	}
 	
+	@Test
+	void testVisualizationFlag() throws ArgumentException {
+		
+		String[] args = { "INPUT.dot", "1", "-v" };
+		
+		Config config = parser.parse(args);
+		
+		assertEquals("INPUT.dot",config.inputFile());
+		assertEquals(1,config.P());
+		assertEquals(1,config.N());
+		assertEquals(true,config.visualize());
+		assertEquals("INPUT-output.dot",config.outputFile());
+		
+	}
+	
+	@Test
+	void testCustomOutputFile() throws ArgumentException {
+		
+		String[] args = { "INPUT.dot", "1", "-o" };
+		
+		Config config;
+		
+		try {
+			config = parser.parse(args);
+			fail();
+		} catch (ArgumentException e) {
+			assertEquals("Unable to parse malformed arguments.",e.getMessage());
+		}
+		
+		String[] args1 = { "infile.dot", "1", "-o", "outfile" };
+		
+		config = parser.parse(args1);
+		
+		assertEquals("infile.dot",config.inputFile());
+		assertEquals(1,config.P());
+		assertEquals(1,config.N());
+		assertEquals(false,config.visualize());
+		assertEquals("outfile",config.outputFile());
+		
+	}
+	
+	@Test
+	void testAdvancedConfigurationOne() throws ArgumentException {
+		
+		String[] args = { "advanced.dot", "5", "-p", "7", "-v" };
+		
+		Config config;
+		
+		config = parser.parse(args);
+		
+		assertEquals("advanced.dot",config.inputFile());
+		assertEquals(5,config.P());
+		assertEquals(7,config.N());
+		assertEquals(true,config.visualize());
+		assertEquals("advanced-output.dot",config.outputFile());
+		
+	}
+	
+	@Test
+	void testAdvancedConfigurationTwo() throws ArgumentException {
+		
+		String[] args = { "myadvanced.dot", "4", "-o", "myoutput.dot", "-p", "12", "-v" };
+		
+		Config config;
+		
+		config = parser.parse(args);
+		
+		assertEquals("myadvanced.dot",config.inputFile());
+		assertEquals(4,config.P());
+		assertEquals(12,config.N());
+		assertEquals(true,config.visualize());
+		assertEquals("myoutput.dot",config.outputFile());
+		
+	}
+	
+	@Test
+	void testInvalidAdvancedConfiguration() throws ArgumentException {
+		
+		String[] args = { "invalid.dot", "4", "-o", "-p", "12", "-v" };
+		
+		try {
+			parser.parse(args);
+			fail();
+		} catch (ArgumentException e) {
+			assertEquals("Unable to parse malformed arguments.",e.getMessage());
+		}
+		
+	}
 	
 	
 }
