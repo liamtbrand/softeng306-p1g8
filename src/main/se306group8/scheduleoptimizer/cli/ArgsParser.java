@@ -1,4 +1,4 @@
-package se306group8.scheduleoptimizer;
+package se306group8.scheduleoptimizer.cli;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -10,8 +10,21 @@ import se306group8.scheduleoptimizer.config.Config;
 import se306group8.scheduleoptimizer.config.ConfigBuilder;
 import se306group8.scheduleoptimizer.config.ArgumentException;
 
+/**
+ * 
+ * A parser to parse the CLI arguments into a Config object.
+ *
+ */
 public class ArgsParser {
 	
+	/**
+	 * Calling parse will return a Config object which represents the configuration to be used for this search.
+	 * If an ArgumentException is thrown, the Config object was unable to be created successfully.
+	 * 
+	 * @param args - The CLI arguments. These should be passed in from main(String[] args).
+	 * @return Config - An object representing the configuration for running the search.
+	 * @throws ArgumentException - An exception indicating that a Config object could not be created. The search should be aborted.
+	 */
 	public Config parse(String[] args) throws ArgumentException {
 		
 		/*

@@ -1,5 +1,6 @@
 package se306group8.scheduleoptimizer;
 
+import se306group8.scheduleoptimizer.cli.ArgsParser;
 import se306group8.scheduleoptimizer.config.ArgumentException;
 import se306group8.scheduleoptimizer.config.Config;
 

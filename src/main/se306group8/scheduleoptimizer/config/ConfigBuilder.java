@@ -1,5 +1,11 @@
 package se306group8.scheduleoptimizer.config;
 
+/**
+ * A builder that is used to build a Config object.
+ * ConfigBuilder will perform check on the configuration being applied.
+ * If there are issues, the set methods will throw ArgumentException.
+ *
+ */
 public class ConfigBuilder {
 	
 	private DefaultConfig config;

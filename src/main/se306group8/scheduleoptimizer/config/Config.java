@@ -1,5 +1,10 @@
 package se306group8.scheduleoptimizer.config;
 
+/**
+ * The interface for the Config objects.
+ * This interface provides access to a configuration object representing the arguments parsed by ArgsParser.
+ *
+ */
 public interface Config {
 
 	/**

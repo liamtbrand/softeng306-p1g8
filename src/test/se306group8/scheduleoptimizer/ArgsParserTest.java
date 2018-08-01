@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import se306group8.scheduleoptimizer.cli.ArgsParser;
 import se306group8.scheduleoptimizer.config.ArgumentException;
 import se306group8.scheduleoptimizer.config.Config;
 

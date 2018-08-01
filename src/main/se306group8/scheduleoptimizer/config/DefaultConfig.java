@@ -1,5 +1,12 @@
 package se306group8.scheduleoptimizer.config;
 
+/**
+ * The default implementation of the Config interface.
+ * This provides access to internal fields by conforming to the interface.
+ * It also sets up the default values for a Config object.
+ * To create a Config object you are recommended to use ConfigBuilder.
+ *
+ */
 public class DefaultConfig implements Config {
 	
 	protected String inputFile = "INPUT.dot";			// INPUT file.
