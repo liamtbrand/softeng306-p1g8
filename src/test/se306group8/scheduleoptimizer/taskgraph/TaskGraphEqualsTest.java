@@ -1,5 +1,7 @@
 package se306group8.scheduleoptimizer.taskgraph;
 
+import java.util.Collection;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -51,5 +53,69 @@ class TaskGraphEqualsTest {
 				Assertions.assertEquals(t1.equals(t2), t1 == t2);
 			}
 		}
+	}
+	
+	/** Check equality of two tasks with different costs, dependencies and same names */
+	@Test
+	void testNotEqualsCosts() {
+		TaskGraphBuilder builder = new TaskGraphBuilder();
+		builder.addTask("a", 1);
+		builder.addTask("a", 2);
+		
+		TaskGraph graph = builder.buildGraph();
+		
+		for(Task t1 : graph.getAll()) {
+			for(Task t2 : graph.getAll()) {
+				Assertions.assertEquals(t1.equals(t2), t1 == t2);
+			}
+		}
+	}
+	
+	/** Check the communication cost of two nodes known to be equal, is rendered equal */
+	@Test
+	void testCommunicationCostsEqual() {
+		Task a = null;
+		Task b = null;
+		Task c = null;
+		Task d = null;
+		
+		// Assign task objects as specified in Tester graph
+		for(Task t : TestGraphUtils.buildTestGraphA().getAll()) {
+			switch(t.getName()) {
+				case "a":
+					a = t;
+					break;
+				case "b":
+					b = t;
+					break;
+				case "c":
+					c = t;
+					break;
+				case "d":
+					d = t;
+					break;
+			}
+		}	
+		Assertions.assertEquals(a.getCost(), d.getCost());
+		Assertions.assertEquals(b.getCost(), c.getCost());
+	}
+	
+	/** Check that the dependency attributes of a graph are equal to what they should be */
+	@Test
+	void dependencyEquivalenceTest() {
+		
+		TaskGraph tg = TestGraphUtils.buildTestGraphA();
+		Collection<Dependency> deps = tg.getEdges();
+		
+		
+		for (Dependency d : deps) {
+			if ((d.getSource().getName() == "a") && (d.getTarget().getName() == "b")) {
+				Assertions.assertEquals(d.getCommunicationCost(), 1);
+			}
+			
+			if ((d.getSource().getName() == "c") && (d.getTarget().getName() == "d")) {
+				Assertions.assertEquals(d.toString(), "c -> d");
+			}
+		}		
 	}
 }

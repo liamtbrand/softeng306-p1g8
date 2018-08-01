@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import se306group8.scheduleoptimizer.algorithm.ListSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
@@ -23,6 +24,6 @@ public class TestScheduleUtils {
 			lists.add(Arrays.asList(t));
 		}
 		
-		return new ScheduleFromFile(graph, lists);
+		return new ListSchedule(graph, lists);
 	}
 }
