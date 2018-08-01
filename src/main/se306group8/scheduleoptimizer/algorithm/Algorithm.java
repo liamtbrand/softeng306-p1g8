@@ -21,7 +21,7 @@ public interface Algorithm {
 	/**
 	 * Sets the monitor that is used to display intermediate results.
 	 * 
-	 * @param monitor The monitor to use, it this is null the monitor is un-set.
+	 * @param monitor The monitor to use, if this is null the monitor is un-set.
 	 */
 	void setMonitor(RuntimeMonitor monitor);
 }
