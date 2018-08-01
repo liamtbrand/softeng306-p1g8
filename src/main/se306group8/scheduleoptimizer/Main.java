@@ -1,5 +1,6 @@
 package se306group8.scheduleoptimizer;
 
+import se306group8.scheduleoptimizer.config.ArgumentException;
 import se306group8.scheduleoptimizer.config.Config;
 
 public class Main {
@@ -7,11 +8,13 @@ public class Main {
 	public static void main(String[] args) {
 		
 		ArgsParser parser = new ArgsParser();
-		Config config = parser.parse(args);
+		Config config;
 		
-		if(config == null) {
-			System.out.println("Something went wrong when parsing the config.");
-			return;
+		try {
+			config = parser.parse(args);
+		} catch (ArgumentException e) {
+			System.out.println("Problem parsing arguments: "+e.getMessage());
+			return; // Stop prematurely.
 		}
 
 		System.out.println("inputFile = \""+config.inputFile()+"\"");

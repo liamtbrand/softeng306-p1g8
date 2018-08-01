@@ -1,8 +1,5 @@
 package se306group8.scheduleoptimizer;
 
-import java.util.List;
-import java.util.logging.Logger;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -11,12 +8,23 @@ import org.apache.commons.cli.ParseException;
 
 import se306group8.scheduleoptimizer.config.Config;
 import se306group8.scheduleoptimizer.config.ConfigBuilder;
+import se306group8.scheduleoptimizer.config.ArgumentException;
 
 public class ArgsParser {
 	
-	private static final Logger LOGGER = Logger.getLogger( ArgsParser.class.getName() );
-	
-	public Config parse(String[] args) {
+	public Config parse(String[] args) throws ArgumentException {
+		
+		/*
+		 * Arguments will come in the format:
+		 * 
+		 * java −jar scheduler.jar INPUT.dot P [OPTION]
+		 * INPUT.dot	a task graph with integer weights in dot format
+		 * P			number of processors to schedule the INPUT graph on
+		 * 
+		 * -p N			use N cores for execution in parallel (default is sequential)
+		 * -v			visualize the search
+		 * -o OUTPUT	output file is named OUTPUT (default is INPUT−output.dot)
+		 */
 		
 		Options options = new Options();
 		
@@ -31,56 +39,52 @@ public class ArgsParser {
 		
 		ConfigBuilder builder = new ConfigBuilder();
 		
+		// Grab the compulsory arguments.
+		
+		if(args.length < 2) {
+			throw new ArgumentException("Must pass arguments for parameters INPUT.dot and P.");
+		}
+		
+		String[] argsToParse = new String[args.length-2];
+		
+		for(int i = 0; i < argsToParse.length; i++) {
+			argsToParse[i] = args[i+2];
+		}
+		
 		// Try to parse the arguments:
 		
 		try {
-			cmd = parser.parse(options, args);
+			cmd = parser.parse(options, argsToParse);
 		} catch (ParseException e) {
-			LOGGER.info("Unable to parse arguments.");
-			LOGGER.severe(e.getStackTrace().toString());
-			return null;
+			throw new ArgumentException("Unable to parse malformed arguments.");
 		}
-		
-		List<String> arguments = cmd.getArgList();
 		
 		// Make sure we have the correct number of arguments remaining.
 		
-		if(arguments.size() != 2) {
-			LOGGER.info("Must pass arguments for parameters INPUT.dot and P.");
-			return null;
+		if(cmd.getArgList().size() != 0) {
+			throw new ArgumentException("Unknown arguments.");
 		}
 		
 		// Get our input file name.
 		
-		String inputFile = arguments.get(0);
-		if(!inputFile.substring(inputFile.length()-4, inputFile.length()).equals(".dot")) {
-			LOGGER.info("Input file must be a .dot file.");
-			return null;
-		}
-		builder.setInputFile(inputFile);
+		builder.setInputFile(args[0]);
 		
 		// Get the number of processors, P.
 		
-		int P;
 		try {
-			P = Integer.parseInt(arguments.get(1));
+			builder.setP(Integer.parseInt(args[1]));
 		} catch (NumberFormatException e) {
-			LOGGER.info("P must be an integer.");
-			return null;
+			throw new ArgumentException("P must be an integer.");
 		}
-		builder.setP(P);
 		
 		// Get the number of cores to use, N.
 		
 		if(cmd.hasOption("p")) {
-			int N;
 			try {
-				N = Integer.parseInt(cmd.getOptionValue("p"));
+				builder.setN(Integer.parseInt(cmd.getOptionValue("p")));
 			} catch (NumberFormatException e) {
-				LOGGER.info("N must be an integer.");
-				return null;
+				throw new ArgumentException("N must be an integer.");
 			}
-			builder.setN(N);
 		}
 		
 		builder.setVisualize(cmd.hasOption("v"));
