@@ -109,5 +109,26 @@ public class ArgsParser {
 		return builder.build();
 		
 	}
+	
+	private String getJarFileName() {
+		return new java.io.File(ArgsParser.class.getProtectionDomain()
+				.getCodeSource()
+				.getLocation()
+				.getPath())
+				.getName();
+	}
+
+	public String getHelp() {
+		return
+		"Usage:\n"+
+		"java -jar "+getJarFileName()+" INPUT.dot P [OPTIONS]\n" +
+		"INPUT.dot    A task graph with integer weights in dot format.\n" +
+		"P            Number of processors to schedule the INPUT graph on.\n"+
+		"\n"+
+		"Optional:\n"+
+		"-p N         Use N cores for execution in parallel (default is sequential).\n"+
+		"-v           Visualise the search.\n"+
+		"-o OUTPUT    Output file is named OUTPUT (default is INPUT−output.dot).";
+	}
 
 }
