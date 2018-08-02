@@ -14,7 +14,7 @@ repositories {
 	mavenCentral()
 }
 
-mainClassName = 'INSERT MAIN CLASS HERE'
+mainClassName = 'Main'
 
 sourceSets { 
 	main {
@@ -28,6 +28,7 @@ sourceSets {
 }
 
 dependencies {
+	compile group: 'commons-cli', name: 'commons-cli', version:'1.4'
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
 	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.2.0'
 }
