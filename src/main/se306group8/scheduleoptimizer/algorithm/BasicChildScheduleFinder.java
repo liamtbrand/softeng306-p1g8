@@ -39,9 +39,11 @@ public class BasicChildScheduleFinder implements ChildScheduleFinder {
 	private List<Task> getNextTasks(TreeSchedule schedule) {
 		
 		List<Task> nextTasks = new ArrayList<Task>();
-		
-	// TODO
-		
+		for (Task task : schedule.getGraph().getAll()) {
+			if (schedule.getAlloctionFor(task) != null) {
+				nextTasks.add(task);
+			}
+		}
 		return nextTasks;
 	}
 	
