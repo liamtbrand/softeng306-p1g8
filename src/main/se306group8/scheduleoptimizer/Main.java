@@ -27,6 +27,7 @@ public class Main {
 			config = parser.parse(args);
 		} catch (ArgumentException e) {
 			System.out.println("Problem parsing arguments: "+e.getMessage());
+			System.out.println(parser.getHelp());
 			return; // Stop prematurely.
 		}
 		

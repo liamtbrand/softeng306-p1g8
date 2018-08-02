@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import se306group8.scheduleoptimizer.algorithm.ListSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilder;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 class DOTFileHandlerTest {
@@ -59,6 +62,47 @@ class DOTFileHandlerTest {
 		Path schedule = Paths.get("res", "test", "testgraphs", "a_schedule.dot");
 		
 		Assertions.assertEquals(TestScheduleUtils.createTestScheduleA(), handler.readSchedule(schedule));
+	}
+	
+	@Test
+	void testTwiceWrite() throws IOException {
+		TaskGraph graph = new TaskGraphBuilder()
+				.addTask("a", 1)
+				.addTask("b", 2)
+				.addTask("c", 1)
+				.addTask("d", 2)
+				.addTask("e", 1)
+				.addTask("ea", 1)
+				.addTask("eb", 1)
+				.addTask("ec", 1)
+				.addTask("ed", 1)
+				.addTask("ee", 1)
+				.addTask("ef", 1)
+				.addTask("eg", 1)
+				.addTask("eh", 1)
+				.addTask("ei", 1)
+				.addTask("ej", 1)
+				.addTask("ek", 1)
+				.addTask("el", 1)
+				.addTask("em", 1)
+				.addTask("en", 1)
+				.addTask("eo", 1)
+				.addTask("ep", 1)
+				.addTask("eq", 1)
+				.addTask("er", 1)
+				.addTask("es", 1)
+				.addTask("et", 1)
+				.addTask("f", 3).buildGraph();
+		
+		ListSchedule schedule = new ListSchedule(graph, Arrays.asList(graph.getAll()));
+		
+		Path tmpFolder = Files.createTempDirectory("testGraphs");
+		DOTFileHandler handler = new DOTFileHandler();
+		
+		handler.write(tmpFolder.resolve("double-write.dot"), schedule);
+		handler.write(tmpFolder.resolve("double-write.dot"), TestScheduleUtils.createTestScheduleA());
+		
+		Assertions.assertEquals(TestScheduleUtils.createTestScheduleA(), handler.readSchedule(tmpFolder.resolve("double-write.dot")));
 	}
 	
 	@Test

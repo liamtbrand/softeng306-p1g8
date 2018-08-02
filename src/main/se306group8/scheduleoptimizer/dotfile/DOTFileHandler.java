@@ -125,6 +125,8 @@ public class DOTFileHandler {
 		}
 		
 		readStatementList(iter, builder, processorMapping);
+		
+		assert iter.next().type == Token.Type.EOF;
 	}
 
 	/** Reads the list of statements, that may or may not be separated by semi-colons. If processorMapping is not null
@@ -377,7 +379,7 @@ public class DOTFileHandler {
 
 		output.append("}").append(System.lineSeparator());
 
-		try (BufferedWriter reader = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
+		try (BufferedWriter reader = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 			reader.write(output.toString());
 		}
 	}
