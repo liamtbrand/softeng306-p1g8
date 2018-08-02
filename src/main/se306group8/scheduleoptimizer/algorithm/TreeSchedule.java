@@ -19,6 +19,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	
 	//Constructed fields
 	private final TreeSchedule parent;
+	
+	/** If this is null then this is the empty schedule */
 	private final Task task;
 	private final int processor;
 	private final TaskGraph graph;
@@ -31,14 +33,17 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private int lowerBound;
 	private int idleTime;
 	
-	public TreeSchedule(TaskGraph graph, Task task, int processor, MinimumHeuristic heuristic) {
+	public TreeSchedule(TaskGraph graph, MinimumHeuristic heuristic) {
 		this.graph = graph;
-		this.task = task;
-		this.processor = processor;
+		this.task = null;
+		this.processor = 0;
 		this.parent = null;
 		this.heuristic = heuristic;
 		
-		calculateFields();
+		startTime = 0;
+		endTime = 0;
+		lowerBound = 0;
+		idleTime = 0;
 	}
 	
 	public TreeSchedule(TaskGraph graph, Task task, int processor, TreeSchedule parent) {
@@ -57,11 +62,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		
 		Map<Task, Dependency> parents = new HashMap<>();
 		
-		if(parent == null) {
-			idleTime = 0;
-		} else {
-			idleTime = parent.idleTime;
-		}
+		idleTime = parent.idleTime;
 		
 		startTime = 0;
 		int endOfPreviousTask = 0;
@@ -70,7 +71,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			parents.put(link.getSource(), link);
 		}
 		
-		for(TreeSchedule s = parent; s != null; s = s.parent) {
+		for(TreeSchedule s = parent; !s.isEmpty(); s = s.parent) {
 			if(s.processor == processor) {
 				//Only set it if this is the first mention of that processor
 				if(startTime == 0) {
@@ -96,6 +97,11 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		lowerBound = heuristic.estimate(this);
 	}
 	
+	/** Returns true if the schedule is empty */
+	public boolean isEmpty() {
+		return task == null;
+	}
+	
 	/** Returns the amount of time wasted */
 	public int getIdleTime() {
 		return idleTime;
@@ -104,7 +110,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	/** Returns the ProcessorAllocation instance that this task was scheduled on.
 	 * This returns null if the task has not been scheduled. */
 	public ProcessorAllocation getAlloctionFor(Task t) {
-		for(TreeSchedule s = this; s != null; s = s.parent) {
+		for(TreeSchedule s = this; !s.isEmpty(); s = s.parent) {
 			if(s.task.equals(t)) {
 				return new ProcessorAllocation(s.startTime, s.endTime, s.processor);
 			}
@@ -114,8 +120,12 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	}
 	
 	public List<List<Task>> computeTaskLists() {
+		if(isEmpty()) {
+			return new ArrayList<>();
+		}
+		
 		List<List<Task>> result;
-		if(parent == null) {
+		if(parent.isEmpty()) {
 			result = new ArrayList<>();
 		} else {
 			result = parent.computeTaskLists();
@@ -128,6 +138,15 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		result.get(processor).add(task);
 		
 		return result;
+	}
+	
+	public boolean isComplete() {
+		int tasks = 0;
+		for(TreeSchedule s = this; !s.isEmpty(); s = s.parent) {
+			tasks++;
+		}
+		
+		return tasks == graph.getAll().size();
 	}
 	
 	/** Returns the full schedule. This may be null if this solution is not a full solution. */
