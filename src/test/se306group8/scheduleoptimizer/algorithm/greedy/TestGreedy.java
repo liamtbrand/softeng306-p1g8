@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
-import se306group8.scheduleoptimizer.dotfile.ScheduleFromFile;
+import se306group8.scheduleoptimizer.algorithm.ListSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
@@ -25,7 +25,7 @@ public class TestGreedy {
 		processorAllocation.add(s1.getTasksOnProcessor(1));
 		processorAllocation.add(s1.getTasksOnProcessor(2));
 		
-		ScheduleFromFile s2 = new ScheduleFromFile(graph, processorAllocation);
+		ListSchedule s2 = new ListSchedule(graph, processorAllocation);
 		
 		assertEquals(s1.getNumberOfUsedProcessors(),s2.getNumberOfUsedProcessors());
 		assertEquals(s1.getTotalRuntime(),s2.getTotalRuntime());
