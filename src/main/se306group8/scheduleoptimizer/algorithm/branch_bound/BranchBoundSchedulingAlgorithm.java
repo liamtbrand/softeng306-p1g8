@@ -22,7 +22,6 @@ public class BranchBoundSchedulingAlgorithm implements Algorithm {
 	}
 
 	private Schedule branchAndBound(TreeSchedule schedule, Schedule best) {
-		
 		// Get all children in order from best lower bound to worst
 		// TODO add processor number to GCSF
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder();
