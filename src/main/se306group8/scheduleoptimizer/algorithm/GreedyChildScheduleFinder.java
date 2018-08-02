@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Set;
 
-import se306group8.scheduleoptimizer.algorithm.greedy.ProcessAllocation;
+import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
 import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
@@ -33,7 +33,8 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder{
 
 	public GreedyChildScheduleFinder(int numProcessors) {
 		this.numProcessors = numProcessors;
-		// allocated = new HashSet<Task>();
+		allocated = new HashSet<Task>();
+		allocatable = new ArrayList<Task>();
 	}
 
 	@Override
@@ -58,21 +59,25 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder{
 
 		// use the schedule to get timing info
 		// I didn't use getFullSchedule() because comments says it may return null
-		Schedule parentSchedule = new ListSchedule(schedule.getGraph(), schedule.computeTaskLists());
+		//Schedule parentSchedule = new ListSchedule(schedule.getGraph(), schedule.computeTaskLists());
 		for (Task task : allocatable) {
-			children.addAll(greedyChildren(parentSchedule, task));
+			children.addAll(greedyChildren(lastSchedule, task));
 		}
 		
 		return children;
 
 	}
 
-	private List<TreeSchedule> greedyChildren(Schedule parentSchedule, Task task) {
+	private List<TreeSchedule> greedyChildren(TreeSchedule parentSchedule, Task task) {
 		
-		int usedProcessors = parentSchedule.getNumberOfUsedProcessors();
-
-		// we don't need to allocate to two free processors
-		int processorsToAllocate = (usedProcessors < numProcessors) ? usedProcessors + 1 : numProcessors;
+		int processorsToAllocate = 0;
+		for (int p= 1;p<=numProcessors;p++) {
+			ProcessorAllocation pA =parentSchedule.getLastAllocationForProcessor(p);
+			processorsToAllocate++;
+			if (pA == null) {
+				break;
+			}
+		}
 
 		// low memory map [][0] is TreeSchedule [][1] is start time of new task
 		Object[][] startTimes = new Object[processorsToAllocate][2];
@@ -94,23 +99,33 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder{
 		return childrenSchedules;
 	}
 
-	private int computeStartTime(Schedule parentSchedule, Task task, int p) {
+	private int computeStartTime(TreeSchedule parentSchedule, Task task, int p) {
+		
+		ProcessorAllocation lastAllocation = lastSchedule.getLastAllocationForProcessor(p);
+		int processorEndtime;
+		if (lastAllocation == null) {
+			processorEndtime = 0;
+		}else {
+			processorEndtime= lastSchedule.getLastAllocationForProcessor(p).endTime;
+		}
+		
+		
 		// in case the task before is not a dependency
-		int startTime = processorEndtime[processor];
+		int startTime = processorEndtime;
 
 		for (Dependency dep : task.getParents()) {
 			Task parent = dep.getSource();
 
 			// because we looped by partial order the parent will already be allocated
-			ProcessAllocation parentAllocation = allocations.get(parent);
+			ProcessorAllocation parentAllocation = lastSchedule.getAlloctionFor(parent);
 			int time;
 
 			// time start rules
-			if (parentAllocation.processor == processor) {
-				time = processorEndtime[processor];
+			if (parentAllocation.processor == p) {
+				time = processorEndtime;
 			} else {
 				int comStart = parentAllocation.endTime + dep.getCommunicationCost();
-				time = (comStart > processorEndtime[processor]) ? comStart : processorEndtime[processor];
+				time = (comStart > processorEndtime) ? comStart : processorEndtime;
 			}
 
 			// we have to accommodate for the worst dependency
@@ -123,7 +138,7 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder{
 	}
 
 	private List<Task> computeAllocatableTasks(TreeSchedule schedule, Set<Task> allocated) {
-		if (schedule.getParent() == lastSchedule) {
+		if (schedule.getParent() == lastSchedule && lastSchedule != null) {
 			allocatable.remove(schedule.getMostRecentTask());
 		} else {
 			allocatable = new ArrayList<Task>();
