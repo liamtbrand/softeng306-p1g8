@@ -25,7 +25,7 @@ public class BranchBoundSchedulingAlgorithm implements Algorithm {
 		_bestSchedule = schedule;
 		List<List<Task>> taskLists = BranchAndBound(schedule);
 		return new ListSchedule(graph, taskLists);
-	} 
+	}
 
 	@Override
 	public void setMonitor(RuntimeMonitor monitor) {
