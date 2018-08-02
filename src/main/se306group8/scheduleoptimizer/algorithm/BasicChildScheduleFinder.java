@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
@@ -45,11 +46,28 @@ public class BasicChildScheduleFinder implements ChildScheduleFinder {
 	private List<Task> getNextTasks(TreeSchedule schedule) {
 		
 		List<Task> nextTasks = new ArrayList<Task>();
+		
 		for (Task task : schedule.getGraph().getAll()) {
-			if (schedule.getAlloctionFor(task) != null) {
+			if(schedule.getAlloctionFor(task) != null) {
+				continue;
+			}
+			
+			boolean canAllocate = true;
+			
+			for(Dependency parent : task.getParents()) {
+				Task parentTask = parent.getSource();
+				
+				if(schedule.getAlloctionFor(parentTask) == null) {
+					canAllocate = false;
+					break;
+				}
+			}
+			
+			if(canAllocate) {
 				nextTasks.add(task);
 			}
 		}
+		
 		return nextTasks;
 	}
 	
