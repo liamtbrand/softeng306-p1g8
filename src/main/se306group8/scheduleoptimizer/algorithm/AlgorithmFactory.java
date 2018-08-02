@@ -1,15 +1,15 @@
 package se306group8.scheduleoptimizer.algorithm;
 
+import se306group8.scheduleoptimizer.algorithm.greedy.GreedySchedulingAlgorithm;
+
 public class AlgorithmFactory {
-	
-	private int processors;
+	private final int processors;
 
 	public AlgorithmFactory(int processors) {
 		this.processors = processors;
 	}
 	
 	public Algorithm getAlgorithm() {
-		return null;
+		return new GreedySchedulingAlgorithm();
 	}
-	
 }
