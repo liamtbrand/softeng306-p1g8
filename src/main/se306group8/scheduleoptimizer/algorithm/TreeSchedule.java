@@ -1,9 +1,12 @@
 package se306group8.scheduleoptimizer.algorithm;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
+import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
@@ -17,11 +20,16 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	//Constructed fields
 	private final TreeSchedule parent;
 	private final Task task;
-	private final int processor, lowerBound;
+	private final int processor;
 	private final TaskGraph graph;
 	private final MinimumHeuristic heuristic;
 	
 	//Calculated fields
+	private int startTime;
+	private int endTime;
+	/** A bound that any full solution using this solution must be greater than. */
+	private int lowerBound;
+	private int idleTime;
 	
 	public TreeSchedule(TaskGraph graph, Task task, int processor, MinimumHeuristic heuristic) {
 		this.graph = graph;
@@ -29,7 +37,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		this.processor = processor;
 		this.parent = null;
 		this.heuristic = heuristic;
-		this.lowerBound = heuristic.estimate(this);
+		
+		calculateFields();
 	}
 	
 	public TreeSchedule(TaskGraph graph, Task task, int processor, TreeSchedule parent) {
@@ -38,7 +47,67 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		this.processor = processor;
 		this.parent = parent;
 		this.heuristic = parent.heuristic;
-		this.lowerBound = heuristic.estimate(this);
+		
+		calculateFields();
+	}
+	
+	private void calculateFields() {
+		//Iterate backward through the tree. This first mention of this processor is the processor start time.
+		//Also look for the mention of each child start.
+		
+		Map<Task, Dependency> parents = new HashMap<>();
+		
+		if(parent == null) {
+			idleTime = 0;
+		} else {
+			idleTime = parent.idleTime;
+		}
+		
+		startTime = 0;
+		int endOfPreviousTask = 0;
+		
+		for(Dependency link : task.getParents()) {
+			parents.put(link.getSource(), link);
+		}
+		
+		for(TreeSchedule s = parent; s != null; s = s.parent) {
+			if(s.processor == processor) {
+				//Only set it if this is the first mention of that processor
+				if(startTime == 0) {
+					startTime = s.endTime;
+					endOfPreviousTask = s.endTime;
+				}
+			} else {
+				//Set the start time based on children
+				Dependency dep = parents.get(s.task);
+				if(dep != null) {
+					int dataReadyTime = s.endTime + dep.getCommunicationCost();
+					if(dataReadyTime > startTime) {
+						startTime = dataReadyTime;
+					}
+				}
+			}
+		}
+		
+		endTime = startTime + task.getCost();
+		idleTime += startTime - endOfPreviousTask;
+	}
+	
+	/** Returns the amount of time wasted */
+	public int getIdleTime() {
+		return idleTime;
+	}
+	
+	/** Returns the ProcessorAllocation instance that this task was scheduled on.
+	 * This returns null if the task has not been scheduled. */
+	public ProcessorAllocation getAlloctionFor(Task t) {
+		for(TreeSchedule s = this; s != null; s = s.parent) {
+			if(s.task.equals(t)) {
+				return new ProcessorAllocation(s.startTime, s.endTime, s.processor);
+			}
+		}
+		
+		return null;
 	}
 	
 	public List<List<Task>> computeTaskLists() {
@@ -74,14 +143,17 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	public TreeSchedule getParent() {
 		return parent;
 	}
-
+	
 	public int getLowerBound() {
+		if(lowerBound == -1)
+			lowerBound = heuristic.estimate(this);
+		
 		return lowerBound;
 	}
 
 	@Override
 	public int compareTo(TreeSchedule o) {
-		return lowerBound - o.lowerBound;
+		return getLowerBound() - o.getLowerBound();
 	}
 
 	public TaskGraph getGraph() {
