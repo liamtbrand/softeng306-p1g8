@@ -91,6 +91,9 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		
 		endTime = startTime + task.getCost();
 		idleTime += startTime - endOfPreviousTask;
+	
+		//This must be last as the other fields may be used by this calculation
+		lowerBound = heuristic.estimate(this);
 	}
 	
 	/** Returns the amount of time wasted */
@@ -145,9 +148,6 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	}
 	
 	public int getLowerBound() {
-		if(lowerBound == -1)
-			lowerBound = heuristic.estimate(this);
-		
 		return lowerBound;
 	}
 
