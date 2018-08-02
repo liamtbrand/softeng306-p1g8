@@ -75,8 +75,11 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		for(TreeSchedule s = parent; !s.isEmpty(); s = s.parent) {
 			if(s.processor == processor) {
 				//Only set it if this is the first mention of that processor
-				if(startTime == 0) {
-					startTime = s.endTime;
+				if(endOfPreviousTask == 0) {
+					if(s.endTime > startTime) {
+						startTime = s.endTime;
+					}
+					
 					endOfPreviousTask = s.endTime;
 				}
 			} else {
@@ -171,6 +174,10 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		return lowerBound;
 	}
 
+	public String toString() {
+		return getFullSchedule().toString();
+	}
+	
 	@Override
 	public int compareTo(TreeSchedule o) {
 		return getLowerBound() - o.getLowerBound();
