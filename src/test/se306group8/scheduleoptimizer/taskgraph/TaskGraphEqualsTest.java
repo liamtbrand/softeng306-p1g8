@@ -1,6 +1,5 @@
 package se306group8.scheduleoptimizer.taskgraph;
 
-import java.util.Collection;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -100,22 +99,5 @@ class TaskGraphEqualsTest {
 		Assertions.assertEquals(b.getCost(), c.getCost());
 	}
 	
-	/** Check that the dependency attributes of a graph are equal to what they should be */
-	@Test
-	void dependencyEquivalenceTest() {
-		
-		TaskGraph tg = TestGraphUtils.buildTestGraphA();
-		Collection<Dependency> deps = tg.getEdges();
-		
-		
-		for (Dependency d : deps) {
-			if ((d.getSource().getName() == "a") && (d.getTarget().getName() == "b")) {
-				Assertions.assertEquals(d.getCommunicationCost(), 1);
-			}
-			
-			if ((d.getSource().getName() == "c") && (d.getTarget().getName() == "d")) {
-				Assertions.assertEquals(d.toString(), "c -> d");
-			}
-		}		
-	}
+	
 }
