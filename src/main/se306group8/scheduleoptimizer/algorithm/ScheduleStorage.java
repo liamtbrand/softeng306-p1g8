@@ -15,13 +15,13 @@ public class ScheduleStorage {
 	}
 	
 	/** Stores a schedule in storage. */
-	public void storeSchedule(InternalSchedule schedule) {
+	public void storeSchedule(TreeSchedule schedule) {
 		assert false : "Not done";
 	}
 	
 	/** Stores a list of schedules in storage. */
-	public void storeSchedules(Collection<InternalSchedule> schedules) {
-		for(InternalSchedule partial : schedules) {
+	public void storeSchedules(Collection<TreeSchedule> schedules) {
+		for(TreeSchedule partial : schedules) {
 			storeSchedule(partial);
 		}
 	}
