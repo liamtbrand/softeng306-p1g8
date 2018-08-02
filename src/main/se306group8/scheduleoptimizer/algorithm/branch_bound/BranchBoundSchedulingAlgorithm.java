@@ -3,6 +3,7 @@ package se306group8.scheduleoptimizer.algorithm.branch_bound;
 import java.util.List;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
+import se306group8.scheduleoptimizer.algorithm.CriticalPathHeuristic;
 import se306group8.scheduleoptimizer.algorithm.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.ListSchedule;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
@@ -19,11 +20,8 @@ public class BranchBoundSchedulingAlgorithm implements Algorithm {
 	@Override
 	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
 		
-		// how to calculate lower bound?
-		int lowerBound = 0;
-		
 		// create initial schedule where parent schedule is null and task is first task in topological order
-		TreeSchedule schedule = new TreeSchedule(graph, null, graph.getAll().get(0), 0, lowerBound);
+		TreeSchedule schedule = new TreeSchedule(graph, graph.getAll().get(0), 0, new CriticalPathHeuristic());
 		_bestSchedule = schedule;
 		List<List<Task>> taskLists = BranchAndBound(schedule);
 		return new ListSchedule(graph, taskLists);

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class GreedyChildScheduleFinder extends ChildScheduleFinder {
+public class GreedyChildScheduleFinder extends BasicChildScheduleFinder {
 
 	public List<TreeSchedule> getChildSchedules(TreeSchedule schedule) {
 		Collection<TreeSchedule> unorderedSet = super.getChildSchedules(schedule);

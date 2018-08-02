@@ -1,14 +1,9 @@
 package se306group8.scheduleoptimizer.algorithm;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.IntStream;
 
-import se306group8.scheduleoptimizer.taskgraph.Dependency;
+import java.util.List;
+
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
@@ -24,15 +19,26 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private final Task task;
 	private final int processor, lowerBound;
 	private final TaskGraph graph;
+	private final MinimumHeuristic heuristic;
 	
 	//Calculated fields
 	
-	public TreeSchedule(TaskGraph graph, TreeSchedule parent, Task task, int processor, int lowerBound) {
+	public TreeSchedule(TaskGraph graph, Task task, int processor, MinimumHeuristic heuristic) {
 		this.graph = graph;
-		this.parent = parent;
 		this.task = task;
 		this.processor = processor;
-		this.lowerBound = lowerBound;
+		this.parent = null;
+		this.heuristic = heuristic;
+		this.lowerBound = heuristic.estimate(this);
+	}
+	
+	public TreeSchedule(TaskGraph graph, Task task, int processor, TreeSchedule parent) {
+		this.graph = graph;
+		this.task = task;
+		this.processor = processor;
+		this.parent = parent;
+		this.heuristic = parent.heuristic;
+		this.lowerBound = heuristic.estimate(this);
 	}
 	
 	public List<List<Task>> computeTaskLists() {

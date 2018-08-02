@@ -1,8 +1,8 @@
 package se306group8.scheduleoptimizer.algorithm;
 
-import java.util.Collection;
+import java.util.List;
 
 @FunctionalInterface
-public interface IChildScheduleFinder {
-	Collection<TreeSchedule> getChildSchedules(TreeSchedule schedule);
+public interface ChildScheduleFinder {
+	List<TreeSchedule> getChildSchedules(TreeSchedule schedule);
 }
