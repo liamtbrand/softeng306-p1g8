@@ -1,5 +1,6 @@
 package se306group8.scheduleoptimizer.algorithm.branch_bound;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
@@ -14,62 +15,41 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 public class BranchBoundSchedulingAlgorithm implements Algorithm {
 	
-	private TreeSchedule _currentSchedule;
-	private TreeSchedule _bestSchedule;
-	
 	@Override
 	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
 		
-		// create initial schedule where parent schedule is null and task is first task in topological order
-		TreeSchedule schedule = new TreeSchedule(graph, graph.getAll().get(0), 0, new CriticalPathHeuristic());
-		_bestSchedule = schedule;
-		List<List<Task>> taskLists = BranchAndBound(schedule);
-		return new ListSchedule(graph, taskLists);
+		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder();
+		TreeSchedule initialSchedule = new TreeSchedule(graph, graph.getAll().get(0), 0, new CriticalPathHeuristic());
+		
+		List<TreeSchedule> activeSchedules = new ArrayList<TreeSchedule>();
+		activeSchedules.add(initialSchedule);
+		int best = Integer.MAX_VALUE;
+		TreeSchedule currentBest = null;
+		
+		while (!activeSchedules.isEmpty()) {
+			TreeSchedule selectedSchedule = activeSchedules.get(0);
+			activeSchedules.remove(selectedSchedule);
+			List<TreeSchedule> childSchedules = greedyFinder.getChildSchedules(selectedSchedule);
+			for (TreeSchedule child : childSchedules) {
+				// check if estimate better than best
+				if (child.getLowerBound() < best) {
+					// check if child is a full schedule
+					if (child.getFullSchedule() != null) {
+					best = child.getLowerBound();
+					currentBest = child;
+					} else {
+					activeSchedules.add(child);
+					}
+				}
+			}
+		}
+		
+		return new ListSchedule(graph, currentBest.computeTaskLists());
 	}
 
 	@Override
 	public void setMonitor(RuntimeMonitor monitor) {
 		// TODO Auto-generated method stub
-		
-	}
-	
-	private List<List<Task>> BranchAndBound(TreeSchedule schedule) {
-		
-		_currentSchedule = Branch(schedule);
-		
-		// check if current schedule's lower bound is lower than the best schedule
-		if (_currentSchedule.compareTo(_bestSchedule) < 0) {
-			_bestSchedule = _currentSchedule;
-		}
-		
-		schedule = Bound(schedule);
-		
-		return _bestSchedule.computeTaskLists();
-	}
-	
-	/** Intended to travel from a given schedule to a complete schedule using greedy logic. */
-	private TreeSchedule Branch(TreeSchedule schedule) {
-		
-		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder();
-		// Get next schedule based on greedy logic - best lower bound is first in the list
-		schedule = (greedyFinder.getChildSchedules(schedule)).get(0);
-		
-		// check if the schedule is a full schedule, if so, branch is complete
-		// assuming this method returns null if schedule is incomplete?
-		// could be good to have a method isComplete() that returns a boolean
-		if (schedule.getFullSchedule() == null) {
-			// Keep getting the next schedule until a full schedule is produced
-			Branch(schedule);
-		}
-		return schedule;
-	}
-	
-	/** Intended to return to the most recent node with multiple children and then BRANCH. */
-	private TreeSchedule Bound(TreeSchedule schedule) {
-
-		// TODO
-		
-		return Branch(schedule);	
 	}
 
 }
