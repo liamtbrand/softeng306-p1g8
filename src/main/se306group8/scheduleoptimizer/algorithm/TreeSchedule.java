@@ -149,7 +149,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			result.add(new ArrayList<>());
 		}
 		
-		result.get(processor).add(task);
+		result.get(processor - 1).add(task);
 		
 		return result;
 	}

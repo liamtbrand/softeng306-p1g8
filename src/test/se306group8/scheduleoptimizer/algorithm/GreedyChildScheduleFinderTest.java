@@ -17,10 +17,11 @@ public class GreedyChildScheduleFinderTest {
 		TaskGraph tg1 = TestGraphUtils.buildTestGraphC();
 		Task firstTask = tg1.getAll().get(0);
 		
-		TreeSchedule empty = new TreeSchedule(tg1, firstTask,1, (TreeSchedule s) -> 0);
+		TreeSchedule empty = new TreeSchedule(tg1, (TreeSchedule s) -> 0);
+		TreeSchedule initial = new TreeSchedule(tg1, firstTask, 1, empty);
 		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(2);
 		
-		List<TreeSchedule> result = gcsf.getChildSchedules(empty);
+		List<TreeSchedule> result = gcsf.getChildSchedules(initial);
 		
 		//1 nodes 2 processors = 2 children
 		assertEquals(2,result.size());
@@ -43,10 +44,11 @@ public class GreedyChildScheduleFinderTest {
 		TaskGraph tg1 = TestGraphUtils.buildTestGraphA();
 		Task firstTask = tg1.getAll().get(0);
 		
-		TreeSchedule empty = new TreeSchedule(tg1, firstTask,1, (TreeSchedule s) -> 0);
+		TreeSchedule empty = new TreeSchedule(tg1, (TreeSchedule s) -> 0);
+		TreeSchedule initial = new TreeSchedule(tg1, firstTask, 1, empty);
 		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(2);
 		
-		List<TreeSchedule> result = gcsf.getChildSchedules(empty);
+		List<TreeSchedule> result = gcsf.getChildSchedules(initial);
 		
 		//2 nodes 2 processors = 4 children
 		assertEquals(4,result.size());
@@ -58,10 +60,11 @@ public class GreedyChildScheduleFinderTest {
 		TaskGraph tg1 = TestGraphUtils.buildTestGraphB();
 		Task firstTask = tg1.getAll().get(0);
 		
-		TreeSchedule empty = new TreeSchedule(tg1, firstTask,1, (TreeSchedule s) -> 0);
+		TreeSchedule empty = new TreeSchedule(tg1, (TreeSchedule s) -> 0);
+		TreeSchedule initial = new TreeSchedule(tg1, firstTask, 1, empty);
 		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(2);
 		
-		List<TreeSchedule> result = gcsf.getChildSchedules(empty);
+		List<TreeSchedule> result = gcsf.getChildSchedules(initial);
 		
 		//2 nodes 2 processors = 4 children
 		assertEquals(4,result.size());

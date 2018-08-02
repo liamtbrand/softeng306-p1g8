@@ -18,13 +18,13 @@ public class BranchBoundSchedulingAlgorithm implements Algorithm {
 		TreeSchedule emptySchedule = new TreeSchedule(graph, new CriticalPathHeuristic());
 		
 		// Kick off BnB (current 'best schedule' is null)
-		return branchAndBound(emptySchedule, null);
+		return branchAndBound(emptySchedule, null, numberOfProcessors);
 	}
 
-	private Schedule branchAndBound(TreeSchedule schedule, Schedule best) {
+	private Schedule branchAndBound(TreeSchedule schedule, Schedule best, int numberOfProcessors) {
 		// Get all children in order from best lower bound to worst
 		// TODO add processor number to GCSF
-		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder();
+		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		List<TreeSchedule> childSchedules = greedyFinder.getChildSchedules(schedule);
 		
 		for (TreeSchedule child : childSchedules) {
@@ -35,7 +35,7 @@ public class BranchBoundSchedulingAlgorithm implements Algorithm {
 					best = child.getFullSchedule();
 				} else {
 					// Check if the child schedule is complete or not
-					best = branchAndBound(child, best);
+					best = branchAndBound(child, best, numberOfProcessors);
 				}
 			}
 			
