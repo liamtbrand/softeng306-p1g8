@@ -38,13 +38,17 @@ public class TestScheduleUtils {
 	public static void checkValidity(Schedule schedule) {
 		TaskGraph graph = schedule.getGraph();
 		
-		int[] processorStart = new int[schedule.getNumberOfUsedProcessors()];
-		int start = 0;
-		
 		for(Task task : graph.getAll()) {
-			start = processorStart[schedule.getProcessorNumber(task) - 1];
+			int processorNumber = schedule.getProcessorNumber(task);
+			int index = schedule.getTasksOnProcessor(processorNumber).indexOf(task);
 			
-			processorStart[schedule.getProcessorNumber(task) - 1] = schedule.getStartTime(task) + task.getCost();
+			int start;
+			if(index != 0) {
+				Task previous = schedule.getTasksOnProcessor(processorNumber).get(index - 1);
+				start = schedule.getStartTime(previous) + previous.getCost();
+			} else {
+				start = 0;
+			}
 			
 			for(Dependency dep : task.getParents()) {
 				int comCost = (schedule.getProcessorNumber(task) == schedule.getProcessorNumber(dep.getSource())) ? 0 : dep.getCommunicationCost();
