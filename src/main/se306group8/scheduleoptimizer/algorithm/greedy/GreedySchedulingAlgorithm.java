@@ -62,6 +62,11 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 		
 		// Invoke finish() method on RuntimeMonitor instance
 		monitor.finish();
+		
+		// Update RuntimeMonitor instance with finished schedule
+		monitor.updateBestSchedule(new ListSchedule(graph, allocations, schedule));
+		
+		
 
 		return new ListSchedule(graph, allocations, schedule);
 
