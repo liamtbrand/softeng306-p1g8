@@ -2,8 +2,10 @@ package se306group8.scheduleoptimizer.algorithm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
@@ -35,6 +37,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private int idleTime;
 	
 	public TreeSchedule(TaskGraph graph, MinimumHeuristic heuristic) {
+		assert graph != null;
+		
 		this.graph = graph;
 		this.task = null;
 		this.processor = 0;
@@ -48,6 +52,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	}
 	
 	public TreeSchedule(TaskGraph graph, Task task, int processor, TreeSchedule parent) {
+		assert graph != null;
+		
 		this.graph = graph;
 		this.task = task;
 		this.processor = processor;
@@ -129,7 +135,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	 * @return
 	 */
 	public ProcessorAllocation getLastAllocationForProcessor(int processor) {
-		for(TreeSchedule s = this; s != null; s = s.parent) {
+		for(TreeSchedule s = this; !s.isEmpty(); s = s.parent) {
 			if(s.processor == processor) {
 				return new ProcessorAllocation(s.startTime, s.endTime, s.processor);
 			}
@@ -199,5 +205,41 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 
 	public TaskGraph getGraph() {
 		return this.graph;
+	}
+
+	public Set<Task> getAllocated() {
+		Set<Task> allocated = new HashSet<>();
+		
+		for(TreeSchedule s = this; !s.isEmpty(); s = s.parent) {
+			allocated.add(s.task);
+		}
+		
+		return allocated;
+	}
+	
+	public Set<Task> getAllocatable() {
+		Set<Task> allocated = getAllocated();
+		Set<Task> results = new HashSet<>();
+		
+		for(Task t : graph.getAll()) {
+			if(allocated.contains(t)) {
+				continue;
+			}
+				
+			boolean allParents = true;
+			for(Dependency dep : t.getParents()) {
+				Task parent = dep.getSource();
+				if(!allocated.contains(parent)) {
+					allParents = false;
+					break;
+				}
+			}
+			
+			if(allParents) {
+				results.add(t);
+			}
+		}
+		
+		return results;
 	}
 }
