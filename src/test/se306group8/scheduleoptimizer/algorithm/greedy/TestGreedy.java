@@ -13,7 +13,7 @@ public class TestGreedy {
 	private void testGraph(TaskGraph graph) {
 		Algorithm greedy = new GreedySchedulingAlgorithm();
 		Schedule s1 = greedy.produceCompleteSchedule(graph, 2);
-		TestScheduleUtils.checkValidity(s1);
+		TestScheduleUtils.checkValidity(s1,2);
 	}
 	
 	@Test

@@ -65,11 +65,13 @@ public class DOTFileHandler {
 		TaskGraphBuilder builder = new TaskGraphBuilder();
 		TreeMap<Integer, TreeMap<Integer, String>> processorMapping = new TreeMap<>();
 		
+		//Read populates the processorMapping and the builder
 		read(path, builder, processorMapping);
 		
 		TaskGraph graph = builder.buildGraph();
 		HashMap<String, Task> taskMapping = new HashMap<>();
 		
+		//Assign each name to a task
 		for(Task t : graph.getAll()) {
 			taskMapping.put(t.getName(), t);
 		}
@@ -88,35 +90,95 @@ public class DOTFileHandler {
 		return new ListSchedule(graph, processorAllocation);
 	}
 	
-	/** Internal method to read a dot file from a map into a designated builder. Mapping may be null, in which case processor information is ignored. */
+	/**
+	 * Internal method to read a dot file from a map into a designated builder.
+	 * Mapping may be null, in which case processor information is ignored.
+	 * <br>
+	 * Mapping is chosen with this structure so that the tasks are ordered by processor and then by start-time, to aid graph construction.
+	 * 
+	 * @param path The path to a valid taskgraph file, or schedule
+	 * @param builder A TaskGraph builder. Must not be null
+	 * @param mapping A TreeMap storing the mapping from processor to a mapping from start-time to task name.
+	 * @throws IOException
+	 */
 	private void read(Path path, TaskGraphBuilder builder, TreeMap<Integer, TreeMap<Integer, String>> mapping) throws IOException {
 		List<Token> tokens = new ArrayList<>();
 		
 		try(PushbackReader reader = new PushbackReader(Files.newBufferedReader(path, StandardCharsets.UTF_8))) {
 			Token token;
 			do {
-				token = readToken(reader);
+				token = Token.readNextToken(reader);
 				if(token.type != Type.IGNORED)
 					tokens.add(token);
 			} while(token.type != Type.EOF);
 		}
 		
 		try {
+			tokens = mergeQuotes(tokens);
+			
 			parseTokens(tokens.listIterator(), builder, mapping);
 		} catch(NoSuchElementException nsee) {
 			throw new IOException("Expected token", nsee);
 		}
 	}
 	
-	/** Takes a list of tokens and populates the builder. */
+	/** Merges sets of quotes separated by + symbols into a single quote. 
+	 * @throws IOException */
+	private List<Token> mergeQuotes(List<Token> tokens) throws IOException {
+		List<Token> result = new ArrayList<>();
+		
+		ListIterator<Token> iterator = tokens.listIterator();
+		while(iterator.hasNext()) {
+			Token token = iterator.next();
+			if(token.type == Type.QUOTE) {
+				result.add(tryToMergeQuotes(iterator));
+			} else {
+				result.add(token);
+			}
+		}
+		
+		return result;
+	}
+
+	/** Attempts to merge a group of quotes starting at the position of this iterator. 
+	 * @throws IOException */
+	private Token tryToMergeQuotes(ListIterator<Token> iterator) throws IOException {
+		iterator.previous();
+		
+		//We are now at the start of the quote.
+		String mergedString = "";
+		
+		while(true) {
+			Token quote = iterator.next();
+			if(quote.type != Type.QUOTE) {
+				throw new IOException("All + tokens must be preceded and followed by a quoted string.");
+			}
+			
+			mergedString += quote.value;
+			
+			if(!iterator.hasNext()) { //No more pluses, return the merged String.
+				return Token.createQuoteToken(mergedString);
+			}
+			
+			Token plus = iterator.next();
+			if(plus.type != Type.CONTROL_CHAR || !plus.value.equals("+")) {
+				//Not a plus, roll-back and then return
+				iterator.previous();
+				return Token.createQuoteToken(mergedString);
+			}
+		}
+	}
+
+	/** Takes a list of tokens and populates the builder and the mapping. Very similar to {@link DOTFileHandler#read(Path, TaskGraphBuilder, TreeMap)} */
 	private void parseTokens(ListIterator<Token> iter, TaskGraphBuilder builder, TreeMap<Integer, TreeMap<Integer, String>> processorMapping) throws IOException {
 		//Read the header
 		Token graphType = iter.next();
 		if(!graphType.value.toLowerCase().equals("digraph"))
 			throw new IOException("Only digraphs are supported.");
 		
+		//Read the name
 		Token next = iter.next();
-		if(next.type == Type.ID) {
+		if(next.type == Type.ID || next.type == Type.QUOTE) {
 			builder.setName(next.value);
 		} else if(next.value.equals("{")) {
 			builder.setName("");
@@ -124,9 +186,12 @@ public class DOTFileHandler {
 			throw new IOException("Expected ID or QUOTE or {");
 		}
 		
+		//Read the rest
 		readStatementList(iter, builder, processorMapping);
 		
-		assert iter.next().type == Token.Type.EOF;
+		if(iter.next().type != Token.Type.EOF) {
+			throw new IOException("There can be no tokens after the closing brace.");
+		}
 	}
 
 	/** Reads the list of statements, that may or may not be separated by semi-colons. If processorMapping is not null
@@ -144,11 +209,20 @@ public class DOTFileHandler {
 				String itemName = t.getID();
 				
 				if(iter.next().type == Type.EDGE_OP) {
-					String otherItem = iter.next().getID();
+					//Read edge statement
+					
+					Token other = iter.next();
+					
+					if(other.value.equals("{")) {
+						throw new IOException("Clusters are not supported");
+					}
+					
+					String otherItem = other.getID();
 					Attributes attr = new Attributes(iter);
 					
 					builder.addDependecy(itemName, otherItem, attr.edgeWeight);
 				} else {
+					//Read node statement
 					iter.previous();
 					
 					Attributes attr = new Attributes(iter);
@@ -161,58 +235,11 @@ public class DOTFileHandler {
 			}
 			
 			if(iter.next().value.equals(";")) {
-				//Ignore
+				//Ignore ;
 			} else {
 				iter.previous();
 			}
 		}
-	}
-
-	/** A token is a single coherent unit, such as a comment, [, ], ;, graph, ->, ect... */
-	private Token readToken(PushbackReader reader) throws IOException {
-		int c;
-		while((c = reader.read()) != -1) {
-			if(c == '\r' || c == '\n') {
-				int peek = reader.read();
-				if(peek == -1)
-					return Token.EOF();
-				
-				if(peek == '#') {
-					do {
-						c = reader.read();
-					} while(c != '\r' && c != '\n' && c != -1);
-					continue;
-				} else {
-					reader.unread(peek);
-				}
-			}
-			
-			if(Character.isWhitespace(c))
-				continue;
-			
-			//Read single characters
-			switch(c) {
-			case '{':
-			case '}':
-			case ']':
-			case '[':
-			case ',':
-			case ';':
-			case ':':
-			case '=':
-				return new Token(c);
-			case '"':
-				return Token.quote(reader);
-			case '/': //There is no valid / symbol in the syntax, either it is a comment of an error
-				return Token.comment(reader);
-			}
-			
-			//We are now reading ID or KEYWORD, or EDGE_OP
-			reader.unread(c);
-			return Token.readIDOrKeywordOrEdgeOp(reader);
-		}
-		
-		return Token.EOF();
 	}
 
 	private class Attributes {
