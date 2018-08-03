@@ -24,6 +24,7 @@ public class TestGreedyValidity {
 		try(DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("dataset", "input"))) {
 			stream.forEach(p -> {
 				String graphName = p.getFileName().toString();
+				if (graphName.contains(".dot"))
 				names.add(graphName);
 			});
 		}
@@ -49,8 +50,5 @@ public class TestGreedyValidity {
 			TestScheduleUtils.checkValidity(s);
 		}
 	}
-
-	
-	
 }
 
