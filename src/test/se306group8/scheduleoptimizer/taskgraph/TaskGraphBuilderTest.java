@@ -82,4 +82,32 @@ class TaskGraphBuilderTest {
 		assertEquals(2, graph.getRoots().size());
 		assertEquals(0, graph.getEdges().size());
 	}
+	
+	@Test
+	void testBottomTime() {
+		TaskGraph graph = TestGraphUtils.buildTestGraphA();
+		
+		Task a = null, b = null, c = null, d = null;
+		for(Task task : graph.getAll()) {
+			switch(task.getName()) {
+			case "a":
+				a = task;
+				break;
+			case "b":
+				b = task;
+				break;
+			case "c":
+				c = task;
+				break;
+			case "d":
+				d = task;
+				break;
+			}
+		}
+		
+		assertEquals(7, graph.getBottomTime(a));
+		assertEquals(5, graph.getBottomTime(b));
+		assertEquals(5, graph.getBottomTime(c));
+		assertEquals(2, graph.getBottomTime(d));
+	}
 }

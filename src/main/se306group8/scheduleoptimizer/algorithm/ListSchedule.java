@@ -90,7 +90,7 @@ public final class ListSchedule implements Schedule {
 		return result;
 	}
 
-	protected ListSchedule(TaskGraph graph, Map<Task, ProcessorAllocation> allocation, List<List<Task>> taskLists) {
+	public ListSchedule(TaskGraph graph, Map<Task, ProcessorAllocation> allocation, List<List<Task>> taskLists) {
 		assert graph != null && taskLists != null && allocation != null && checkConsistency(graph, allocation, taskLists);
 		
 		this.graph = graph;

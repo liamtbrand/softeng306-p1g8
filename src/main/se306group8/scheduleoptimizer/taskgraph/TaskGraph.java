@@ -2,7 +2,9 @@ package se306group8.scheduleoptimizer.taskgraph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -16,6 +18,7 @@ public final class TaskGraph {
 	private final Collection<Task> roots;
 	private final Collection<Dependency> edges;
 	private final String name;
+	private final Map<Task, Integer> bottomTime = new HashMap<>();
 	
 	TaskGraph(String name, Collection<Task> tasks) {
 		assert tasks.stream().noneMatch(Objects::isNull);
@@ -34,6 +37,19 @@ public final class TaskGraph {
 		edges = tasks.stream()
 				.flatMap(t -> t.getChildren().stream())
 				.collect(Collectors.toList());
+		
+		//Iterate backwards calculating the bottom times
+		for(int i = topologicalOrder.size() - 1; i >= 0; i--) {
+			Task task = topologicalOrder.get(i);
+			int taskBottomTime = task.getCost();
+			
+			for(Dependency dep : task.getChildren()) {
+				Task child = dep.getTarget();
+				taskBottomTime = Math.max(taskBottomTime, bottomTime.get(child) + task.getCost());
+			}
+			
+			bottomTime.put(task, taskBottomTime);
+		}
 	}
 	
 	private void addTask(Task parent) {
@@ -71,6 +87,13 @@ public final class TaskGraph {
 
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * Gets the time from the start of this task to the end of the farthest descendant
+	 */
+	public int getBottomTime(Task task) {
+		return bottomTime.get(task);
 	}
 	
 	@Override
