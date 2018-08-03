@@ -4,13 +4,12 @@ import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
 public class CLIRuntimeMonitor implements RuntimeMonitor {
 	
-	// Variables to store time quality
+	// Variables to store time values
 	long duration;
 	long startTime;
 	long finishTime;
 	
 	int numProcessors;
-	
 	
 	public CLIRuntimeMonitor() {
 		this.numProcessors = 0;
@@ -45,7 +44,7 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 		this.finishTime = System.nanoTime();
 		this.duration = this.finishTime - this.startTime;
 		
-		logMessage("Finished! Valid schedule found in: " + this.duration + " seconds.");
+		logMessage("Finished! Valid schedule found in: " + (double)this.duration/1000000000 + " seconds.");
 		logMessage("==========================================");
 		
 	}
@@ -57,7 +56,6 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 		//optimalSchedule.
 		logMessage("Found new best schedule."); // Just log a message.
 	}
-	
 	
 
 	@Override
