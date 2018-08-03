@@ -35,12 +35,16 @@ public class TestScheduleUtils {
 		return new ListSchedule(graph, lists);
 	}
 	
-	public static void checkValidity(Schedule schedule) {
+	public static void checkValidity(Schedule schedule, int maxProcessors) {
 		TaskGraph graph = schedule.getGraph();
 		
 		for(Task task : graph.getAll()) {
 			int processorNumber = schedule.getProcessorNumber(task);
 			int index = schedule.getTasksOnProcessor(processorNumber).indexOf(task);
+			
+			if (processorNumber>maxProcessors) {
+				fail();
+			}
 			
 			int start;
 			if(index != 0) {

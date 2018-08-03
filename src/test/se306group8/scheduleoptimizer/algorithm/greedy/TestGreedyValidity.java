@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 
@@ -36,18 +38,21 @@ public class TestGreedyValidity {
 			
 			long start = System.nanoTime();
 			Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
-			if(optimal.getNumberOfUsedProcessors() > 3)
-				continue;
 			
 			System.out.println("Starting '" + graphName + "'");
 			
 			TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
 			
-			Schedule s = new GreedySchedulingAlgorithm().produceCompleteSchedule(graph, optimal.getNumberOfUsedProcessors());
+			Pattern pattern = Pattern.compile("^\\d+");
+			Matcher matcher = pattern.matcher(graphName);
+			matcher.find();
+			String result=matcher.group(0);
+			int numProcessors = Integer.parseInt(result);
+			Schedule s = new GreedySchedulingAlgorithm().produceCompleteSchedule(graph, numProcessors);
 
 			System.out.println(s + " took " + (System.nanoTime() - start) / 1_000_000 + "ms");
 			
-			TestScheduleUtils.checkValidity(s);
+			TestScheduleUtils.checkValidity(s,numProcessors);
 		}
 	}
 }
