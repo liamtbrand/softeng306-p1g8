@@ -15,6 +15,7 @@ class Token {
 	enum Type {
 		EOF,
 		ID,
+		QUOTE,
 		KEYWORD,
 		BRACKET,
 		CONTROL_CHAR,
@@ -33,6 +34,7 @@ class Token {
 		case ';':
 		case ',':
 		case '=':
+		case '+':
 			type = Type.CONTROL_CHAR;
 			break;
 		case '[':
@@ -63,7 +65,7 @@ class Token {
 		} else if(isIgnored(s)) {
 			type = Type.IGNORED;
 		} else if(s.startsWith("\"")) {
-			type = Type.ID;
+			type = Type.QUOTE;
 			value = s.substring(1, s.length() - 1);
 			return;
 		} else if(s.equals("->")) {
@@ -78,9 +80,60 @@ class Token {
 		
 		this.value = s;
 	}
-
+	
+	/** A token is a single coherent unit, such as a comment, [, ], ;, graph, ->, ect... */
+	static Token readNextToken(PushbackReader reader) throws IOException {
+		int c;
+		while((c = reader.read()) != -1) {
+			
+			//Newline handling, including c pre-processor matching
+			if(c == '\r' || c == '\n') {
+				int peek = reader.read();
+				if(peek == -1)
+					return Token.EOF();
+				
+				if(peek == '#') {
+					do {
+						c = reader.read();
+					} while(c != '\r' && c != '\n' && c != -1);
+					continue;
+				} else {
+					reader.unread(peek);
+				}
+			}
+			
+			//Ignore all whitespace
+			if(Character.isWhitespace(c))
+				continue;
+			
+			//Read single characters
+			switch(c) {
+			case '{':
+			case '}':
+			case ']':
+			case '[':
+			case ',':
+			case ';':
+			case ':':
+			case '=':
+			case '+':
+				return new Token(c);
+			case '"':
+				return Token.quote(reader);
+			case '/': //There is no valid / symbol in the syntax, either it is a comment of an error
+				return Token.comment(reader);
+			}
+			
+			//We are now reading ID or KEYWORD, or EDGE_OP
+			reader.unread(c);
+			return Token.readIDOrKeywordOrEdgeOp(reader);
+		}
+		
+		return Token.EOF();
+	}
+	
 	/** Reads data from the reader until the end of the quote has been reached. */
-	static Token quote(PushbackReader reader) throws IOException {
+	private static Token quote(PushbackReader reader) throws IOException {
 		//Read until the next non-escaped quote is reached
 		
 		StringBuilder builder = new StringBuilder();
@@ -92,6 +145,8 @@ class Token {
 
 			switch(c) {
 			case -1:
+			case '\n':
+			case '\r':
 				throw new IOException("Unclosed quote");
 			case '\\':
 				int peek = reader.read();
@@ -101,10 +156,16 @@ class Token {
 				
 				if(peek == '"') {
 					builder.append('"');
+				} else if(peek == '\n') {
+					//Ignore new lines
+				} else if(peek == '\r') {
+					int tmp = reader.read(); //Ignore the '\n'
+					assert tmp == '\n';
 				} else {
 					builder.append('\\');
 					reader.unread(peek);
 				}
+				
 				break;
 			case '"':
 				return new Token(builder.append('"').toString());
@@ -116,7 +177,7 @@ class Token {
 	}
 
 	/** Reads a comment from the reader. The reader will have already read one / */
-	static Token comment(PushbackReader reader) throws IOException {
+	private static Token comment(PushbackReader reader) throws IOException {
 		//check if next char is a * or a / If it is neither it is an error.
 		
 		StringBuilder builder = new StringBuilder();
@@ -177,7 +238,7 @@ class Token {
 	}
 
 	/** Reads an unquoted string term such as an ID or a KEYWORD, or EDGE_OP. It accepts numbers and letters. */
-	static Token readIDOrKeywordOrEdgeOp(PushbackReader reader) throws IOException {
+	private static Token readIDOrKeywordOrEdgeOp(PushbackReader reader) throws IOException {
 		StringBuilder builder = new StringBuilder();
 		
 		int c;
@@ -194,6 +255,10 @@ class Token {
 				if(c != -1)
 					reader.unread(c);
 				
+				if(c == '<') {
+					throw new IOException("HTML IDs are not supported.");
+				}
+				
 				if(builder.length() == 0)
 					throw new IOException("Invalid token in DOT file.");
 				
@@ -209,12 +274,12 @@ class Token {
 		return new Token(text);
 	}
 
-	/** Creates and EOF token */
-	static Token EOF() {
+	/** Creates an EOF token */
+	private static Token EOF() {
 		return new Token();
 	}
 
-	/** Returns true if the string shoud be ignored. */
+	/** Returns true if the string should be ignored. */
 	private static boolean isIgnored(String s) {
 		return s.startsWith("/") || s.toLowerCase().equals("strict");
 	}
@@ -237,10 +302,20 @@ class Token {
 		return value;
 	}
 
+	/** Returns the string equivalent of this token, if and only if it is of the ID type.
+	 * 
+	 * @throws IOException if the token is not an ID
+	 **/
 	String getID() throws IOException {
-		if(type != Type.ID)
+		if(type != Type.ID && type != Type.QUOTE)
 			throw new IOException("Expected ID, found " + type.name());
 		
 		return value;
+	}
+
+	/** Creates a Token of type QUOTE. This is used in the quote merging system. 
+	 * @throws IOException */
+	static Token createQuoteToken(String mergedString) throws IOException {
+		return new Token("\"" + mergedString + "\"");
 	}
 }
