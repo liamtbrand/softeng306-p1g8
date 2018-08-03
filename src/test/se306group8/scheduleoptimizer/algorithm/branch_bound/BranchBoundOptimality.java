@@ -37,6 +37,7 @@ public class BranchBoundOptimality {
 
         Assertions.assertEquals(optimal.getTotalRuntime(), s.getTotalRuntime());
     }
+	
 //
 //    @Test
 //    void testProduceCompleteScheduleAll10NodeGraphs() throws IOException {
