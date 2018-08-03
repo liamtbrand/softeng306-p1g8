@@ -242,4 +242,15 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		
 		return results;
 	}
+
+	public int getNumberOfUsedProcessors() {
+		int n = 0;
+		for(TreeSchedule s = this; !s.isEmpty(); s = s.parent) {
+			if(n < s.processor) {
+				n = s.processor;
+			}
+		}
+		
+		return n;
+	}
 }
