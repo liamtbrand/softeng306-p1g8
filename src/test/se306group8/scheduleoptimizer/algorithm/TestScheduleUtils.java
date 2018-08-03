@@ -36,7 +36,7 @@ public class TestScheduleUtils {
 		int start = 0;
 		
 		for(Task task : graph.getAll()) {
-			start = Math.max(start, processorStart[schedule.getProcessorNumber(task) - 1]);
+			start = processorStart[schedule.getProcessorNumber(task) - 1];
 			
 			processorStart[schedule.getProcessorNumber(task) - 1] = schedule.getStartTime(task) + task.getCost();
 			
