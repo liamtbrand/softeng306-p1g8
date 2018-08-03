@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
+import se306group8.scheduleoptimizer.algorithm.CLIRuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.ListSchedule;
 import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
@@ -32,6 +33,14 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 	 */
 	@Override
 	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
+		
+		// Create new RuntimeMonitor instance
+		if (this.monitor == null) {
+			this.monitor = new CLIRuntimeMonitor(numberOfProcessors);
+		}
+		
+		// Invoke start() method on RuntimeMonitor instance
+		this.monitor.start();
 
 		// reset
 		allocations = new HashMap<>();
@@ -50,6 +59,9 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 		for (Task task : partialOrder) {
 			allocatePosition(task);
 		}
+		
+		// Invoke finish() method on RuntimeMonitor instance
+		monitor.finish();
 
 		return new ListSchedule(graph, allocations, schedule);
 

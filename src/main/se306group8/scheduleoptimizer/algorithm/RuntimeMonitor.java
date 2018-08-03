@@ -9,6 +9,10 @@ public interface RuntimeMonitor {
 
 	public void updateBestSchedule( Schedule optimalSchedule );
 	
+	public void start();
+	
+	public void finish();
+	
 	public void logMessage( String message );
 	
 }
