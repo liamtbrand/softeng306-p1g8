@@ -21,7 +21,6 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder{
 
 	// rather than recalcuate bottom level every time we cache the last result
 	private TaskGraph lastGraph;
-	private Map<Task, Integer> bottomLevel;
 
 	// we can allocate by remembering parent
 	private TreeSchedule lastSchedule;
@@ -44,16 +43,16 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder{
 //		List<TreeSchedule> orderedList = orderByLowerBound(unorderedList);
 //		return orderedList;
 
-		allocated = computeAllocated(schedule);
-		bottomLevel = computeBottomLevel(schedule);
-		allocatable = computeAllocatableTasks(schedule, allocated);
+		allocated = schedule.getAllocated();
+		allocatable = new ArrayList<>(schedule.getAllocatable());
 
 		// Important optimization step needs to be done after calling compute fucntions
 		lastSchedule = schedule;
-
+		lastGraph = schedule.getGraph();
+		
 		// Robert's first Java lambda
 		// ordered such that largest bottom order first
-		allocatable.sort((Task t1, Task t2) -> bottomLevel.get(t2) - bottomLevel.get(t1));
+		allocatable.sort((Task t1, Task t2) -> schedule.getGraph().getBottomTime(t2) - schedule.getGraph().getBottomTime(t1));
 
 		List<TreeSchedule> children = new ArrayList<TreeSchedule>();
 
@@ -136,87 +135,4 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder{
 
 		return startTime;
 	}
-
-	private List<Task> computeAllocatableTasks(TreeSchedule schedule, Set<Task> allocated) {
-		if (schedule.getParent() == lastSchedule && lastSchedule != null) {
-			allocatable.remove(schedule.getMostRecentTask());
-		} else {
-			allocatable = new ArrayList<Task>();
-			for (Task task : schedule.getGraph().getAll()) {
-				if (!allocated.contains(task)) {
-					boolean allocate = true;
-					for (Dependency dep : task.getParents()) {
-						if (!allocated.contains(dep.getSource())) {
-							allocate = false;
-							break;
-						}
-					}
-					if (allocate) {
-						allocatable.add(task);
-					}
-				}
-			}
-		}
-
-		return allocatable;
-
-	}
-
-	private Set<Task> computeAllocated(TreeSchedule schedule) {
-		if (schedule.getParent() == lastSchedule) {
-			allocated.add(schedule.getMostRecentTask());
-		} else {
-			List<List<Task>> taskList = schedule.computeTaskLists();
-			allocated = new HashSet<Task>();
-			for (List<Task> processor : taskList) {
-				for (Task task : processor) {
-					allocated.add(task);
-				}
-			}
-		}
-
-		return allocated;
-	}
-
-	private Map<Task, Integer> computeBottomLevel(TreeSchedule schedule) {
-		if (lastGraph != schedule.getGraph()) {
-			lastGraph = schedule.getGraph();
-			bottomLevel = new HashMap<Task, Integer>();
-
-			Collection<Task> roots = lastGraph.getRoots();
-
-			// In computing the bottom level of all roots we get the bottom level of all
-			// tasks
-			for (Task root : roots) {
-				dynamicComputeBottomLevel(root);
-			}
-
-		}
-		return bottomLevel;
-	}
-
-	private int dynamicComputeBottomLevel(Task task) {
-		Integer bottomLevelValue = bottomLevel.get(task);
-		if (bottomLevelValue != null) {
-			return bottomLevelValue;
-		}
-
-		int childBottom = 0;
-		for (Dependency dep : task.getChildren()) {
-			Task child = dep.getTarget();
-			int childBottomLevel = dynamicComputeBottomLevel(child);
-			if (childBottomLevel > childBottom) {
-				childBottom = childBottomLevel;
-			}
-		}
-		bottomLevelValue = childBottom + task.getCost();
-		bottomLevel.put(task, bottomLevelValue);
-		return bottomLevelValue;
-	}
-
-	private List<TreeSchedule> orderByLowerBound(List<TreeSchedule> list) {
-		Collections.sort(list);
-		return list;
-	}
-
 }

@@ -1,10 +1,10 @@
 package se306group8.scheduleoptimizer.algorithm;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
@@ -26,7 +26,7 @@ public class BasicChildScheduleFinder implements ChildScheduleFinder {
 		
 		TaskGraph graph = schedule.getGraph();
 
-		List<Task> nextTasks = getNextTasks(schedule);
+		Collection<Task> nextTasks = schedule.getAllocatable();
 		
 		// Get an array of integers that represents used processors and next empty processor
 		int[] processors = IntStream.rangeClosed(1, _processors).toArray();
@@ -40,36 +40,4 @@ public class BasicChildScheduleFinder implements ChildScheduleFinder {
 		}
 		return childSchedules;
 	}
-	
-	/** Returns a list of tasks that are allowed to be scheduled next. 
-	 *  Tasks are only returned if all their parent tasks have already been scheduled. */
-	private List<Task> getNextTasks(TreeSchedule schedule) {
-		
-		List<Task> nextTasks = new ArrayList<Task>();
-		
-		for (Task task : schedule.getGraph().getAll()) {
-			if(schedule.getAlloctionFor(task) != null) {
-				continue;
-			}
-			
-			boolean canAllocate = true;
-			
-			for(Dependency parent : task.getParents()) {
-				Task parentTask = parent.getSource();
-				
-				if(schedule.getAlloctionFor(parentTask) == null) {
-					canAllocate = false;
-					break;
-				}
-			}
-			
-			if(canAllocate) {
-				nextTasks.add(task);
-			}
-		}
-		
-		return nextTasks;
-	}
-	
-	
 }
