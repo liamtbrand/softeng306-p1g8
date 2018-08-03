@@ -46,6 +46,10 @@ public class TestScheduleUtils {
 				fail();
 			}
 			
+			if (processorNumber<1) {
+				fail();
+			}
+			
 			int start;
 			if(index != 0) {
 				Task previous = schedule.getTasksOnProcessor(processorNumber).get(index - 1);
