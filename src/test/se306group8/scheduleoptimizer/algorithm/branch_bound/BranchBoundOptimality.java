@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
-import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 public class BranchBoundOptimality {
 	
