@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
+import se306group8.scheduleoptimizer.algorithm.ListSchedule;
+import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
@@ -21,7 +23,7 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 	RuntimeMonitor monitor;
 
 	// for these internal data structures the convention is processors start at 0
-	private Map<Task, ProcessAllocation> allocations;
+	private Map<Task, ListSchedule.ProcessorAllocation> allocations;
 	private int[] processorEndtime;
 	private List<List<Task>> schedule;
 
@@ -32,7 +34,7 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
 
 		// reset
-		allocations = new HashMap<Task, ProcessAllocation>();
+		allocations = new HashMap<>();
 		schedule = new ArrayList<List<Task>>(numberOfProcessors);
 		processorEndtime = new int[numberOfProcessors];
 
@@ -49,7 +51,7 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 			allocatePosition(task);
 		}
 
-		return new GreedySchedule(graph, allocations, schedule);
+		return new ListSchedule(graph, allocations, schedule);
 
 	}
 
@@ -62,20 +64,20 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 
 		// we don't know the best time and processor at this stage
 		int bestTime = 0;
-		int bestProcessor = 0;
+		int bestProcessor = 1;
 
 		// internally we use the convention processors start at 0
-		for (int pNo = 0; pNo < schedule.size(); pNo++) {
+		for (int pNo = 1; pNo <= schedule.size(); pNo++) {
 
 			int startTime = timeAtPosition(task, pNo);
 
-			// if we are at processor 0 we have no bestTime to compare against
-			if (startTime < bestTime || pNo == 0) {
+			// if we are at processor 1 we have no bestTime to compare against
+			if (startTime < bestTime || pNo == 1) {
 				bestTime = startTime;
 				bestProcessor = pNo;
 			}
 
-			if (schedule.get(pNo).isEmpty()) {
+			if (schedule.get(pNo - 1).isEmpty()) {
 				// all processors after this are empty as well
 				break;
 			}
@@ -83,11 +85,10 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 		}
 
 		// now we have found best processor to put task
-		processorEndtime[bestProcessor] = bestTime + task.getCost();
-		ProcessAllocation greedyAllocation = new ProcessAllocation(bestTime, processorEndtime[bestProcessor],
-				bestProcessor);
+		processorEndtime[bestProcessor - 1] = bestTime + task.getCost();
+		ProcessorAllocation greedyAllocation = new ProcessorAllocation(bestTime, processorEndtime[bestProcessor - 1], bestProcessor);
 		allocations.put(task, greedyAllocation);
-		schedule.get(bestProcessor).add(task);
+		schedule.get(bestProcessor - 1).add(task);
 	}
 
 	/**
@@ -101,21 +102,21 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 	private int timeAtPosition(Task task, int processor) {
 		
 		//in case the task before is not a dependency
-		int startTime = processorEndtime[processor];
+		int startTime = processorEndtime[processor - 1];
 
 		for (Dependency dep : task.getParents()) {
 			Task parent = dep.getSource();
 			
 			//because we looped by partial order the parent will already be allocated
-			ProcessAllocation parentAllocation = allocations.get(parent);
+			ProcessorAllocation parentAllocation = allocations.get(parent);
 			int time;
 			
 			//time start rules
 			if (parentAllocation.processor == processor) {
-				time = processorEndtime[processor];
+				time = processorEndtime[processor - 1];
 			} else {
 				int comStart = parentAllocation.endTime + dep.getCommunicationCost();
-				time = (comStart > processorEndtime[processor]) ? comStart : processorEndtime[processor];
+				time = (comStart > processorEndtime[processor - 1]) ? comStart : processorEndtime[processor - 1];
 			}
 
 			//we have to accommodate for the worst dependency

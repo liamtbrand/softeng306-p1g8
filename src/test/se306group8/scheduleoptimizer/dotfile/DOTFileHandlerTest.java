@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.algorithm.ListSchedule;
+import se306group8.scheduleoptimizer.algorithm.TestScheduleUtils;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilder;

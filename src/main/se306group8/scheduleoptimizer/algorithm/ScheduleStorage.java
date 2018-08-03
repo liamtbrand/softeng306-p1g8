@@ -2,6 +2,7 @@ package se306group8.scheduleoptimizer.algorithm;
 
 import java.util.Collection;
 
+import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
 public class ScheduleStorage {

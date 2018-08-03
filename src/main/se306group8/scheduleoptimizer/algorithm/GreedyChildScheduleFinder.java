@@ -37,7 +37,6 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder{
 		allocatable = new ArrayList<Task>();
 	}
 
-	@Override
 	public List<TreeSchedule> getChildSchedules(TreeSchedule schedule) {
 //		Collection<TreeSchedule> unorderedSet = super.getChildSchedules(schedule);
 //		List<TreeSchedule> unorderedList = (List<TreeSchedule>)unorderedSet;
