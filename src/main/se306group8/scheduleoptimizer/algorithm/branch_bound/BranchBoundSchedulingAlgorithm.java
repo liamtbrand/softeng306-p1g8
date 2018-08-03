@@ -12,6 +12,9 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 public class BranchBoundSchedulingAlgorithm implements Algorithm {
 	
+	public BranchBoundSchedulingAlgorithm() {
+	}
+	
 	@Override
 	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
 		
