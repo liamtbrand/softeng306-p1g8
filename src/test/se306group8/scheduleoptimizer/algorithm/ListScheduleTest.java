@@ -121,6 +121,6 @@ class ListScheduleTest {
 	
 	@Test
 	void testValidity() {
-		TestScheduleUtils.checkValidity(scheduleFromList);
+		TestScheduleUtils.checkValidity(scheduleFromList,2);
 	}
 }
