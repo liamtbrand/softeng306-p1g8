@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
+import se306group8.scheduleoptimizer.algorithm.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
+import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
@@ -31,25 +33,36 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 	@Override
 	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
 
-		// reset
-		allocations = new HashMap<Task, ProcessAllocation>();
-		schedule = new ArrayList<List<Task>>(numberOfProcessors);
-		processorEndtime = new int[numberOfProcessors];
-
-		// init schedule
-		for (int i = 0; i < numberOfProcessors; i++) {
-			schedule.add(new ArrayList<Task>());
+		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(numberOfProcessors);
+		TreeSchedule schedule = new TreeSchedule(graph, (TreeSchedule s) -> 0);
+		
+		List<TreeSchedule> children = gcsf.getChildSchedules(schedule);
+		while (!children.isEmpty()) {
+			schedule = children.get(0);
+			children = gcsf.getChildSchedules(schedule);
 		}
-
-		// requires getAll to return a partial order
-		List<Task> partialOrder = graph.getAll();
-
-		// allocate tasks
-		for (Task task : partialOrder) {
-			allocatePosition(task);
-		}
-
-		return new GreedySchedule(graph, allocations, schedule);
+		
+		return schedule.getFullSchedule();
+		
+//		// reset
+//		allocations = new HashMap<Task, ProcessAllocation>();
+//		schedule = new ArrayList<List<Task>>(numberOfProcessors);
+//		processorEndtime = new int[numberOfProcessors];
+//
+//		// init schedule
+//		for (int i = 0; i < numberOfProcessors; i++) {
+//			schedule.add(new ArrayList<Task>());
+//		}
+//
+//		// requires getAll to return a partial order
+//		List<Task> partialOrder = graph.getAll();
+//
+//		// allocate tasks
+//		for (Task task : partialOrder) {
+//			allocatePosition(task);
+//		}
+//
+//		//return new GreedySchedule(graph, allocations, schedule);
 
 	}
 
