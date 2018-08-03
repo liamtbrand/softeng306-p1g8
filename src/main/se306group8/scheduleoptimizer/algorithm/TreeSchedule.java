@@ -119,6 +119,20 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		return null;
 	}
 	
+	/**
+	 * Returns the last processor allocation on a processor null if no allocation
+	 * @param processor
+	 * @return
+	 */
+	public ProcessorAllocation getLastAllocationForProcessor(int processor) {
+		for(TreeSchedule s = this; s != null; s = s.parent) {
+			if(s.processor == processor) {
+				return new ProcessorAllocation(s.startTime, s.endTime, s.processor);
+			}
+		}
+		return null;
+	}
+	
 	public List<List<Task>> computeTaskLists() {
 		if(isEmpty()) {
 			return new ArrayList<>();
@@ -135,7 +149,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			result.add(new ArrayList<>());
 		}
 		
-		result.get(processor).add(task);
+		result.get(processor - 1).add(task);
 		
 		return result;
 	}
