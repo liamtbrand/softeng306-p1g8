@@ -7,14 +7,14 @@ import se306group8.scheduleoptimizer.taskgraph.Schedule;
  */
 public interface RuntimeMonitor {
 
-	// To be used to update RuntimeMonitor on current best comlpete schedule
-	public void updateBestSchedule( Schedule optimalSchedule );
+	// To be used to update RuntimeMonitor on current best schedule (this may be partial)
+	public void updateBestSchedule( TreeSchedule optimalSchedule );
 	
 	// Method to be called upon algorithm-start
 	public void start();
 	
 	// Method to be called upon algorithm-finish
-	public void finish();
+	public void finish(Schedule solution);
 	
 	// Passes messages to stdout
 	public void logMessage( String message );

@@ -19,7 +19,7 @@ import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
 public class GreedySchedulingAlgorithm implements Algorithm {
 
 	// TODO use the monitor
-	CLIRuntimeMonitor monitor;
+	private RuntimeMonitor monitor;
 
 	/**
 	 * {@inheritDoc}
@@ -33,7 +33,9 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 		}
 		
 		// Invoke start() method on RuntimeMonitor instance
-		this.monitor.start();
+		if(monitor != null) {
+			this.monitor.start();
+		}
 
 		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(numberOfProcessors);
 		TreeSchedule schedule = new TreeSchedule(graph, (TreeSchedule s) -> 0);
@@ -45,22 +47,9 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 		// Final (immutable) object to return
 		Schedule finalSchedule = schedule.getFullSchedule();
 		
-		TreeSchedule treeSchedule = (TreeSchedule)finalSchedule;
-		
-		HashMap<Task, ProcessorAllocation> allocations = new HashMap<Task, ProcessorAllocation>();
-		
-		for (Task t : treeSchedule.getAllocated()) {
-			allocations.put(t, treeSchedule.getAlloctionFor(t));
+		if(monitor != null) {
+			monitor.finish(finalSchedule);
 		}
-		
-		// Update state of current schedule to CLIRuntimeMonitor
-		this.monitor.printGreedySchedule(allocations, finalSchedule.getTotalRuntime());
-				
-		// Invoke finish() method on RuntimeMonitor instance
-		monitor.finish();
-		
-		// Update RuntimeMonitor instance with finished schedule
-		monitor.updateBestSchedule(finalSchedule);
 		
 		return finalSchedule;
 	}
