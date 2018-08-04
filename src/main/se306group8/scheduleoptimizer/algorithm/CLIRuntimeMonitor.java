@@ -17,7 +17,7 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	
 	int numProcessors;
 	
-	private static int seconds = 0;
+	String info = "";
 	
 	public CLIRuntimeMonitor() {
 		this.numProcessors = 0;
@@ -48,30 +48,46 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 
 	}
 	
-	public void updateCurrentSchedule(HashMap<Task, ListSchedule.ProcessorAllocation> allocations) {
+	public void updateCurrentSchedule(HashMap<Task, ListSchedule.ProcessorAllocation> allocations, int maxFinishTime) {
 			
-			int processor;
-			String tasksCurrent = this.seconds + " ||";
+			// input maxFinishTime presents upper bound on number of times to loop (and print)
+			for(int secs = 0; secs <= maxFinishTime; secs++) {
 			
-			// Iterate through all task-allocations and processors, checking which ones are to be logged for a given second
-			for (int i = 1; i <= this.numProcessors; i++) {
-				for (Map.Entry<Task, ListSchedule.ProcessorAllocation> entry : allocations.entrySet()) {
-					if (entry.getValue().processor == i) {
-						if ((this.seconds >= entry.getValue().startTime) && (this.seconds <= entry.getValue().endTime)) {
-							tasksCurrent += "\t" + entry.getKey().getName() + "\t||";
+				String tasksCurrent = secs + " ||";
+
+
+				
+				
+				// for every processor
+				for (int i = 1; i <= this.numProcessors; i++) {
+					boolean isPrinted = false;
+					
+					for (Map.Entry<Task, ListSchedule.ProcessorAllocation> entry : allocations.entrySet()) {
+						
+						ListSchedule.ProcessorAllocation processorAllo = entry.getValue();
+						Task currentTask = entry.getKey();
+						
+						if (processorAllo.processor == i) {
+							if ((secs >= processorAllo.startTime) && (secs < processorAllo.endTime)) {
+								tasksCurrent += "\t" + currentTask.getName() + "\t||";
+								info += "\nTask name: " + currentTask.getName() + ", start-time: " 
+								+ processorAllo.startTime + ", end-time: " + processorAllo.endTime;
+								isPrinted = true;
+							}
 						}
 					}
+					if (!isPrinted) {
+						tasksCurrent += "\t \t||";
+					}
+					
 				}
+				logMessage(tasksCurrent);
 			}
-			
-			logMessage(tasksCurrent);
-			this.seconds++;
 	}
 
 	@Override
 	public void finish() {
-		
-		this.seconds = 0;
+	
 		
 		// Log and print out finished time
 		this.finishTime = System.nanoTime();
@@ -91,6 +107,10 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 		logMessage("Total runtime of output schedule: " + optimalSchedule.getTotalRuntime());
 		logMessage("==========================================");
 		logMessage("\n\n");
+		
+		// Debug purposes
+		logMessage(info);
+		info = "";
 	}
 	
 

@@ -60,14 +60,18 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 			allocatePosition(task);
 		}
 		
+		ListSchedule finalSchedule = new ListSchedule(graph, allocations, schedule);
+		
+		// Update state of current schedule to CLIRuntimeMonitor
+		this.monitor.updateCurrentSchedule((HashMap)this.allocations, finalSchedule.getTotalRuntime());
 		
 		// Invoke finish() method on RuntimeMonitor instance
 		monitor.finish();
 		
 		// Update RuntimeMonitor instance with finished schedule
-		monitor.updateBestSchedule(new ListSchedule(graph, allocations, schedule));
+		monitor.updateBestSchedule(finalSchedule);
 
-		return new ListSchedule(graph, allocations, schedule);
+		return finalSchedule;
 
 	}
 
@@ -104,9 +108,6 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 		processorEndtime[bestProcessor - 1] = bestTime + task.getCost();
 		ProcessorAllocation greedyAllocation = new ProcessorAllocation(bestTime, processorEndtime[bestProcessor - 1], bestProcessor);
 		allocations.put(task, greedyAllocation);
-		
-		// Update state of current schedule to CLIRuntimeMonitor
-		this.monitor.updateCurrentSchedule((HashMap)this.allocations);
 		
 		schedule.get(bestProcessor - 1).add(task);
 	}
