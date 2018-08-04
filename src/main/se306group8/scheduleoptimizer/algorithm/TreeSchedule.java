@@ -175,6 +175,9 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	
 	/** Returns the full schedule. This may be null if this solution is not a full solution. */
 	public Schedule getFullSchedule() {
+		if(!isComplete())
+			return null;
+		
 		return new ListSchedule(graph, computeTaskLists());
 	}
 	
@@ -195,7 +198,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	}
 
 	public String toString() {
-		return getFullSchedule().toString();
+		return computeTaskLists().toString();
 	}
 	
 	@Override
