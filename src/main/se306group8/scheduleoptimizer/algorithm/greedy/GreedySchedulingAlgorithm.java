@@ -63,7 +63,7 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 		ListSchedule finalSchedule = new ListSchedule(graph, allocations, schedule);
 		
 		// Update state of current schedule to CLIRuntimeMonitor
-		this.monitor.updateCurrentSchedule((HashMap)this.allocations, finalSchedule.getTotalRuntime());
+		this.monitor.printGreedySchedule((HashMap)this.allocations, finalSchedule.getTotalRuntime());
 		
 		// Invoke finish() method on RuntimeMonitor instance
 		monitor.finish();
