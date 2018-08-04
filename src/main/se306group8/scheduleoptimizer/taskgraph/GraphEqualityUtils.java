@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/** This is a static utility class used for testing the equality for elements, possibly ignoring parents or children. */
 class GraphEqualityUtils {
+	/** Wraps an object, redefining equality to ignore children */
 	private static class IgnoreChildContainer<T extends GraphEquality<?>> {
 		T object;
 
@@ -38,6 +40,7 @@ class GraphEqualityUtils {
 		}
 	}
 
+	/** Wraps an object, redefining equality to ignore parents */
 	private static class IgnoreParentContainer<T extends GraphEquality<?>> {
 		T object;
 
@@ -71,6 +74,7 @@ class GraphEqualityUtils {
 		}
 	}
 
+	/** Checks if two sets are equal ignoring the parents of the elements. */
 	static <T extends GraphEquality<?>> boolean setsEqualIgnoringParents(Collection<? extends T> aSet, Collection<? extends T> bSet) {
 		if(aSet == bSet)
 			return true;
@@ -81,6 +85,7 @@ class GraphEqualityUtils {
 		return aTransformed.equals(bTransformed);
 	}
 	
+	/** Checks if two sets are equal ignoring the children of the elements. */
 	static <T extends GraphEquality<?>> boolean setsEqualIgnoringChildren(Collection<? extends T> aSet, Collection<? extends T> bSet) {
 		if(aSet == bSet)
 			return true;
