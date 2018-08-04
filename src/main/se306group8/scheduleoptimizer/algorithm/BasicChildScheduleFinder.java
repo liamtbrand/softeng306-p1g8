@@ -28,7 +28,7 @@ public class BasicChildScheduleFinder implements ChildScheduleFinder {
 
 		Collection<Task> nextTasks = schedule.getAllocatable();
 		
-		// Get an array of integers that represents used processors and next empty processor
+		// Get an array of integers that represents processor numbers
 		int[] processors = IntStream.rangeClosed(1, _processors).toArray();
 		
 		List<TreeSchedule> childSchedules = new ArrayList<TreeSchedule>();
