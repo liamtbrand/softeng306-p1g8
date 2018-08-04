@@ -1,4 +1,4 @@
-package se306group8.scheduleoptimizer.algorithm.branch_bound;
+package se306group8.scheduleoptimizer.algorithm.branchbound;
 
 import java.util.List;
 
