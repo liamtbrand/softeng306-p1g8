@@ -24,6 +24,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
  * This is a simple implementation of schedule that takes stores a mapping of tasks to a processorAllocation
  */
 public final class ListSchedule implements Schedule {
+	
 	/** This class represents an allocation for a single task. It is used as an input to one of the constructors */
 	public static class ProcessorAllocation {
 		public final int startTime;
@@ -89,7 +90,7 @@ public final class ListSchedule implements Schedule {
 		return result;
 	}
 
-	protected ListSchedule(TaskGraph graph, Map<Task, ProcessorAllocation> allocation, List<List<Task>> taskLists) {
+	public ListSchedule(TaskGraph graph, Map<Task, ProcessorAllocation> allocation, List<List<Task>> taskLists) {
 		assert graph != null && taskLists != null && allocation != null && checkConsistency(graph, allocation, taskLists);
 		
 		this.graph = graph;

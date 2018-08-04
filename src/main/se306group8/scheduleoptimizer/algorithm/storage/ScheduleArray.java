@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import se306group8.scheduleoptimizer.algorithm.InternalSchedule;
+import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
@@ -88,7 +88,7 @@ class ScheduleArray {
 	 * @throws OutOfMemoryError if there are too many schedules in this array.
 	 * @return the id that was allocated to this object.
 	 **/
-	int addSchedule(InternalSchedule schedule) throws OutOfMemoryError {
+	int addSchedule(TreeSchedule schedule) throws OutOfMemoryError {
 		if(schedule == null)
 			return -1;
 		

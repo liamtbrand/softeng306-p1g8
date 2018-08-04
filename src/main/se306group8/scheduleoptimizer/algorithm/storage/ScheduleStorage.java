@@ -2,8 +2,8 @@ package se306group8.scheduleoptimizer.algorithm.storage;
 
 import java.util.Collection;
 
-import se306group8.scheduleoptimizer.algorithm.InternalSchedule;
-import se306group8.scheduleoptimizer.algorithm.MinimumHeuristic;
+import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
+import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 public class ScheduleStorage {
@@ -19,18 +19,18 @@ public class ScheduleStorage {
 	}
 	
 	/** Stores a schedule in storage. */
-	public void storeSchedule(InternalSchedule schedule) {
+	public void storeSchedule(TreeSchedule schedule) {
 		queue.put(schedule);
 	}
 	
 	/** Stores a list of schedules in storage. */
-	public void storeSchedules(Collection<InternalSchedule> schedules) {
-		for(InternalSchedule partial : schedules) {
+	public void storeSchedules(Collection<TreeSchedule> schedules) {
+		for(TreeSchedule partial : schedules) {
 			storeSchedule(partial);
 		}
 	}
 	
-	public InternalSchedule getBestSchedule() {
+	public TreeSchedule getBestSchedule() {
 		return queue.pop();
 	}
 }

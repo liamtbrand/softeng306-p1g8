@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
-import se306group8.scheduleoptimizer.dotfile.TestScheduleUtils;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
@@ -118,5 +117,10 @@ class ListScheduleTest {
 	void testEqualsObject() {
 		assertEquals(scheduleFromAllocation, scheduleFromList);
 		assertNotEquals(TestScheduleUtils.createTestScheduleA(), schedule);
+	}
+	
+	@Test
+	void testValidity() {
+		TestScheduleUtils.checkValidity(scheduleFromList,2);
 	}
 }

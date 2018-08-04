@@ -86,6 +86,8 @@ public final class Task implements GraphEquality<Task> {
 		
 		Task task = (Task) other;
 		
+		// TODO is this really equality? - Name should be unique, so do we need these other checks?
+		
 		return task.name.equals(name) && cost == task.cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, task.parents) && GraphEqualityUtils.setsEqualIgnoringParents(children, task.children);
 	}
 
