@@ -102,8 +102,10 @@ class DOTFileHandlerTest {
 		Path tmpFolder = Files.createTempDirectory("testGraphs");
 		DOTFileHandler handler = new DOTFileHandler();
 		
-		handler.write(tmpFolder.resolve("double-write.dot"), schedule);
-		handler.write(tmpFolder.resolve("double-write.dot"), TestScheduleUtils.createTestScheduleA());
+		handler.write(tmpFolder.resolve("double-write.dot"), schedule, schedule.getGraph().getName());
+		
+		Schedule testSchedule = TestScheduleUtils.createTestScheduleA();
+		handler.write(tmpFolder.resolve("double-write.dot"), testSchedule, testSchedule.getGraph().getName());
 		
 		Assertions.assertEquals(TestScheduleUtils.createTestScheduleA(), handler.readSchedule(tmpFolder.resolve("double-write.dot")));
 	}
@@ -115,7 +117,7 @@ class DOTFileHandlerTest {
 		DOTFileHandler handler = new DOTFileHandler();
 		
 		Path tmpFolder = Files.createTempDirectory("testGraphs");
-		handler.write(tmpFolder.resolve("a.dot"), output);
+		handler.write(tmpFolder.resolve("a.dot"), output, output.getGraph().getName());
 		
 		Assertions.assertEquals(handler.readSchedule(tmpFolder.resolve("a.dot")), TestScheduleUtils.createTestScheduleA());
 	}
