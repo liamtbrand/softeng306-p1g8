@@ -77,3 +77,7 @@ task rebuildDotFiles {
 	dependsOn 'generateDotFiles'
 	generateDotFiles.mustRunAfter 'cleanDotFiles'
 }
+
+tasks.withType(JavaCompile) {
+  options.encoding = "UTF-8"
+}
