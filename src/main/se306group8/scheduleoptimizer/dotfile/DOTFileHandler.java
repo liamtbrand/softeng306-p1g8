@@ -354,6 +354,14 @@ public class DOTFileHandler {
 				isNotFirstAttribute = true;
 			}
 
+			if(startTime != -1) {
+				if(isNotFirstAttribute)
+					builder.append(',');
+
+				builder.append(startTimeAttribute).append("=").append(Integer.toString(startTime));
+				isNotFirstAttribute = true;
+			}
+			
 			if(processor != -1) {
 				if(isNotFirstAttribute)
 					builder.append(',');
@@ -362,13 +370,7 @@ public class DOTFileHandler {
 				isNotFirstAttribute = true;
 			}
 
-			if(startTime != -1) {
-				if(isNotFirstAttribute)
-					builder.append(',');
-
-				builder.append(startTimeAttribute).append("=").append(Integer.toString(startTime));
-				isNotFirstAttribute = true;
-			}
+			
 
 			builder.append(']');
 
