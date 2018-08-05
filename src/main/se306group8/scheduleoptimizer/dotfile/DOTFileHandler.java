@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -389,7 +390,7 @@ public class DOTFileHandler {
 	private String convertToOutputName(String name) {
 		int indexOfSecondLetter = name.offsetByCodePoints(0, 1);
 		
-		return name.substring(0, indexOfSecondLetter).toUpperCase(Locale.ROOT) + name.substring(indexOfSecondLetter);
+		return "output" + name.substring(0, indexOfSecondLetter).toUpperCase(Locale.ROOT) + name.substring(indexOfSecondLetter);
 	}
 
 	/**
@@ -401,6 +402,10 @@ public class DOTFileHandler {
 	 * @throws IOException If the file cannot be written to for some reason.
 	 */
 	public void write(Path path, Schedule schedule, String name) throws IOException {
+		if(Files.isDirectory(path)) {
+			throw new IOException(path.toString() + " is a directory.");
+		}
+		
 		StringBuilder output = new StringBuilder();
 
 		TaskGraph graph = schedule.getGraph();
@@ -425,6 +430,8 @@ public class DOTFileHandler {
 
 		output.append("}").append(System.lineSeparator());
 
+		Path folder = path.toAbsolutePath().getParent();
+		Files.createDirectories(folder);
 		try (BufferedWriter reader = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 			reader.write(output.toString());
 		}
