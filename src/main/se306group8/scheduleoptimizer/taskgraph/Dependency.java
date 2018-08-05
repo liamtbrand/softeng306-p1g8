@@ -33,6 +33,7 @@ public final class Dependency implements GraphEquality<Dependency> {
 		return String.format("%s -> %s", source.toString(), target.toString());
 	}
 
+	/** Checks the equality of this dependency ignoring any items involving the parents of this link. */
 	@Override
 	public boolean equalsIgnoringParents(Dependency other) {
 		if(other == this)
@@ -41,6 +42,7 @@ public final class Dependency implements GraphEquality<Dependency> {
 		return other.communicationCost == communicationCost && other.target.equalsIgnoringParents(target);
 	}
 
+	/** Checks the equality of this dependency ignoring any items involving the children of this link. */
 	@Override
 	public boolean equalsIgnoringChildren(Dependency other) {
 		if(other == this)
@@ -48,7 +50,8 @@ public final class Dependency implements GraphEquality<Dependency> {
 		
 		return other.communicationCost == communicationCost && other.source.equalsIgnoringChildren(source);
 	}
-	
+
+	/** Checks the equality of this dependency. This checks the graph in both directions. */
 	@Override
 	public boolean equals(Object other) {
 		if(other == this)

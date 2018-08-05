@@ -2,6 +2,7 @@ package se306group8.scheduleoptimizer.algorithm.heuristic;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
+/** Calculates the time taken if there is no more processor time wasted. */
 public class NoIdleTimeHeuristic implements MinimumHeuristic {
 	private final int processors;
 	

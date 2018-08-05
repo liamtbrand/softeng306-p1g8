@@ -16,6 +16,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilder;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
+/** Tests the DOT file IO by reading and writing several files from disk. The writer is checked by reading the file back in. */
 class DOTFileHandlerTest {
 
 	@Test
@@ -65,6 +66,7 @@ class DOTFileHandlerTest {
 		Assertions.assertEquals(TestScheduleUtils.createTestScheduleA(), handler.readSchedule(schedule));
 	}
 	
+	/** This is a regression test for the double writing of the graph to the same file. */
 	@Test
 	void testTwiceWrite() throws IOException {
 		TaskGraph graph = new TaskGraphBuilder()
