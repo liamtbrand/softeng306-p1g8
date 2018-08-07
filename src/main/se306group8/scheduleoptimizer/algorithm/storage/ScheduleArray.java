@@ -1,6 +1,7 @@
 package se306group8.scheduleoptimizer.algorithm.storage;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 

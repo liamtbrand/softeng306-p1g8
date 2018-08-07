@@ -203,7 +203,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	}
 
 	public String toString() {
-		return computeTaskLists().toString();
+		return computeTaskLists().toString() + "(" + lowerBound + ")";
 	}
 	
 	@Override
