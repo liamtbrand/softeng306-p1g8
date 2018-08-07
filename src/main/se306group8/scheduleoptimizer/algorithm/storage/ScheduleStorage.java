@@ -3,8 +3,6 @@ package se306group8.scheduleoptimizer.algorithm.storage;
 import java.util.Collection;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 public class ScheduleStorage {
 	private final SchedulePriorityQueue queue;
@@ -14,8 +12,8 @@ public class ScheduleStorage {
 	 * @param minimum The minimum heuristic to use, this may not be null.
 	 * @param sizeLimit The maximum number of Mb to use storing the schedules. More memory than this must not be used.
 	 **/
-	public ScheduleStorage(TaskGraph graph, MinimumHeuristic minimum, int sizeLimit) {
-		queue = new SchedulePriorityQueue(graph);
+	public ScheduleStorage(int sizeLimit) {
+		queue = new SchedulePriorityQueue();
 	}
 	
 	/** Stores a schedule in storage. */
@@ -31,6 +29,6 @@ public class ScheduleStorage {
 	}
 	
 	public TreeSchedule getBestSchedule() {
-		return queue.pop();
+		return queue.poll();
 	}
 }

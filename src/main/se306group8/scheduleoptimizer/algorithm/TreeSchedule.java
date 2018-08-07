@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
@@ -222,6 +223,30 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		}
 		
 		return allocated;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof TreeSchedule)) {
+			return false;
+		}
+		
+		TreeSchedule other = (TreeSchedule) obj;
+		
+		if(isEmpty()) {
+			return other.isEmpty() && graph.equals(other.graph);
+		} else {
+			return !other.isEmpty() && graph.equals(other.graph) && Objects.equals(parent, other.parent) && task == other.task && processor == other.processor;
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		if(isEmpty()) {
+			return Objects.hash(graph);
+		} else {
+			return Objects.hash(graph, parent, task, processor);
+		}
 	}
 	
 	public Set<Task> getAllocatable() {

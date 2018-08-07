@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 /** This is an implementation of a priority queue, that holds indexs into the ScheduleArray. */
 final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
@@ -15,8 +14,8 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 	private int length;
 	private int[] minHeap;
 	
-	SchedulePriorityQueue(TaskGraph graph) {
-		this.scheduleArray = new ScheduleArray(graph);
+	SchedulePriorityQueue() {
+		this.scheduleArray = new ScheduleArray();
 		length = 0;
 		minHeap = new int[1024 * 1024]; //Go big or go home :D
 	}

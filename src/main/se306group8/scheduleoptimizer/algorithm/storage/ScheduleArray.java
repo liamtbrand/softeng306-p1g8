@@ -3,11 +3,11 @@ package se306group8.scheduleoptimizer.algorithm.storage;
 import java.util.ArrayList;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
-/** This class represents a linear array of schedules */
+/** This class represents a linear array of schedules. All of these schedules must be generated from the
+ * same root schedule. */
 class ScheduleArray {
-	private static final int BLOCK_SIZE = 100_000;
+	static final int BLOCK_SIZE = 100_000;
 	
 	/** This class represents a large block of schedules. This represents a storage of about 1Mb.
 	 * This block size is chosen to be small enough so as to not waste memory. But large enough so
@@ -33,15 +33,15 @@ class ScheduleArray {
 	
 	/** Each block stores a large number of schedules at 8B per schedule. This limits the cost of resizing the array. */
 	private final ArrayList<ScheduleBlock> blocks = new ArrayList<>();
-	private final TaskGraph graph;
+	private TreeSchedule rootSchedule;
 	
 	private int nextId = 0;
 	
-	ScheduleArray(TaskGraph graph) {
-		this.graph = graph;
-	}
-	
 	int getLowerBound(int id) {
+		if(id == -1) {
+			return rootSchedule.getLowerBound();
+		}
+		
 		ScheduleBlock block = blocks.get(id / BLOCK_SIZE);
 		int subIndex = id % BLOCK_SIZE;
 		return block.lowerBound[subIndex];
@@ -51,11 +51,13 @@ class ScheduleArray {
 	 * Returns the schedule at the given id.
 	 * 
 	 * @param id The id to retrieve a schedule at.
-	 * @return The schedule, or null if the id is -1
+	 * @return The schedule
 	 */
-	ArrayBackedSchedule get(int id) {
+	TreeSchedule get(int id) {
 		if(id == -1) {
-			return null;
+			assert rootSchedule != null;
+			
+			return rootSchedule;
 		}
 		
 		ScheduleBlock block = blocks.get(id / BLOCK_SIZE);
@@ -66,7 +68,7 @@ class ScheduleArray {
 		int processor = Byte.toUnsignedInt(block.processorArray[subIndex]);
 		int lowerBound = Short.toUnsignedInt(block.lowerBound[subIndex]);
 		
-		return new ArrayBackedSchedule(graph, this, id, parent, graph.getTask(task), processor, lowerBound);
+		return new ArrayBackedSchedule(rootSchedule.getGraph(), this, id, parent, rootSchedule.getGraph().getTask(task), processor, lowerBound);
 	}
 	
 	/** Adds a schedule to the array. If this schedule object was already in the array it is not re-added
@@ -76,8 +78,12 @@ class ScheduleArray {
 	 * @return the id that was allocated to this object.
 	 **/
 	int addOrGetId(TreeSchedule schedule) throws OutOfMemoryError {
-		if(schedule == null)
+		if(schedule.getParent() == null) {
+			assert rootSchedule == null || rootSchedule.equals(schedule);
+			
+			rootSchedule = schedule; //Update root, this may be the first time.
 			return -1;
+		}
 		
 		if(schedule instanceof ArrayBackedSchedule) {
 			return ((ArrayBackedSchedule) schedule).getIndex();
