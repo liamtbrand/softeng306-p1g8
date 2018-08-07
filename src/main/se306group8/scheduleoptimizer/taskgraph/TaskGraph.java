@@ -67,6 +67,11 @@ public final class TaskGraph {
 		}
 	}
 	
+	/** Gets the task with the given id. */
+	public Task getTask(int id) {
+		return null; //TODO Robert fill this in when you commit your code.
+	}
+	
 	/**
 	 * Returns a List containing a topological ordering of all tasks.
 	 */

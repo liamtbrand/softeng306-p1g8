@@ -38,6 +38,11 @@ public final class Task implements GraphEquality<Task> {
 		return name;
 	}
 	
+	public int getId() {
+		assert false; //TODO Robert fill this in when you commit your work.
+		return 0;
+	}
+	
 	/** 
 	 * Returns all of the tasks that depend on this task. 
 	 */
