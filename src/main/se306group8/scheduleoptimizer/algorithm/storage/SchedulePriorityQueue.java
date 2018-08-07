@@ -27,9 +27,14 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 		expandIfNeeded();
 		minHeap[length++] = id;
 		fixTail();
+		checkHeapProperty();
 	}
 
-	int checkHeapProperty(int i) {
+	void checkHeapProperty() {
+		checkHeapProperty(0);
+	}
+	
+	private int checkHeapProperty(int i) {
 		int left = leftChild(i);
 		int right = rightChild(i);
 		int bound = scheduleArray.getLowerBound(minHeap[i]);
@@ -72,6 +77,7 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 		int index = minHeap[0];
 		minHeap[0] = minHeap[--length];
 		fixHead();
+		checkHeapProperty();
 		
 		return scheduleArray.get(index);
 	}
@@ -116,6 +122,10 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 		
 		do {
 			int leftChild = leftChild(parent);
+			if(leftChild >= length) {
+				return;
+			}
+			
 			int rightChild = rightChild(parent);
 			
 			//Initially choose the left child
@@ -138,7 +148,6 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 				swap(smallestChild, parent);
 				
 				parent = smallestChild;
-				parentBound = smallestChildBound;
 			} else {
 				isDone = true;
 			}

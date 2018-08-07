@@ -50,27 +50,27 @@ class SchedulePriorityQueueTest {
 	void testPutPoll() {
 		priorityQueue.putAll(Arrays.asList(parent, child1, child2));
 		
-		priorityQueue.checkHeapProperty(0);
+		priorityQueue.checkHeapProperty();
 		assertEquals(parent, priorityQueue.peek());
 		assertEquals(3, priorityQueue.size());
 		
-		priorityQueue.checkHeapProperty(0);
+		priorityQueue.checkHeapProperty();
 		assertEquals(parent, priorityQueue.poll());
 		assertEquals(2, priorityQueue.size());
 		
-		priorityQueue.checkHeapProperty(0);
+		priorityQueue.checkHeapProperty();
 		priorityQueue.put(child3);
 		assertEquals(3, priorityQueue.size());
 		
-		priorityQueue.checkHeapProperty(0);
+		priorityQueue.checkHeapProperty();
 		assertEquals(child2, priorityQueue.poll());
 		assertEquals(2, priorityQueue.size());
 		
-		priorityQueue.checkHeapProperty(0);
+		priorityQueue.checkHeapProperty();
 		assertEquals(child1, priorityQueue.poll());
 		assertEquals(1, priorityQueue.size());
 		
-		priorityQueue.checkHeapProperty(0);
+		priorityQueue.checkHeapProperty();
 		assertEquals(child3, priorityQueue.poll());
 		assertEquals(0, priorityQueue.size());
 	}

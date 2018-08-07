@@ -1,5 +1,6 @@
 package se306group8.scheduleoptimizer.algorithm.storage;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
@@ -30,5 +31,13 @@ public class ScheduleStorage {
 	
 	public TreeSchedule getBestSchedule() {
 		return queue.poll();
+	}
+	
+	public int size() {
+		return queue.size();
+	}
+	
+	public String toString() {
+		return Arrays.deepToString(queue.toArray());
 	}
 }
