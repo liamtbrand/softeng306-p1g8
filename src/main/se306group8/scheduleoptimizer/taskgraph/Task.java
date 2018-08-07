@@ -12,10 +12,12 @@ public final class Task implements GraphEquality<Task> {
 	private Collection<Dependency> children;
 	private Collection<Dependency> parents;
 	private final int cost;
+	private final int id;
 	
-	Task(String name, int cost){
+	Task(String name, int cost, int id){
 		this.name = name;
 		this.cost = cost;
+		this.id = id;
 	}
 	
 	void setChildDependencies(Collection<Dependency> children){
@@ -39,8 +41,7 @@ public final class Task implements GraphEquality<Task> {
 	}
 	
 	public int getId() {
-		assert false; //TODO Robert fill this in when you commit your work.
-		return 0;
+		return id;
 	}
 	
 	/** 

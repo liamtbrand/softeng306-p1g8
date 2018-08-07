@@ -19,6 +19,7 @@ public final class TaskGraph {
 	private final Collection<Dependency> edges;
 	private final String name;
 	private final Map<Task, Integer> bottomTime = new HashMap<>();
+	private final Task[] taskMap;
 	
 	TaskGraph(String name, Collection<Task> tasks) {
 		assert tasks.stream().noneMatch(Objects::isNull);
@@ -26,8 +27,9 @@ public final class TaskGraph {
 		topologicalOrder = new ArrayList<>();
 		roots = new ArrayList<>();
 		this.name = name;
-		
+		this.taskMap = new Task[tasks.size()];
 		for(Task task : tasks) {
+			taskMap[task.getId()]=task;
 			addTask(task);
 			if(task.getParents().isEmpty()) {
 				roots.add(task);
@@ -69,7 +71,7 @@ public final class TaskGraph {
 	
 	/** Gets the task with the given id. */
 	public Task getTask(int id) {
-		return null; //TODO Robert fill this in when you commit your code.
+		return taskMap[id];
 	}
 	
 	/**
