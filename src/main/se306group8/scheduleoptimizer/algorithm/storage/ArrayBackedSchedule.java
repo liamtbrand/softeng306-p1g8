@@ -10,7 +10,7 @@ final class ArrayBackedSchedule extends TreeSchedule {
 	private final int index;
 	
 	ArrayBackedSchedule(TaskGraph graph, ScheduleArray array, int index, int parent, Task task, int processor, int lowerBound) {
-		super(graph, task, processor, array.getSchedule(parent));
+		super(graph, task, processor, array.get(parent));
 		
 		this.index = index;
 	}

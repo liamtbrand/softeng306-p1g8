@@ -25,7 +25,7 @@ class ScheduleArray {
 		
 		void setSchedule(int subIndex, TreeSchedule schedule) {
 			lowerBound[subIndex] = (short) schedule.getLowerBound();
-			parentsArray[subIndex] = addSchedule(schedule.getParent());
+			parentsArray[subIndex] = addOrGetId(schedule.getParent());
 			taskArray[subIndex] = (byte) schedule.getMostRecentTask().getId();
 			processorArray[subIndex] = (byte) schedule.getMostRecentProcessor();
 		}
@@ -53,7 +53,7 @@ class ScheduleArray {
 	 * @param id The id to retrieve a schedule at.
 	 * @return The schedule, or null if the id is -1
 	 */
-	ArrayBackedSchedule getSchedule(int id) {
+	ArrayBackedSchedule get(int id) {
 		if(id == -1) {
 			return null;
 		}
@@ -75,7 +75,7 @@ class ScheduleArray {
 	 * @throws OutOfMemoryError if there are too many schedules in this array.
 	 * @return the id that was allocated to this object.
 	 **/
-	int addSchedule(TreeSchedule schedule) throws OutOfMemoryError {
+	int addOrGetId(TreeSchedule schedule) throws OutOfMemoryError {
 		if(schedule == null)
 			return -1;
 		
