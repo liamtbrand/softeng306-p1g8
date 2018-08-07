@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
@@ -18,6 +19,17 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
  * starting time of the new Task.
  */
 public class GreedyChildScheduleFinder implements ChildScheduleFinder {
+
+	// rather than recalcuate bottom level every time we cache the last result
+	private TaskGraph lastGraph;
+	private Map<Task, Integer> bottomLevel;
+
+	// we can allocate by remembering parent
+	private TreeSchedule lastSchedule;
+	private Set<Task> allocated;
+
+	private List<Task> allocatable;
+
 	private int numProcessors;
 
 	public GreedyChildScheduleFinder(int numProcessors) {
