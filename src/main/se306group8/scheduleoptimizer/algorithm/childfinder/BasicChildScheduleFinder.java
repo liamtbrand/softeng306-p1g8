@@ -1,10 +1,11 @@
-package se306group8.scheduleoptimizer.algorithm;
+package se306group8.scheduleoptimizer.algorithm.childfinder;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 

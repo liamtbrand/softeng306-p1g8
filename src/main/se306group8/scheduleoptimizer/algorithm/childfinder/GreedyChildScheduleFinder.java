@@ -1,4 +1,4 @@
-package se306group8.scheduleoptimizer.algorithm;
+package se306group8.scheduleoptimizer.algorithm.childfinder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
+import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;

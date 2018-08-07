@@ -10,9 +10,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import se306group8.scheduleoptimizer.algorithm.BasicChildScheduleFinder;
-import se306group8.scheduleoptimizer.algorithm.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
+import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;

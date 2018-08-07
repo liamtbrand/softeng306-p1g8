@@ -1,6 +1,8 @@
-package se306group8.scheduleoptimizer.algorithm;
+package se306group8.scheduleoptimizer.algorithm.childfinder;
 
 import java.util.List;
+
+import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
 /**
  * Interface for producing child TreeSchedules 
