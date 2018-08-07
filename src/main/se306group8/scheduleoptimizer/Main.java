@@ -5,6 +5,9 @@ import java.nio.file.Paths;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.AlgorithmFactory;
+import se306group8.scheduleoptimizer.algorithm.CLIRuntimeMonitor;
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitorAggregator;
 import se306group8.scheduleoptimizer.cli.ArgsParser;
 import se306group8.scheduleoptimizer.config.ArgumentException;
 import se306group8.scheduleoptimizer.config.Config;
@@ -48,6 +51,12 @@ public class Main {
 		= new AlgorithmFactory(config.P());
 		
 		Algorithm algorithm = algorithmFactory.getAlgorithm();
+	
+		// Set the runtime monitor.
+		
+		RuntimeMonitor cliMonitor = new CLIRuntimeMonitor(config.P());
+		RuntimeMonitor monitor = new RuntimeMonitorAggregator(cliMonitor);
+		algorithm.setMonitor(monitor);
 		
 		// Run the Algorithm and obtain the Schedule.
 		
