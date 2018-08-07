@@ -27,7 +27,7 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 		expandIfNeeded();
 		minHeap[length++] = id;
 		fixTail();
-		checkHeapProperty();
+//		checkHeapProperty();
 	}
 
 	void checkHeapProperty() {
@@ -77,7 +77,7 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 		int index = minHeap[0];
 		minHeap[0] = minHeap[--length];
 		fixHead();
-		checkHeapProperty();
+//		checkHeapProperty();
 		
 		return scheduleArray.get(index);
 	}
