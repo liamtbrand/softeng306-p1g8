@@ -14,10 +14,8 @@ import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
-/** This is class that is used to wrap the very compressed representation that is used for ScheduleStorage. It is
- * not intended to be used for the storage itself, as the fact that it is an object instantly requires that it takes up
- * 16B, and usually 24B. Using clever compression we can store each schedule in 10B, doubling the number of solutions we can
- * store. */
+/** This class represents a partial schedule. It stores a parent schedule, and the task and processor that was added to it.
+ * This allows a nice easy to work with model of a schedule. */
 public class TreeSchedule implements Comparable<TreeSchedule> {
 	
 	//Constructed fields
@@ -36,6 +34,9 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private int lowerBound;
 	private int idleTime;
 	
+	/** Creates an empty schedule.
+	 * 
+	 * @param heuristic The heuristic that is used to calculate the lower bound for this schedule and all children. */
 	public TreeSchedule(TaskGraph graph, MinimumHeuristic heuristic) {
 		assert graph != null;
 		
@@ -47,10 +48,13 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		
 		startTime = 0;
 		endTime = 0;
-		lowerBound = 0;
+		lowerBound = heuristic.estimate(this);
 		idleTime = 0;
 	}
 	
+	/**
+	 * Creates a schedule from a parent schedule and an allocation.
+	 */
 	public TreeSchedule(TaskGraph graph, Task task, int processor, TreeSchedule parent) {
 		assert graph != null;
 		
@@ -246,6 +250,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		return results;
 	}
 
+	/** This gets the number of used processor. A processor is considered used if
+	 * there is a task allocated on it, or on some processor number larger than it. */
 	public int getNumberOfUsedProcessors() {
 		int n = 0;
 		for(TreeSchedule s = this; !s.isEmpty(); s = s.parent) {

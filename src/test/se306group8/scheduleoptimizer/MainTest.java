@@ -1,7 +1,5 @@
 package se306group8.scheduleoptimizer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Test;

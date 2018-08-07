@@ -7,10 +7,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.FileAttribute;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
@@ -352,6 +354,14 @@ public class DOTFileHandler {
 				isNotFirstAttribute = true;
 			}
 
+			if(startTime != -1) {
+				if(isNotFirstAttribute)
+					builder.append(',');
+
+				builder.append(startTimeAttribute).append("=").append(Integer.toString(startTime));
+				isNotFirstAttribute = true;
+			}
+			
 			if(processor != -1) {
 				if(isNotFirstAttribute)
 					builder.append(',');
@@ -360,13 +370,7 @@ public class DOTFileHandler {
 				isNotFirstAttribute = true;
 			}
 
-			if(startTime != -1) {
-				if(isNotFirstAttribute)
-					builder.append(',');
-
-				builder.append(startTimeAttribute).append("=").append(Integer.toString(startTime));
-				isNotFirstAttribute = true;
-			}
+			
 
 			builder.append(']');
 
@@ -382,11 +386,33 @@ public class DOTFileHandler {
 	 * @throws IOException If the file cannot be written to for some reason.
 	 */
 	public void write(Path path, Schedule schedule) throws IOException {
+		write(path, schedule, convertToOutputName(schedule.getGraph().getName()));
+	}
+	
+	private String convertToOutputName(String name) {
+		int indexOfSecondLetter = name.offsetByCodePoints(0, 1);
+		
+		return "output" + name.substring(0, indexOfSecondLetter).toUpperCase(Locale.ROOT) + name.substring(indexOfSecondLetter);
+	}
+
+	/**
+	 * Writes a completed schedule to the disk. The schedule must be complete and valid.
+	 * 
+	 * @param path The path to write to. This must not be null. The file will be created or overwritten.
+	 * @param schedule The complete schedule to write to disk. This must not be null and must be valid and complete.
+	 * @param name Overrides the name of the graph
+	 * @throws IOException If the file cannot be written to for some reason.
+	 */
+	public void write(Path path, Schedule schedule, String name) throws IOException {
+		if(Files.isDirectory(path)) {
+			throw new IOException(path.toString() + " is a directory.");
+		}
+		
 		StringBuilder output = new StringBuilder();
 
 		TaskGraph graph = schedule.getGraph();
 
-		output.append("digraph \"").append(graph.getName()).append("\" {").append(System.lineSeparator());
+		output.append("digraph \"").append(name).append("\" {").append(System.lineSeparator());
 
 		for(Task task : graph.getAll()) {
 			Attributes attr = new Attributes(task, schedule.getProcessorNumber(task), schedule.getStartTime(task));
@@ -406,6 +432,8 @@ public class DOTFileHandler {
 
 		output.append("}").append(System.lineSeparator());
 
+		Path folder = path.toAbsolutePath().getParent();
+		Files.createDirectories(folder);
 		try (BufferedWriter reader = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 			reader.write(output.toString());
 		}

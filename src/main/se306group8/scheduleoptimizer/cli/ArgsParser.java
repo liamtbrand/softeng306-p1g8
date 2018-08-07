@@ -43,7 +43,7 @@ public class ArgsParser {
 		
 		options.addOption("p", true, "use N cores for execution in parallel (default is sequential)");
 		options.addOption("v", "visualise the search");
-		options.addOption("o", true, "output file is named OUTPUT (default is INPUT−output.dot)");
+		options.addOption("o", true, "output file is named OUTPUT (default is INPUT-output.dot)");
 		
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd;
@@ -128,7 +128,7 @@ public class ArgsParser {
 		"Optional:\n"+
 		"-p N         Use N cores for execution in parallel (default is sequential).\n"+
 		"-v           Visualise the search.\n"+
-		"-o OUTPUT    Output file is named OUTPUT (default is INPUT−output.dot).";
+		"-o OUTPUT    Output file is named OUTPUT (default is INPUT-output.dot).";
 	}
 
 }

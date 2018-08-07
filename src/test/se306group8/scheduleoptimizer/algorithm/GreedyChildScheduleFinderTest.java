@@ -34,9 +34,6 @@ public class GreedyChildScheduleFinderTest {
 		assertEquals(1,result.get(1).getMostRecentProcessor());
 		assertEquals("b", result.get(1).getMostRecentTask().getName());
 		
-		
-		
-		
 	}
 	
 	@Test

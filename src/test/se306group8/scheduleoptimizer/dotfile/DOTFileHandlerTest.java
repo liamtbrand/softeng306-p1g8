@@ -16,6 +16,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraphBuilder;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
+/** Tests the DOT file IO by reading and writing several files from disk. The writer is checked by reading the file back in. */
 class DOTFileHandlerTest {
 
 	@Test
@@ -65,6 +66,7 @@ class DOTFileHandlerTest {
 		Assertions.assertEquals(TestScheduleUtils.createTestScheduleA(), handler.readSchedule(schedule));
 	}
 	
+	/** This is a regression test for the double writing of the graph to the same file. */
 	@Test
 	void testTwiceWrite() throws IOException {
 		TaskGraph graph = new TaskGraphBuilder()
@@ -100,8 +102,10 @@ class DOTFileHandlerTest {
 		Path tmpFolder = Files.createTempDirectory("testGraphs");
 		DOTFileHandler handler = new DOTFileHandler();
 		
-		handler.write(tmpFolder.resolve("double-write.dot"), schedule);
-		handler.write(tmpFolder.resolve("double-write.dot"), TestScheduleUtils.createTestScheduleA());
+		handler.write(tmpFolder.resolve("double-write.dot"), schedule, schedule.getGraph().getName());
+		
+		Schedule testSchedule = TestScheduleUtils.createTestScheduleA();
+		handler.write(tmpFolder.resolve("double-write.dot"), testSchedule, testSchedule.getGraph().getName());
 		
 		Assertions.assertEquals(TestScheduleUtils.createTestScheduleA(), handler.readSchedule(tmpFolder.resolve("double-write.dot")));
 	}
@@ -113,7 +117,7 @@ class DOTFileHandlerTest {
 		DOTFileHandler handler = new DOTFileHandler();
 		
 		Path tmpFolder = Files.createTempDirectory("testGraphs");
-		handler.write(tmpFolder.resolve("a.dot"), output);
+		handler.write(tmpFolder.resolve("a.dot"), output, output.getGraph().getName());
 		
 		Assertions.assertEquals(handler.readSchedule(tmpFolder.resolve("a.dot")), TestScheduleUtils.createTestScheduleA());
 	}

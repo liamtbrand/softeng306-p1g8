@@ -26,6 +26,7 @@ public class MinimumHeuristicTest {
 		childFinder = new BasicChildScheduleFinder(PROCESSOR);
 	}
 	
+	/** Makes sure that the given heuristic is actually an underestimate. */
 	public void testEstimate(MinimumHeuristic heuristic) {
 		TaskGraph graph = TestGraphUtils.buildTestGraphA();
 		
@@ -33,6 +34,8 @@ public class MinimumHeuristicTest {
 		getCompleteList(root, heuristic);
 	}
 
+	/** Gets a list of all schedules, checking that all of the returned elements don't violate the heuristic of the root.
+	 * This also recursively calls the same method for every single child schedule. */
 	private Collection<Schedule> getCompleteList(TreeSchedule root, MinimumHeuristic heuristic) {
 		if(root.isComplete()) {
 			Schedule schedule = root.getFullSchedule();
