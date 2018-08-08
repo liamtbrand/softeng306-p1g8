@@ -4,7 +4,7 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
 public class AggregateHeuristic implements MinimumHeuristic{
 	
-	MinimumHeuristic[] heuristics;
+	private final MinimumHeuristic[] heuristics;
 	
 	public AggregateHeuristic(MinimumHeuristic ...heuristics) {
 		this.heuristics=heuristics;
