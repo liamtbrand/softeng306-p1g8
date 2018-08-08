@@ -2,6 +2,7 @@ package se306group8.scheduleoptimizer.algorithm;
 
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+import se306group8.scheduleoptimizer.visualisation.RuntimeMonitor;
 
 /**
  * The root interface for all algorithms for computing a schedule. The only guarantee is that the schedule will be valid and complete.

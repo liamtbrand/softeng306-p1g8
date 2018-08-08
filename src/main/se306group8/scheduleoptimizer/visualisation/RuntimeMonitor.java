@@ -1,5 +1,6 @@
-package se306group8.scheduleoptimizer.algorithm;
+package se306group8.scheduleoptimizer.visualisation;
 
+import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
 /**
