@@ -25,24 +25,6 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
  */
 public final class ListSchedule implements Schedule {
 	
-	/** This class represents an allocation for a single task. It is used as an input to one of the constructors */
-	public static class ProcessorAllocation {
-		public final int startTime;
-		public final int processor;
-		public final int endTime;
-		
-		public ProcessorAllocation(int startTime, int endTime, int processor) {
-			this.startTime = startTime;
-			this.endTime = endTime;
-			this.processor = processor;
-		}
-		
-		@Override
-		public String toString() {
-			return "P[" + processor + "](" + startTime + ", " + endTime + ")";
-		}
-	}
-	
 	private final TaskGraph graph;
 	private final List<List<Task>> taskLists;
 	private final Map<Task, ProcessorAllocation> allocations;
@@ -170,7 +152,7 @@ public final class ListSchedule implements Schedule {
 			}
 		}
 		
-		alloc = new ProcessorAllocation(startTime, startTime + task.getCost(), processor);
+		alloc = new ProcessorAllocation(task, startTime, processor);
 		allocations.put(task, alloc);
 		
 		return alloc;
