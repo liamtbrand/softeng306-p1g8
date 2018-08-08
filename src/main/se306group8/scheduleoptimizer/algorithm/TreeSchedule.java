@@ -30,6 +30,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private final int lowerBound;
 	private final int idleTime;
 	private final int numberOfUsedProcessors;
+	private final int runtime;
 	
 	//Per task arrays
 	private final ProcessorAllocation[] allocations;
@@ -58,6 +59,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		idleTime = 0;
 		numberOfUsedProcessors = 0;
 		allocations = new ProcessorAllocation[numberOfTasks];
+		runtime = 0;
 		
 		numberOfParentsUncheduled = new int[numberOfTasks];
 		for(Task task : graph.getAll()) {
@@ -138,6 +140,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		allocated.add(task);
 
 		lowerBound = heuristic.estimate(this);
+		runtime = Math.max(parent.runtime, allocation.endTime);
 	}
 	
 	/** Returns true if the schedule is empty */
@@ -148,6 +151,10 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	/** Returns the amount of time wasted */
 	public int getIdleTime() {
 		return idleTime;
+	}
+	
+	public int getRuntime() {
+		return runtime;
 	}
 	
 	/** Returns the ProcessorAllocation instance that this task was scheduled on.
