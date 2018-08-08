@@ -2,9 +2,7 @@ package se306group8.scheduleoptimizer.taskgraph;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -18,7 +16,7 @@ public final class TaskGraph {
 	private final Collection<Task> roots;
 	private final Collection<Dependency> edges;
 	private final String name;
-	private final Map<Task, Integer> bottomTime = new HashMap<>();
+	private final int[] bottomTime;
 	private final Task[] taskMap;
 	
 	TaskGraph(String name, Collection<Task> tasks) {
@@ -40,6 +38,8 @@ public final class TaskGraph {
 				.flatMap(t -> t.getChildren().stream())
 				.collect(Collectors.toList());
 		
+		bottomTime = new int[topologicalOrder.size()];
+		
 		//Iterate backwards calculating the bottom times
 		for(int i = topologicalOrder.size() - 1; i >= 0; i--) {
 			Task task = topologicalOrder.get(i);
@@ -47,10 +47,10 @@ public final class TaskGraph {
 			
 			for(Dependency dep : task.getChildren()) {
 				Task child = dep.getTarget();
-				taskBottomTime = Math.max(taskBottomTime, bottomTime.get(child) + task.getCost());
+				taskBottomTime = Math.max(taskBottomTime, bottomTime[child.getId()] + task.getCost());
 			}
 			
-			bottomTime.put(task, taskBottomTime);
+			bottomTime[task.getId()]= taskBottomTime;
 		}
 	}
 	
@@ -100,7 +100,7 @@ public final class TaskGraph {
 	 * Gets the time from the start of this task to the end of the farthest descendant
 	 */
 	public int getBottomTime(Task task) {
-		return bottomTime.get(task);
+		return bottomTime[task.getId()];
 	}
 	
 	@Override
