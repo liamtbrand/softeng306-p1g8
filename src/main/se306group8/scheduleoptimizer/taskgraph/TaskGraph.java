@@ -18,6 +18,7 @@ public final class TaskGraph {
 	private final String name;
 	private final int[] bottomTime;
 	private final Task[] taskMap;
+	private final int totalTime;
 	
 	TaskGraph(String name, Collection<Task> tasks) {
 		assert tasks.stream().noneMatch(Objects::isNull);
@@ -26,14 +27,19 @@ public final class TaskGraph {
 		roots = new ArrayList<>();
 		this.name = name;
 		this.taskMap = new Task[tasks.size()];
+		
+		int sum = 0;
 		for(Task task : tasks) {
 			taskMap[task.getId()]=task;
 			addTask(task);
 			if(task.getParents().isEmpty()) {
 				roots.add(task);
 			}
+			
+			sum += task.getCost();
 		}
 		
+		totalTime = sum;
 		edges = tasks.stream()
 				.flatMap(t -> t.getChildren().stream())
 				.collect(Collectors.toList());
@@ -121,5 +127,9 @@ public final class TaskGraph {
 	@Override
 	public int hashCode() {
 		return Objects.hash(name, topologicalOrder.size(), edges.size());
+	}
+
+	public int getTotalTaskTime() {
+		return totalTime;
 	}
 }

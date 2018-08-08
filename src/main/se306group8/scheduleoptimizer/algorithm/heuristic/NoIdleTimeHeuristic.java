@@ -13,7 +13,7 @@ public class NoIdleTimeHeuristic implements MinimumHeuristic {
 	@Override
 	public int estimate(TreeSchedule schedule) {
 		int idleTime = schedule.getIdleTime();
-		int totalTime = schedule.getGraph().getAll().stream().mapToInt(task -> task.getCost()).sum();
+		int totalTime = schedule.getGraph().getTotalTaskTime();
 		
 		//Ceil div
 		return (totalTime + idleTime - 1) / processors + 1;
