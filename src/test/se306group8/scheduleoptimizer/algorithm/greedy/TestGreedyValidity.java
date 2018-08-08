@@ -37,7 +37,6 @@ public class TestGreedyValidity {
 			DOTFileHandler reader = new DOTFileHandler();
 			
 			long start = System.nanoTime();
-			Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
 			
 			System.out.println("Starting '" + graphName + "'");
 			
