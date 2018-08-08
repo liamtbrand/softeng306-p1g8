@@ -1,14 +1,12 @@
 package se306group8.scheduleoptimizer.algorithm;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
-import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
@@ -23,98 +21,131 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private final TreeSchedule parent;
 	
 	/** If this is null then this is the empty schedule */
-	private final Task task;
-	private final int processor;
 	private final TaskGraph graph;
 	private final MinimumHeuristic heuristic;
 	
 	//Calculated fields
-	private int startTime;
-	private int endTime;
+	private final ProcessorAllocation allocation;
 	/** A bound that any full solution using this solution must be greater than. */
-	private int lowerBound;
-	private int idleTime;
+	private final int lowerBound;
+	private final int idleTime;
+	private final int numberOfUsedProcessors;
+	private final int runtime;
+	
+	//Per task arrays
+	private final ProcessorAllocation[] allocations;
+	private final int[] numberOfParentsUncheduled;
+	
+	//Per processor arrays
+	/** This array.length = numberOfUsedProcessors */
+	private final ProcessorAllocation[] lastAllocationOnProcessor;
+	
+	//Sets
+	private final Collection<Task> allocatable;
+	private final Collection<Task> allocated;
 	
 	/** Creates an empty schedule.
 	 * 
 	 * @param heuristic The heuristic that is used to calculate the lower bound for this schedule and all children. */
 	public TreeSchedule(TaskGraph graph, MinimumHeuristic heuristic) {
 		assert graph != null;
+		int numberOfTasks = graph.getAll().size();
 		
 		this.graph = graph;
-		this.task = null;
-		this.processor = 0;
+		this.allocation = null;
 		this.parent = null;
 		this.heuristic = heuristic;
 		
-		startTime = 0;
-		endTime = 0;
-		lowerBound = heuristic.estimate(this);
 		idleTime = 0;
+		numberOfUsedProcessors = 0;
+		allocations = new ProcessorAllocation[numberOfTasks];
+		runtime = 0;
+		
+		numberOfParentsUncheduled = new int[numberOfTasks];
+		for(Task task : graph.getAll()) {
+			numberOfParentsUncheduled[task.getId()] = task.getParents().size();
+		}
+		
+		lastAllocationOnProcessor = new ProcessorAllocation[0];
+		
+		allocatable = graph.getRoots();
+		allocated = Collections.emptyList();
+		
+		lowerBound = heuristic.estimate(this);
 	}
 	
 	/**
 	 * Creates a schedule from a parent schedule and an allocation.
 	 */
-	public TreeSchedule(TaskGraph graph, Task task, int processor, TreeSchedule parent) {
-		assert graph != null;
-		
-		this.graph = graph;
-		this.task = task;
-		this.processor = processor;
+	public TreeSchedule(Task task, int processor, TreeSchedule parent) {
+		this.graph = parent.graph;
 		this.parent = parent;
 		this.heuristic = parent.heuristic;
 		
-		calculateFields();
-	}
-	
-	private void calculateFields() {
-		//Iterate backward through the tree. This first mention of this processor is the processor start time.
-		//Also look for the mention of each child start.
+		numberOfUsedProcessors = Math.max(parent.numberOfUsedProcessors, processor);
+		numberOfParentsUncheduled = parent.numberOfParentsUncheduled.clone();
+		allocatable = new ArrayList<>();
+		lastAllocationOnProcessor = Arrays.copyOf(parent.lastAllocationOnProcessor, numberOfUsedProcessors);
+		allocations = parent.allocations.clone();
 		
-		Map<Task, Dependency> parents = new HashMap<>();
-		
-		idleTime = parent.idleTime;
-		
-		startTime = 0;
-		int endOfPreviousTask = 0;
-		
-		for(Dependency link : task.getParents()) {
-			parents.put(link.getSource(), link);
-		}
-		
-		for(TreeSchedule s = parent; !s.isEmpty(); s = s.parent) {
-			if(s.processor == processor) {
-				//Only set it if this is the first mention of that processor
-				if(endOfPreviousTask == 0) {
-					if(s.endTime > startTime) {
-						startTime = s.endTime;
-					}
-					
-					endOfPreviousTask = s.endTime;
-				}
-			} else {
-				//Set the start time based on children
-				Dependency dep = parents.get(s.task);
-				if(dep != null) {
-					int dataReadyTime = s.endTime + dep.getCommunicationCost();
-					if(dataReadyTime > startTime) {
-						startTime = dataReadyTime;
-					}
-				}
+		for(Dependency dep : task.getChildren()) {
+			Task child = dep.getTarget();
+			numberOfParentsUncheduled[child.getId()]--;
+			
+			if(numberOfParentsUncheduled[child.getId()] == 0) {
+				allocatable.add(child);
 			}
 		}
 		
-		endTime = startTime + task.getCost();
-		idleTime += startTime - endOfPreviousTask;
-	
-		//This must be last as the other fields may be used by this calculation
+		int processorReadyTime;
+		
+		if(parent.getLastAllocationForProcessor(processor) != null) {
+			processorReadyTime = parent.getLastAllocationForProcessor(processor).endTime;
+		} else {
+			processorReadyTime = 0;
+		}
+		
+		int startTime = processorReadyTime;
+		
+		for(Dependency dep : task.getParents()) {
+			Task parentTask = dep.getSource();
+			ProcessorAllocation alloc = parent.getAlloctionFor(parentTask);
+			int dataReadyTime;
+			
+			if(alloc.processor == processor) {
+				dataReadyTime = alloc.endTime;
+			} else {
+				dataReadyTime = alloc.endTime + dep.getCommunicationCost();
+			}
+			
+			if(dataReadyTime > startTime) {
+				startTime = dataReadyTime;
+			}
+		}
+		
+		idleTime = parent.idleTime + startTime - processorReadyTime;
+		
+		for(Task oldAllocatable : parent.allocatable) {
+			if(oldAllocatable != task) {
+				allocatable.add(oldAllocatable);
+			}
+		}
+		
+		allocation = new ProcessorAllocation(task, startTime, processor);
+		
+		lastAllocationOnProcessor[processor - 1] = allocation;
+		allocations[task.getId()] = allocation;
+		
+		allocated = new ArrayList<>(parent.allocated);
+		allocated.add(task);
+
 		lowerBound = heuristic.estimate(this);
+		runtime = Math.max(parent.runtime, allocation.endTime);
 	}
 	
 	/** Returns true if the schedule is empty */
 	public boolean isEmpty() {
-		return task == null;
+		return allocation == null;
 	}
 	
 	/** Returns the amount of time wasted */
@@ -122,16 +153,14 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		return idleTime;
 	}
 	
+	public int getRuntime() {
+		return runtime;
+	}
+	
 	/** Returns the ProcessorAllocation instance that this task was scheduled on.
 	 * This returns null if the task has not been scheduled. */
 	public ProcessorAllocation getAlloctionFor(Task t) {
-		for(TreeSchedule s = this; !s.isEmpty(); s = s.parent) {
-			if(s.task.equals(t)) {
-				return new ProcessorAllocation(s.startTime, s.endTime, s.processor);
-			}
-		}
-		
-		return null;
+		return allocations[t.getId()];
 	}
 	
 	/**
@@ -140,12 +169,10 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	 * @return
 	 */
 	public ProcessorAllocation getLastAllocationForProcessor(int processor) {
-		for(TreeSchedule s = this; !s.isEmpty(); s = s.parent) {
-			if(s.processor == processor) {
-				return new ProcessorAllocation(s.startTime, s.endTime, s.processor);
-			}
-		}
-		return null;
+		if(processor > lastAllocationOnProcessor.length)
+			return null;
+		
+		return lastAllocationOnProcessor[processor - 1];
 	}
 	
 	public List<List<Task>> computeTaskLists() {
@@ -160,11 +187,11 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			result = parent.computeTaskLists();
 		}
 		
-		while(result.size() < processor) {
+		while(result.size() < numberOfUsedProcessors) {
 			result.add(new ArrayList<>());
 		}
 		
-		result.get(processor - 1).add(task);
+		result.get(allocation.processor - 1).add(allocation.task);
 		
 		return result;
 	}
@@ -186,12 +213,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		return new ListSchedule(graph, computeTaskLists());
 	}
 	
-	public Task getMostRecentTask() {
-		return task;
-	}
-	
-	public int getMostRecentProcessor() {
-		return processor;
+	public ProcessorAllocation getMostRecentAllocation() {
+		return allocation;
 	}
 
 	public TreeSchedule getParent() {
@@ -215,13 +238,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		return this.graph;
 	}
 
-	public Set<Task> getAllocated() {
-		Set<Task> allocated = new HashSet<>();
-		
-		for(TreeSchedule s = this; !s.isEmpty(); s = s.parent) {
-			allocated.add(s.task);
-		}
-		
+	public Collection<Task> getAllocated() {
 		return allocated;
 	}
 	
@@ -236,7 +253,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		if(isEmpty()) {
 			return other.isEmpty() && graph.equals(other.graph);
 		} else {
-			return !other.isEmpty() && graph.equals(other.graph) && Objects.equals(parent, other.parent) && task == other.task && processor == other.processor;
+			return !other.isEmpty() && graph.equals(other.graph) && Objects.equals(parent, other.parent) && allocation.equals(other.allocation);
 		}
 	}
 	
@@ -245,46 +262,17 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		if(isEmpty()) {
 			return Objects.hash(graph);
 		} else {
-			return Objects.hash(graph, parent, task, processor);
+			return Objects.hash(graph, parent, allocation.processor, allocation.task);
 		}
 	}
 	
-	public Set<Task> getAllocatable() {
-		Set<Task> allocated = getAllocated();
-		Set<Task> results = new HashSet<>();
-		
-		for(Task t : graph.getAll()) {
-			if(allocated.contains(t)) {
-				continue;
-			}
-				
-			boolean allParents = true;
-			for(Dependency dep : t.getParents()) {
-				Task parent = dep.getSource();
-				if(!allocated.contains(parent)) {
-					allParents = false;
-					break;
-				}
-			}
-			
-			if(allParents) {
-				results.add(t);
-			}
-		}
-		
-		return results;
+	public Collection<Task> getAllocatable() {
+		return allocatable;
 	}
 
 	/** This gets the number of used processor. A processor is considered used if
 	 * there is a task allocated on it, or on some processor number larger than it. */
 	public int getNumberOfUsedProcessors() {
-		int n = 0;
-		for(TreeSchedule s = this; !s.isEmpty(); s = s.parent) {
-			if(n < s.processor) {
-				n = s.processor;
-			}
-		}
-		
-		return n;
+		return numberOfUsedProcessors;
 	}
 }

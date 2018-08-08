@@ -19,7 +19,7 @@ public class GreedyChildScheduleFinderTest {
 		Task firstTask = tg1.getAll().get(0);
 		
 		TreeSchedule empty = new TreeSchedule(tg1, (TreeSchedule s) -> 0);
-		TreeSchedule initial = new TreeSchedule(tg1, firstTask, 1, empty);
+		TreeSchedule initial = new TreeSchedule(firstTask, 1, empty);
 		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(2);
 		
 		List<TreeSchedule> result = gcsf.getChildSchedules(initial);
@@ -28,12 +28,12 @@ public class GreedyChildScheduleFinderTest {
 		assertEquals(2,result.size());
 		
 		//earliest start time should be b on processor 2
-		assertEquals(2,result.get(0).getMostRecentProcessor());
-		assertEquals("b", result.get(0).getMostRecentTask().getName());
+		assertEquals(2,result.get(0).getMostRecentAllocation().processor);
+		assertEquals("b", result.get(0).getMostRecentAllocation().task.getName());
 		
 		//second should be processor 1
-		assertEquals(1,result.get(1).getMostRecentProcessor());
-		assertEquals("b", result.get(1).getMostRecentTask().getName());
+		assertEquals(1,result.get(1).getMostRecentAllocation().processor);
+		assertEquals("b", result.get(1).getMostRecentAllocation().task.getName());
 		
 	}
 	
@@ -43,7 +43,7 @@ public class GreedyChildScheduleFinderTest {
 		Task firstTask = tg1.getAll().get(0);
 		
 		TreeSchedule empty = new TreeSchedule(tg1, (TreeSchedule s) -> 0);
-		TreeSchedule initial = new TreeSchedule(tg1, firstTask, 1, empty);
+		TreeSchedule initial = new TreeSchedule(firstTask, 1, empty);
 		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(2);
 		
 		List<TreeSchedule> result = gcsf.getChildSchedules(initial);
@@ -59,7 +59,7 @@ public class GreedyChildScheduleFinderTest {
 		Task firstTask = tg1.getAll().get(0);
 		
 		TreeSchedule empty = new TreeSchedule(tg1, (TreeSchedule s) -> 0);
-		TreeSchedule initial = new TreeSchedule(tg1, firstTask, 1, empty);
+		TreeSchedule initial = new TreeSchedule(firstTask, 1, empty);
 		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(2);
 		
 		List<TreeSchedule> result = gcsf.getChildSchedules(initial);

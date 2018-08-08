@@ -69,4 +69,9 @@ public class MinimumHeuristicTest {
 	public void testCriticalPath() {
 		testEstimate(new CriticalPathHeuristic());
 	}
+	
+	@Test
+	public void testDataReadyTime() {
+		testEstimate(new DataReadyTimeHeuristic(PROCESSOR));
+	}
 }

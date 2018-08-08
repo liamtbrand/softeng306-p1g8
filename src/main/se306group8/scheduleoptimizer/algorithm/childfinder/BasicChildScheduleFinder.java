@@ -38,7 +38,7 @@ public class BasicChildScheduleFinder implements ChildScheduleFinder {
 		
 		for (Task task : nextTasks) {
 			for (int processor : processors) {
-				childSchedules.add(new TreeSchedule(graph, task, processor, schedule));
+				childSchedules.add(new TreeSchedule(task, processor, schedule));
 			}
 		}
 		return childSchedules;

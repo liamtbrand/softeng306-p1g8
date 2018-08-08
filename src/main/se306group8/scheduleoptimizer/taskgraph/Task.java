@@ -1,7 +1,6 @@
 package se306group8.scheduleoptimizer.taskgraph;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -21,11 +20,11 @@ public final class Task implements GraphEquality<Task> {
 	}
 	
 	void setChildDependencies(Collection<Dependency> children){
-		this.children = Collections.unmodifiableCollection(children);
+		this.children = children;
 	}
 	
 	void setParentDependencies(Collection<Dependency> parents){
-		this.parents = Collections.unmodifiableCollection(parents);
+		this.parents = parents;
 	}
 	
 	/** 

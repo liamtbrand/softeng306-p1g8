@@ -26,9 +26,9 @@ class SchedulePriorityQueueTest {
 		task2 = graph.getAll().get(1);
 		
 		parent = new TreeSchedule(graph, s -> code(s));
-		child1 = new TreeSchedule(graph, task1, 1, parent);
-		child2 = new TreeSchedule(graph, task2, 2, parent);
-		child3 = new TreeSchedule(graph, task2, 1, child1);
+		child1 = new TreeSchedule(task1, 1, parent);
+		child2 = new TreeSchedule(task1, 2, parent);
+		child3 = new TreeSchedule(task2, 1, child1);
 		
 		priorityQueue = new SchedulePriorityQueue();
 	}
@@ -37,10 +37,10 @@ class SchedulePriorityQueueTest {
 	private int code(TreeSchedule s) {
 		if(s.isEmpty()) {
 			return 0;
-		} else if(s.getMostRecentTask().equals(task1)) {
-			return 2;
-		} else if(s.getMostRecentProcessor() == 2) {
+		} else if(s.getMostRecentAllocation().processor == 2) {
 			return 1;
+		} else if(s.getMostRecentAllocation().task.equals(task1)) {
+			return 2;
 		} else {
 			return 3;
 		}

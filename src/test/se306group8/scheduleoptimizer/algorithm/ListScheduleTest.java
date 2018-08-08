@@ -11,7 +11,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
@@ -54,11 +53,11 @@ class ListScheduleTest {
 		
 		Map<Task, ProcessorAllocation> allocations = new HashMap<>();
 		
-		allocations.put(a, new ProcessorAllocation(0, 2, 1));
-		allocations.put(b, new ProcessorAllocation(2, 5, 1));
+		allocations.put(a, new ProcessorAllocation(a, 0, 1));
+		allocations.put(b, new ProcessorAllocation(b, 2, 1));
 		
-		allocations.put(c, new ProcessorAllocation(4, 7, 2));
-		allocations.put(d, new ProcessorAllocation(7, 9, 2));
+		allocations.put(c, new ProcessorAllocation(c, 4, 2));
+		allocations.put(d, new ProcessorAllocation(d, 7, 2));
 		
 		scheduleFromList = new ListSchedule(graph, Arrays.asList(processorOne, processorTwo));
 		scheduleFromAllocation = new ListSchedule(graph, allocations);

@@ -1,18 +1,11 @@
 package se306group8.scheduleoptimizer.algorithm.childfinder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Task;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
+//import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 /**
  * Implementation of ChildScheduleFinder that orders the child schedules based
@@ -20,16 +13,6 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
  * starting time of the new Task.
  */
 public class GreedyChildScheduleFinder implements ChildScheduleFinder {
-
-	// rather than recalcuate bottom level every time we cache the last result
-	private TaskGraph lastGraph;
-	private Map<Task, Integer> bottomLevel;
-
-	// we can allocate by remembering parent
-	private TreeSchedule lastSchedule;
-	private Set<Task> allocated;
-
-	private List<Task> allocatable;
 
 	private int numProcessors;
 
@@ -71,7 +54,7 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder {
 		List<TreeSchedule> childrenSchedules = new ArrayList<>();
 
 		for (int p = 1; p <= processorsToAllocate; p++) {
-			TreeSchedule childSchedule = new TreeSchedule(parentSchedule.getGraph(), task, p, parentSchedule);
+			TreeSchedule childSchedule = new TreeSchedule(task, p, parentSchedule);
 			childrenSchedules.add(childSchedule);
 		}
 

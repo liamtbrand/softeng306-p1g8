@@ -1,7 +1,6 @@
 package se306group8.scheduleoptimizer.algorithm.storage;
 
 import java.util.ArrayList;
-import java.util.stream.IntStream;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
@@ -27,8 +26,8 @@ class ScheduleArray {
 		void setSchedule(int subIndex, TreeSchedule schedule) {
 			lowerBound[subIndex] = (short) schedule.getLowerBound();
 			parentsArray[subIndex] = addOrGetId(schedule.getParent());
-			taskArray[subIndex] = (byte) schedule.getMostRecentTask().getId();
-			processorArray[subIndex] = (byte) schedule.getMostRecentProcessor();
+			taskArray[subIndex] = (byte) schedule.getMostRecentAllocation().task.getId();
+			processorArray[subIndex] = (byte) schedule.getMostRecentAllocation().processor;
 		}
 	}
 	
@@ -69,7 +68,7 @@ class ScheduleArray {
 		int processor = Byte.toUnsignedInt(block.processorArray[subIndex]);
 		int lowerBound = Short.toUnsignedInt(block.lowerBound[subIndex]);
 		
-		return new ArrayBackedSchedule(rootSchedule.getGraph(), this, id, parent, rootSchedule.getGraph().getTask(task), processor, lowerBound);
+		return new ArrayBackedSchedule(this, id, parent, rootSchedule.getGraph().getTask(task), processor, lowerBound);
 	}
 	
 	/** Adds a schedule to the array. If this schedule object was already in the array it is not re-added
