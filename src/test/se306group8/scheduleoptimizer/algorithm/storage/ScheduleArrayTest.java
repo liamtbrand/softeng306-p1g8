@@ -2,6 +2,8 @@ package se306group8.scheduleoptimizer.algorithm.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Objects;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,9 +27,9 @@ public class ScheduleArrayTest {
 		
 		int[] tmp = new int[] { 5 };
 		
-		parent = new TreeSchedule(graph, s -> tmp[0]++);
-		child1 = new TreeSchedule(graph, task, 1, parent);
-		child2 = new TreeSchedule(graph, task, 2, parent);
+		parent = new TreeSchedule(graph, s -> 0xff & s.hashCode());
+		child1 = new TreeSchedule(task, 1, parent);
+		child2 = new TreeSchedule(task, 2, parent);
 		
 		array = new ScheduleArray();
 	}

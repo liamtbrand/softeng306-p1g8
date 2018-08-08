@@ -1,6 +1,6 @@
 package se306group8.scheduleoptimizer.algorithm.heuristic;
 
-import se306group8.scheduleoptimizer.algorithm.ListSchedule.ProcessorAllocation;
+import se306group8.scheduleoptimizer.algorithm.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 
