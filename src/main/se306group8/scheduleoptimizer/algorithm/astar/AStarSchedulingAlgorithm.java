@@ -20,13 +20,16 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
+		
 		int storageSizeLimit = 1000000; // TODO calculate properly.
+		
 		ScheduleStorage queue = new ScheduleStorage(storageSizeLimit);
 		TreeSchedule best = new TreeSchedule(graph, heuristic);
 		
 		while(!best.isComplete()) {
 			queue.storeSchedules(childGenerator.getChildSchedules(best));
 			best = queue.getBestSchedule();
+			getMonitor().setSolutionsExplored(queue.size());
 		}
 		
 		return best.getFullSchedule();
