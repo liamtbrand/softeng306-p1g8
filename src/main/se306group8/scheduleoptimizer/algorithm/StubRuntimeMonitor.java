@@ -24,4 +24,10 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 		// Do Nothing
 	}
 
+	@Override
+	public void setSolutionsExplored(int number) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -4,24 +4,52 @@ import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 /**
- * The root interface for all algorithms for computing a schedule. The only guarantee is that the schedule will be valid and complete.
- * Subclasses may stipulate that they return optimal solutions.
+ * Uses RuntimeMonitor to monitor the status of the algorithm.
+ * Algorithms should implement the hook method.
+ * Algorithms should call updateBestSchedule and logMessage on themselves to update the monitor.
  */
-public interface Algorithm {
+public abstract class MonitoredAlgorithm implements Algorithm {
+	
+	private RuntimeMonitor runtimeMonitor = new StubRuntimeMonitor();
+	
+	public abstract Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors);
+
+	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
+		
+		if(runtimeMonitor != null) {
+			runtimeMonitor.start();
+		}
+		
+		Schedule solution = produceCompleteScheduleHook(graph, numberOfProcessors);
+		
+		if(runtimeMonitor != null) {
+			runtimeMonitor.finish(solution);
+		}
+		
+		return solution;
+	}
+	
+	public void setMonitor(RuntimeMonitor monitor) {
+		if(monitor != null) {
+			runtimeMonitor = monitor;
+		}
+	}
 
 	/**
-	 * Starts the computation process for computing a valid complete schedule, returning when the computation is complete.
-	 * 
-	 * @param graph The task graph, must be nonNull
-	 * @param numberOfProcessors The maximum number of processors that the algorithm can assign tasks to, must be positive.
-	 * @return The complete schedule.
+	 * Update the RuntimeMonitor with the latest TreeSchedule
+	 * @see #runtimeMonitor
+	 * @param optimalSchedule
 	 */
-	Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors);
-	
+	public void updateBestSchedule(TreeSchedule optimalSchedule) {
+		runtimeMonitor.updateBestSchedule(optimalSchedule);
+	}
+
 	/**
-	 * Sets the monitor that is used to display intermediate results.
-	 * 
-	 * @param monitor The monitor to use, if this is null the monitor is un-set.
+	 * Update the RuntimeMonitor with a message.
+	 * @see #runtimeMonitor
+	 * @param message
 	 */
-	void setMonitor(RuntimeMonitor monitor);
+	public void logMessage(String message) {
+		runtimeMonitor.logMessage(message);
+	}
 }
