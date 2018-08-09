@@ -27,7 +27,7 @@ import org.apache.commons.cli.ParseException;
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.algorithm.astar.AStarAlgorithm;
+import se306group8.scheduleoptimizer.algorithm.astar.AStarSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.branchbound.BranchBoundSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
@@ -50,7 +50,7 @@ public class PerformanceTest {
 
 	@FunctionalInterface
 	private static interface AlgorithmConstructor {
-		Algorithm construct(MinimumHeuristic heuristic, ChildScheduleFinder finder);
+		Algorithm construct(MinimumHeuristic heuristic, ChildScheduleFinder finder, RuntimeMonitor monitor);
 	}
 
 	//Set up the various testing options.
@@ -59,8 +59,8 @@ public class PerformanceTest {
 		DIFFICULTIES.put("MEDIUM", s -> s.contains("Nodes_1") || s.contains("Nodes_2"));
 		DIFFICULTIES.put("HARD", s -> true);
 
-		ALGORITHMS.put("A_STAR", (h, f) -> new AStarAlgorithm(f, h));
-		ALGORITHMS.put("BRANCH_BOUND", (h, f) -> new BranchBoundSchedulingAlgorithm(f, h));
+		ALGORITHMS.put("A_STAR", (h, f, m) -> new AStarSchedulingAlgorithm(f, h, m));
+		ALGORITHMS.put("BRANCH_BOUND", (h, f, m) -> new BranchBoundSchedulingAlgorithm(f, h, m));
 
 		HEURISTICS.put("ZERO", processors -> schedule -> 0);
 		HEURISTICS.put("NO_IDLE", NoIdleTimeHeuristic::new);
@@ -202,8 +202,7 @@ public class PerformanceTest {
 			//Create the algorithm objects
 			MinimumHeuristic heuristic = heuristicBuilder.apply(processors);
 			ChildScheduleFinder child = childScheduleBuilder.apply(processors);
-			Algorithm alg = algorithmConstructor.construct(heuristic, child);
-			alg.setMonitor(monitor);
+			Algorithm alg = algorithmConstructor.construct(heuristic, child, monitor);
 			
 			Schedule s = alg.produceCompleteSchedule(graph, processors);
 			

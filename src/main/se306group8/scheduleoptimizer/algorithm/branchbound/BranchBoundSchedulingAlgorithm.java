@@ -10,33 +10,34 @@ import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
-public class BranchBoundSchedulingAlgorithm implements Algorithm {
+public class BranchBoundSchedulingAlgorithm extends Algorithm {
+  
 	private final ChildScheduleFinder finder;
 	private final MinimumHeuristic heuristic;
 	
-	private RuntimeMonitor monitor;
 	private int children = 0;
 	
+	public BranchBoundSchedulingAlgorithm(ChildScheduleFinder finder, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
+		super(monitor);
+		
+		this.finder = finder;
+		this.heuristic = heuristic;
+	}
+
 	public BranchBoundSchedulingAlgorithm(ChildScheduleFinder finder, MinimumHeuristic heuristic) {
+		super();
+		
 		this.finder = finder;
 		this.heuristic = heuristic;
 	}
 
 	@Override
-	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
+	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
 		
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic);
 		
-		if(monitor != null) {
-			monitor.start();
-		}
-		
 		// Kick off BnB (current 'best schedule' is null)
 		Schedule schedule =  branchAndBound(emptySchedule, null, numberOfProcessors);
-		
-		if(monitor != null) {
-			monitor.finish(schedule);
-		}
 		
 		return schedule;
 	}
@@ -44,9 +45,7 @@ public class BranchBoundSchedulingAlgorithm implements Algorithm {
 	private Schedule branchAndBound(TreeSchedule schedule, Schedule best, int numberOfProcessors) {
 		children++;
 		
-		if(monitor != null) {
-			monitor.setSolutionsExplored(children);
-		}
+		getMonitor().setSolutionsExplored(children);
 		
 		// Get all children in order from best lower bound to worst
 		// TODO add processor number to GCSF
@@ -68,9 +67,5 @@ public class BranchBoundSchedulingAlgorithm implements Algorithm {
 		
 		return best;
 	}
-	
-	@Override
-	public void setMonitor(RuntimeMonitor monitor) {
-		this.monitor = monitor;
-	}
+
 }

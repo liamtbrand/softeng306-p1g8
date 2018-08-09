@@ -9,42 +9,40 @@ import se306group8.scheduleoptimizer.algorithm.storage.ScheduleStorage;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
-public class AStarAlgorithm implements Algorithm{
-	private RuntimeMonitor monitor;
+public class AStarSchedulingAlgorithm extends Algorithm {
+	
 	private ChildScheduleFinder childGenerator;
 	private MinimumHeuristic heuristic;
 	
-	public AStarAlgorithm(ChildScheduleFinder childGenerator,MinimumHeuristic heuristic) {
-		this.childGenerator=childGenerator;
-		this.heuristic=heuristic;
+	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
+		super(monitor);
+		
+		this.childGenerator = childGenerator;
+		this.heuristic = heuristic;
+	}
+
+	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic) {
+		super();
+		
+		this.childGenerator = childGenerator;
+		this.heuristic = heuristic;
 	}
 
 	@Override
-	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
-		if(monitor != null)
-			monitor.start();
+	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
 		
-		ScheduleStorage queue = new ScheduleStorage(numberOfProcessors);
+		int storageSizeLimit = 1000000; // TODO calculate properly.
+		
+		ScheduleStorage queue = new ScheduleStorage(storageSizeLimit);
 		TreeSchedule best = new TreeSchedule(graph, heuristic);
 		
 		while(!best.isComplete()) {
 			queue.storeSchedules(childGenerator.getChildSchedules(best));
-			best=queue.getBestSchedule();
-			if(monitor != null)
-				monitor.setSolutionsExplored(queue.size());
+			best = queue.getBestSchedule();
+			getMonitor().setSolutionsExplored(queue.size());
 		}
 		
-		Schedule schedule = best.getFullSchedule();
-		
-		if(monitor != null)
-			monitor.finish(schedule);
-		
-		return schedule;
-	}
-
-	@Override
-	public void setMonitor(RuntimeMonitor monitor) {
-		this.monitor = monitor;
+		return best.getFullSchedule();
 	}
 
 }
