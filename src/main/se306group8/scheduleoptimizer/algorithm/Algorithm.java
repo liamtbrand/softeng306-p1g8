@@ -14,7 +14,15 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
  */
 public abstract class Algorithm {
 	
-	private RuntimeMonitor runtimeMonitor = new StubRuntimeMonitor();
+	private RuntimeMonitor runtimeMonitor;
+	
+	public Algorithm(RuntimeMonitor monitor) {
+		runtimeMonitor = monitor;
+	}
+	
+	public Algorithm() {
+		this(new StubRuntimeMonitor());
+	}
 	
 	public abstract Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors);
 
