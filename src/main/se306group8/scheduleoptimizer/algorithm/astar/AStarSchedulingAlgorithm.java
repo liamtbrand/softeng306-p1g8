@@ -57,7 +57,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			if (children.get(0).isComplete()) {
 
 				// sort by lowest runtime
-				children.sort((TreeSchedule s1, TreeSchedule s2) -> s1.getRuntime() - s2.getRuntime());
+				children.sort(null);
 				TreeSchedule completeSchedule = children.get(0);
 
 				// if false all children are useless
