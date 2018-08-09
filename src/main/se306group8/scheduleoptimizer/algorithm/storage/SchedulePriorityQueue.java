@@ -21,6 +21,16 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 		minHeap = new int[1024 * 1024]; //Go big or go home :D
 	}
 	
+	SchedulePriorityQueue(ScheduleArray backingArray) {
+		scheduleArray = backingArray;
+		length = backingArray.size();
+		minHeap = new int[length];
+		
+		for(int i = 0; i < length; i++) {
+			minHeap[i] = i;
+		}
+	}
+
 	void put(TreeSchedule schedule) {
 		int id = scheduleArray.addOrGetId(schedule);
 		

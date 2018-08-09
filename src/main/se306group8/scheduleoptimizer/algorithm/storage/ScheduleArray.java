@@ -106,4 +106,13 @@ class ScheduleArray {
 		
 		return blocks.get(i);
 	}
+
+	int size() {
+		return nextId;
+	}
+
+	void clear() {
+		nextId = 0;
+		blocks.clear();
+	}
 }
