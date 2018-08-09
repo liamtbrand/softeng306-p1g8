@@ -6,11 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,7 +28,8 @@ public class AStarOptimality {
 	
 	
 	private Algorithm initAlgorithm(int numProcessors) {
-		MinimumHeuristic heuristic = new AggregateHeuristic(new CriticalPathHeuristic(), new DataReadyTimeHeuristic(numProcessors), new NoIdleTimeHeuristic(numProcessors)); 
+		MinimumHeuristic heuristic = new AggregateHeuristic(new CriticalPathHeuristic(),
+				new DataReadyTimeHeuristic(numProcessors), new NoIdleTimeHeuristic(numProcessors));
 		return new AStarSchedulingAlgorithm(new BasicChildScheduleFinder(numProcessors), heuristic);
 	}
 	
