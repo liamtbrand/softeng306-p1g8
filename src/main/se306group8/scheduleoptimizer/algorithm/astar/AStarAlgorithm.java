@@ -10,7 +10,7 @@ import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 public class AStarAlgorithm implements Algorithm{
-	
+	private RuntimeMonitor monitor;
 	private ChildScheduleFinder childGenerator;
 	private MinimumHeuristic heuristic;
 	
@@ -21,22 +21,30 @@ public class AStarAlgorithm implements Algorithm{
 
 	@Override
 	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
+		if(monitor != null)
+			monitor.start();
+		
 		ScheduleStorage queue = new ScheduleStorage(numberOfProcessors);
 		TreeSchedule best = new TreeSchedule(graph, heuristic);
 		
 		while(!best.isComplete()) {
 			queue.storeSchedules(childGenerator.getChildSchedules(best));
 			best=queue.getBestSchedule();
+			if(monitor != null)
+				monitor.setSolutionsExplored(queue.size());
 		}
 		
-		return best.getFullSchedule();
+		Schedule schedule = best.getFullSchedule();
 		
+		if(monitor != null)
+			monitor.finish(schedule);
+		
+		return schedule;
 	}
 
 	@Override
 	public void setMonitor(RuntimeMonitor monitor) {
-		// TODO Auto-generated method stub
-		
+		this.monitor = monitor;
 	}
 
 }
