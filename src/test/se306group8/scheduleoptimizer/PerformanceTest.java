@@ -41,6 +41,7 @@ import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
+/** This class is a testing utility that runs the chosen algorithm and writes out various metrics. */
 public class PerformanceTest {
 	private static final Map<String, Predicate<String>> DIFFICULTIES = new HashMap<>();
 	private static final Map<String, AlgorithmConstructor> ALGORITHMS = new HashMap<>();
@@ -52,6 +53,7 @@ public class PerformanceTest {
 		Algorithm construct(MinimumHeuristic heuristic, ChildScheduleFinder finder);
 	}
 
+	//Set up the various testing options.
 	static {
 		DIFFICULTIES.put("EASY", s -> s.contains("Nodes_1") && s.startsWith("2p"));
 		DIFFICULTIES.put("MEDIUM", s -> s.contains("Nodes_1") || s.contains("Nodes_2"));
@@ -70,7 +72,7 @@ public class PerformanceTest {
 		CHILD_FINDER.put("DUPLICATE_REMOVING", p -> { throw new RuntimeException("Not Implemented"); });
 	}
 
-	//Run through the dataset, creating a mapping from the file name to the length of time, and the number of solutions stored
+	//Run through the data-set, creating a mapping from the file name to the length of time, and the number of solutions stored
 	public static void main(String[] args) throws ParseException, IOException {
 		Options options = new Options();
 
@@ -83,30 +85,31 @@ public class PerformanceTest {
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(options, args);
 
-		String difficulty, heuristicOption, childFinder, algorithm;
+		String difficulty, heuristicOptionString, childFinder, algorithm;
 		
 		difficulty = cmd.getOptionValue("d", "EASY");
-		heuristicOption = cmd.getOptionValue("h", "CRITICAL_PATH,NO_IDLE,DATA_READY_TIME");
+		heuristicOptionString = cmd.getOptionValue("h", "CRITICAL_PATH,NO_IDLE,DATA_READY_TIME");
 		childFinder = cmd.getOptionValue("c", "BASIC");
 		algorithm = cmd.getOptionValue("a", "A_STAR");
 		
-		int n = Integer.parseInt(cmd.getOptionValue("n", "10"));
+		int n = Integer.parseInt(cmd.getOptionValue("n", "20"));
 		
-		List<IntFunction<MinimumHeuristic>> heuristics = Arrays.stream(heuristicOption.split(","))
+		List<IntFunction<MinimumHeuristic>> heuristicBuilders = Arrays.stream(heuristicOptionString.split(","))
 				.map(HEURISTICS::get)
 				.collect(Collectors.toList());
 		
 		IntFunction<MinimumHeuristic> heuristicBuilder;
-		if(heuristics.size() == 1) {
-			heuristicBuilder = heuristics.get(0);
+		if(heuristicBuilders.size() == 1) {
+			heuristicBuilder = heuristicBuilders.get(0);
 		} else {
 			heuristicBuilder = processors -> {
-				MinimumHeuristic[] h = heuristics.stream().map(builder -> builder.apply(processors)).toArray(MinimumHeuristic[]::new);
-				return new AggregateHeuristic(h);
+				MinimumHeuristic[] heuristics = heuristicBuilders.stream().map(builder -> builder.apply(processors)).toArray(MinimumHeuristic[]::new);
+				return new AggregateHeuristic(heuristics);
 			};
 		}
 		
-		String fileName = difficulty + "-" + heuristicOption + "-" + childFinder + "-" + algorithm + "-" + (n == -1 ? "NOLIMIT" : Integer.toString(n));
+		//This is the file name, made out of the command options.
+		String fileName = difficulty + "-" + heuristicOptionString + "-" + childFinder + "-" + algorithm + "-" + (n == -1 ? "NOLIMIT" : Integer.toString(n));
 		System.out.println("Starting test '" + fileName + "'");
 		
 		Predicate<String> inputFilter = DIFFICULTIES.get(difficulty);
@@ -115,6 +118,7 @@ public class PerformanceTest {
 
 		List<String> names = new ArrayList<>();
 
+		//Read the list of file names
 		try(DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("dataset", "input"))) {
 			stream.forEach(p -> {
 				String graphName = p.getFileName().toString();
@@ -125,10 +129,14 @@ public class PerformanceTest {
 
 		names.sort(null);
 		Pattern numberExtraction = Pattern.compile("^(\\d+)");
-		BufferedWriter output = Files.newBufferedWriter(Paths.get(fileName + ".csv"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		
+		//Create the file
+		Files.createDirectories(Paths.get("performance"));
+		BufferedWriter output = Files.newBufferedWriter(Paths.get("performance", fileName + ".csv"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		int i = 0;
 		
-		output.write("\"Graph Name\",\"Optimal\",\"Time Taken (ms)\",\"Solutions Searched (M)\"\n");
+		//Write the header
+		output.write("\"Graph Name\",\"Optimal\",\"Time Taken (ms)\",\"Solutions Searched\"\n");
 		
 		for(String graphName : names) {
 			if(i == n) {
@@ -154,6 +162,7 @@ public class PerformanceTest {
 			
 			RuntimeMonitor monitor = new RuntimeMonitor() {
 				int millionSolutions;
+				int numberOfSolutions;
 				long startTime;
 				
 				@Override
@@ -172,6 +181,8 @@ public class PerformanceTest {
 				
 				@Override
 				public void setSolutionsExplored(int number) {
+					numberOfSolutions = number;
+					
 					if(number / 1_000_000 > millionSolutions) {
 						millionSolutions = number / 1_000_000;
 						System.out.println(millionSolutions + "M solutions");
@@ -183,11 +194,12 @@ public class PerformanceTest {
 					long timeTaken = System.nanoTime() - startTime;
 					
 					try {
-						output.write("\"" + graphName + "\",\"" + (solution.getTotalRuntime() == optimal.getTotalRuntime()) + "\",\"" + timeTaken / 1_000_000 + "\",\"" + millionSolutions + "\"\n");
+						output.write("\"" + graphName + "\",\"" + (solution.getTotalRuntime() == optimal.getTotalRuntime()) + "\",\"" + timeTaken / 1_000_000 + "\",\"" + numberOfSolutions + "\"\n");
 					} catch (IOException e) { throw new RuntimeException(e); }
 				}
 			};
 			
+			//Create the algorithm objects
 			MinimumHeuristic heuristic = heuristicBuilder.apply(processors);
 			ChildScheduleFinder child = childScheduleBuilder.apply(processors);
 			Algorithm alg = algorithmConstructor.construct(heuristic, child);
@@ -200,7 +212,6 @@ public class PerformanceTest {
 			}
 		}
 		
-		output.flush();
 		output.close();
 	}
 }

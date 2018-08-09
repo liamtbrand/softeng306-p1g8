@@ -11,17 +11,35 @@ import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 public class BranchBoundSchedulingAlgorithm implements Algorithm {
+	private RuntimeMonitor monitor;
+	private int children = 0;
 	
 	@Override
 	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
 		
 		TreeSchedule emptySchedule = new TreeSchedule(graph, new CriticalPathHeuristic());
 		
+		if(monitor != null) {
+			monitor.start();
+		}
+		
 		// Kick off BnB (current 'best schedule' is null)
-		return branchAndBound(emptySchedule, null, numberOfProcessors);
+		Schedule schedule =  branchAndBound(emptySchedule, null, numberOfProcessors);
+		
+		if(monitor != null) {
+			monitor.finish(schedule);
+		}
+		
+		return schedule;
 	}
 
 	private Schedule branchAndBound(TreeSchedule schedule, Schedule best, int numberOfProcessors) {
+		children++;
+		
+		if(monitor != null) {
+			monitor.setSolutionsExplored(children);
+		}
+		
 		// Get all children in order from best lower bound to worst
 		// TODO add processor number to GCSF
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
@@ -39,13 +57,13 @@ public class BranchBoundSchedulingAlgorithm implements Algorithm {
 				}
 			}
 			
-		}	
+		}
+		
 		return best;
 	}
 	
 	@Override
 	public void setMonitor(RuntimeMonitor monitor) {
-		// TODO Auto-generated method stub
+		this.monitor = monitor;
 	}
-
 }
