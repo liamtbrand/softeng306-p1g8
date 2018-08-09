@@ -1,7 +1,6 @@
 package se306group8.scheduleoptimizer.algorithm.storage;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.IntStream;
 
@@ -10,34 +9,21 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 /** This is an implementation of a priority queue, that holds indexs into the ScheduleArray. */
 final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 	/** This array stores all of the schedule */
-	private final ScheduleArray scheduleArray;
+	private final ScheduleStorage scheduleArray;
 	
 	private int length;
 	private int[] minHeap;
 	
-	SchedulePriorityQueue() {
-		this.scheduleArray = new ScheduleArray();
-		length = 0;
-		minHeap = new int[1024 * 1024]; //Go big or go home :D
-	}
-	
-	SchedulePriorityQueue(ScheduleArray backingArray) {
+	SchedulePriorityQueue(ScheduleStorage backingArray) {
 		scheduleArray = backingArray;
-		length = backingArray.size();
-		minHeap = new int[length];
-		
-		for(int i = 0; i < length; i++) {
-			minHeap[i] = i;
-		}
+		length = 0;
+		minHeap = new int[1024 * 1024];
 	}
 
-	void put(TreeSchedule schedule) {
-		int id = scheduleArray.addOrGetId(schedule);
-		
+	void put(int id) {
 		expandIfNeeded();
 		minHeap[length++] = id;
 		fixTail();
-//		checkHeapProperty();
 	}
 
 	void checkHeapProperty() {
@@ -67,14 +53,8 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 	}
 	
 	private void expandIfNeeded() {
-		if(length == minHeap.length) {
-			minHeap = Arrays.copyOf(minHeap, minHeap.length * 2);
-		}
-	}
-
-	void putAll(Collection<? extends TreeSchedule> c) {
-		for(TreeSchedule s : c) {
-			put(s);
+		if(length >= minHeap.length) {
+			minHeap = Arrays.copyOf(minHeap, Math.max(minHeap.length * 2, 1024));
 		}
 	}
 	
@@ -83,19 +63,17 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 	}
 
 	/** Returns and removes the best item from this queue */
-	TreeSchedule poll() {
+	int pop() {
 		int index = minHeap[0];
 		minHeap[0] = minHeap[--length];
 		fixHead();
-//		checkHeapProperty();
 		
-		return scheduleArray.get(index);
+		return index;
 	}
 
 	/** Returns the best item from this queue */
-	TreeSchedule peek() {
-		int index = minHeap[0];
-		return scheduleArray.get(index);
+	int peek() {
+		return minHeap[0];
 	}
 	
 	TreeSchedule[] toArray() {
@@ -103,6 +81,10 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 	}
 	
 	private void fixTail() {
+		if(length <= 1) {
+			return;
+		}
+		
 		int childBound = scheduleArray.getLowerBound(minHeap[length - 1]);
 		for(int parent = length - 1; parent > 0; ) {
 			int child = parent;

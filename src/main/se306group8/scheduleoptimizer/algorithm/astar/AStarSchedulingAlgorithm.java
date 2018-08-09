@@ -8,9 +8,7 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
-import se306group8.scheduleoptimizer.algorithm.storage.BucketedScheduleStorage;
 import se306group8.scheduleoptimizer.algorithm.storage.ScheduleStorage;
-import se306group8.scheduleoptimizer.algorithm.storage.SingleQueueScheduleStorage;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
@@ -35,10 +33,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
-		
-		int storageSizeLimit = 1000000; // TODO calculate properly.
-		
-		ScheduleStorage queue = new BucketedScheduleStorage(0, 1);
 		TreeSchedule best = new TreeSchedule(graph, heuristic);
 		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
@@ -48,8 +42,12 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
 		}
 
-		queue.storeSchedule(greedySoln);
 		int upperBound = greedySoln.getRuntime();
+		
+		ScheduleStorage queue = new ScheduleStorage(10, 100_000);
+		queue.pruneStorage(upperBound);
+		
+		queue.put(greedySoln);
 
 		while (!best.isComplete()) {
 
@@ -64,20 +62,15 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 				// if false all children are useless
 				if (completeSchedule.getRuntime() < upperBound) {
-					queue.storeSchedule(completeSchedule);
+					queue.put(completeSchedule);
 					upperBound = completeSchedule.getRuntime();
-				}
-
-			} else {
-				for (TreeSchedule partial : children) {
-					if (partial.getLowerBound() < upperBound) {
-						queue.storeSchedule(partial);
-					}
+					queue.pruneStorage(upperBound);
 				}
 			}
 			
-			
-			best = queue.getBestSchedule();
+			queue.putAll(children);
+
+			best = queue.pop();
 			getMonitor().setSolutionsExplored(queue.size());
 		}
 		

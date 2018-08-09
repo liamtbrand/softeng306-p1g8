@@ -13,7 +13,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 public class ScheduleArrayTest {
-	private ScheduleArray array;
+	private ScheduleStorage array;
 	private TaskGraph graph;
 	private Task task;
 	private TreeSchedule parent;
@@ -31,7 +31,7 @@ public class ScheduleArrayTest {
 		child1 = new TreeSchedule(task, 1, parent);
 		child2 = new TreeSchedule(task, 2, parent);
 		
-		array = new ScheduleArray();
+		array = new ScheduleStorage();
 	}
 	
 	@Test
@@ -63,7 +63,7 @@ public class ScheduleArrayTest {
 	public void addNewBlock() {
 		int lastId = 0;
 		
-		for(int i = 0; i < ScheduleArray.BLOCK_SIZE * 5; i++) {
+		for(int i = 0; i < 5_000_000; i++) {
 			lastId = array.addOrGetId(child1);
 		}
 		

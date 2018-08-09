@@ -13,7 +13,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 class SchedulePriorityQueueTest {
-	private SchedulePriorityQueue priorityQueue;
+	private ScheduleStorage priorityQueue;
 	private TaskGraph graph;
 	private Task task1, task2;
 	private TreeSchedule parent;
@@ -30,7 +30,7 @@ class SchedulePriorityQueueTest {
 		child2 = new TreeSchedule(task1, 2, parent);
 		child3 = new TreeSchedule(task2, 1, child1);
 		
-		priorityQueue = new SchedulePriorityQueue();
+		priorityQueue = new ScheduleStorage(1_000_000, 100_000);
 	}
 
 	//Order [ parent, child2, child1, child3 ]
@@ -50,28 +50,23 @@ class SchedulePriorityQueueTest {
 	void testPutPoll() {
 		priorityQueue.putAll(Arrays.asList(parent, child1, child2));
 		
-		priorityQueue.checkHeapProperty();
+		priorityQueue.getQueue().checkHeapProperty();
 		assertEquals(parent, priorityQueue.peek());
-		assertEquals(3, priorityQueue.size());
 		
-		priorityQueue.checkHeapProperty();
-		assertEquals(parent, priorityQueue.poll());
-		assertEquals(2, priorityQueue.size());
+		priorityQueue.getQueue().checkHeapProperty();
+		assertEquals(parent, priorityQueue.pop());
 		
-		priorityQueue.checkHeapProperty();
+		priorityQueue.getQueue().checkHeapProperty();
 		priorityQueue.put(child3);
-		assertEquals(3, priorityQueue.size());
 		
-		priorityQueue.checkHeapProperty();
-		assertEquals(child2, priorityQueue.poll());
-		assertEquals(2, priorityQueue.size());
+		priorityQueue.getQueue().checkHeapProperty();
+		assertEquals(child2, priorityQueue.pop());
 		
-		priorityQueue.checkHeapProperty();
-		assertEquals(child1, priorityQueue.poll());
-		assertEquals(1, priorityQueue.size());
+		priorityQueue.getQueue().checkHeapProperty();
+		assertEquals(child1, priorityQueue.pop());
+		priorityQueue.pop(); //There is another c1 added due to parent relationships
 		
-		priorityQueue.checkHeapProperty();
-		assertEquals(child3, priorityQueue.poll());
-		assertEquals(0, priorityQueue.size());
+		priorityQueue.getQueue().checkHeapProperty();
+		assertEquals(child3, priorityQueue.pop());
 	}
 }
