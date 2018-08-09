@@ -3,6 +3,7 @@ package se306group8.scheduleoptimizer.algorithm.branchbound;
 import java.util.List;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
@@ -16,7 +17,16 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 	
 	private int children = 0;
 	
+	public BranchBoundSchedulingAlgorithm(ChildScheduleFinder finder, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
+		super(monitor);
+		
+		this.finder = finder;
+		this.heuristic = heuristic;
+	}
+
 	public BranchBoundSchedulingAlgorithm(ChildScheduleFinder finder, MinimumHeuristic heuristic) {
+		super();
+		
 		this.finder = finder;
 		this.heuristic = heuristic;
 	}

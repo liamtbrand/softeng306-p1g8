@@ -1,6 +1,7 @@
 package se306group8.scheduleoptimizer.algorithm.astar;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
@@ -13,7 +14,16 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	private ChildScheduleFinder childGenerator;
 	private MinimumHeuristic heuristic;
 	
+	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
+		super(monitor);
+		
+		this.childGenerator = childGenerator;
+		this.heuristic = heuristic;
+	}
+
 	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic) {
+		super();
+		
 		this.childGenerator = childGenerator;
 		this.heuristic = heuristic;
 	}

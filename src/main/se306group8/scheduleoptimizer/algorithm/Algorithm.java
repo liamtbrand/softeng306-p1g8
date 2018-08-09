@@ -14,7 +14,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
  */
 public abstract class Algorithm {
 	
-	private RuntimeMonitor runtimeMonitor;
+	private final RuntimeMonitor runtimeMonitor;
 	
 	public Algorithm(RuntimeMonitor monitor) {
 		runtimeMonitor = monitor;
@@ -46,18 +46,6 @@ public abstract class Algorithm {
 		}
 		
 		return solution;
-	}
-	
-	/**
-	 * Sets the monitor that is used to display intermediate results.
-	 * 
-	 * @param monitor The monitor to use, if this is null the monitor is un-set.
-	 */
-	@Deprecated
-	public void setMonitor(RuntimeMonitor monitor) {
-		if(monitor != null) {
-			runtimeMonitor = monitor;
-		}
 	}
 	
 	/**
