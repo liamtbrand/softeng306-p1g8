@@ -15,71 +15,75 @@ import java.util.concurrent.Executors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
 import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 public class BranchBoundOptimality {
-	
+
 	//@Test
 	// Test ignored to please Travis
-    void testProduceCompleteScheduleMediumGraph() throws IOException {
-        String graphName = "2p_Fork_Nodes_10_CCR_1.97_WeightType_Random.dot";
+	void testProduceCompleteScheduleMediumGraph() throws IOException {
+		String graphName = "2p_Fork_Nodes_10_CCR_1.97_WeightType_Random.dot";
 
-        DOTFileHandler reader = new DOTFileHandler();
-        TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
-        Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
+		DOTFileHandler reader = new DOTFileHandler();
+		TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
+		Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
 
-        long start = System.nanoTime();
-        System.out.println("Starting '" + graphName + "'");
-        Schedule s = new BranchBoundSchedulingAlgorithm().produceCompleteSchedule(graph, optimal.getNumberOfUsedProcessors());
-        System.out.println(s + " took " + (System.nanoTime() - start) / 1_000_000 + "ms");
+		long start = System.nanoTime();
+		System.out.println("Starting '" + graphName + "'");
+		int processors = optimal.getNumberOfUsedProcessors();
+		Schedule s = new BranchBoundSchedulingAlgorithm(new GreedyChildScheduleFinder(processors), new CriticalPathHeuristic()).produceCompleteSchedule(graph, processors);
+		System.out.println(s + " took " + (System.nanoTime() - start) / 1_000_000 + "ms");
 
-        Assertions.assertEquals(optimal.getTotalRuntime(), s.getTotalRuntime());
-    }
-	
+		Assertions.assertEquals(optimal.getTotalRuntime(), s.getTotalRuntime());
+	}
 
-    //@Test
-    void testProduceCompleteScheduleAll10NodeGraphs() throws IOException {
-        List<String> names = new ArrayList<>();
 
-        try(DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("dataset", "input"))) {
-            stream.forEach(p -> {
-                String graphName = p.getFileName().toString();
-                if(graphName.contains("Nodes_10"))
-                    names.add(graphName);
+	//@Test
+	void testProduceCompleteScheduleAll10NodeGraphs() throws IOException {
+		List<String> names = new ArrayList<>();
 
-            });
-        }
+		try(DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("dataset", "input"))) {
+			stream.forEach(p -> {
+				String graphName = p.getFileName().toString();
+				if(graphName.contains("Nodes_10"))
+					names.add(graphName);
 
-        names.sort(null);
+			});
+		}
 
-        for(String graphName : names) {
-            DOTFileHandler reader = new DOTFileHandler();
+		names.sort(null);
 
-            long start = System.nanoTime();
-            Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
-            if(optimal.getNumberOfUsedProcessors() > 3)
-                continue;
+		for(String graphName : names) {
+			DOTFileHandler reader = new DOTFileHandler();
 
-            System.out.println("Starting '" + graphName + "'");
+			long start = System.nanoTime();
+			Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
+			if(optimal.getNumberOfUsedProcessors() > 3)
+				continue;
 
-            TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
+			System.out.println("Starting '" + graphName + "'");
 
-            Schedule s = new BranchBoundSchedulingAlgorithm().produceCompleteSchedule(graph, optimal.getNumberOfUsedProcessors());
+			TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
 
-            System.out.println(s + " took " + (System.nanoTime() - start) / 1_000_000 + "ms");
+			int processors = optimal.getNumberOfUsedProcessors();
+			Schedule s = new BranchBoundSchedulingAlgorithm(new GreedyChildScheduleFinder(processors), new CriticalPathHeuristic()).produceCompleteSchedule(graph, optimal.getNumberOfUsedProcessors());
 
-            Assertions.assertEquals(optimal.getTotalRuntime(), s.getTotalRuntime());
-        }
-    }
+			System.out.println(s + " took " + (System.nanoTime() - start) / 1_000_000 + "ms");
 
-    @Test
-    void testProduceCompleteScheduleTinyGraph() throws IOException {
-        TaskGraph graph = TestGraphUtils.buildTestGraphA();
-        Assertions.assertEquals(8, new BranchBoundSchedulingAlgorithm().produceCompleteSchedule(graph, 2).getTotalRuntime());
-    }
+			Assertions.assertEquals(optimal.getTotalRuntime(), s.getTotalRuntime());
+		}
+	}
+
+	@Test
+	void testProduceCompleteScheduleTinyGraph() throws IOException {
+		TaskGraph graph = TestGraphUtils.buildTestGraphA();
+		Assertions.assertEquals(8, new BranchBoundSchedulingAlgorithm(new GreedyChildScheduleFinder(2), new CriticalPathHeuristic()).produceCompleteSchedule(graph, 2).getTotalRuntime());
+	}
 
 
 }
