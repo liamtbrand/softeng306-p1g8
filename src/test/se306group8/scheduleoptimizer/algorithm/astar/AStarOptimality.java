@@ -6,18 +6,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.heuristic.AggregateHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
+import se306group8.scheduleoptimizer.algorithm.heuristic.NoIdleTimeHeuristic;
 import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
@@ -28,7 +28,9 @@ public class AStarOptimality {
 	
 	
 	private Algorithm initAlgorithm(int numProcessors) {
-		return new AStarSchedulingAlgorithm(new BasicChildScheduleFinder(numProcessors), new CriticalPathHeuristic());
+		MinimumHeuristic heuristic = new AggregateHeuristic(new CriticalPathHeuristic(),
+				new DataReadyTimeHeuristic(numProcessors), new NoIdleTimeHeuristic(numProcessors));
+		return new AStarSchedulingAlgorithm(new BasicChildScheduleFinder(numProcessors), heuristic);
 	}
 	
 	//@Test

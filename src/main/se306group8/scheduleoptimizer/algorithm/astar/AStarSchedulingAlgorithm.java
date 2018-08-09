@@ -1,9 +1,12 @@
 package se306group8.scheduleoptimizer.algorithm.astar;
 
+import java.util.List;
+
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.algorithm.storage.BucketedScheduleStorage;
 import se306group8.scheduleoptimizer.algorithm.storage.ScheduleStorage;
@@ -38,8 +41,42 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		ScheduleStorage queue = new BucketedScheduleStorage(0, 1);
 		TreeSchedule best = new TreeSchedule(graph, heuristic);
 		
-		while(!best.isComplete()) {
-			queue.storeSchedules(childGenerator.getChildSchedules(best));
+		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
+		
+		TreeSchedule greedySoln = best;
+		while (!greedySoln.isComplete()) {
+			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
+		}
+
+		queue.storeSchedule(greedySoln);
+		int upperBound = greedySoln.getRuntime();
+
+		while (!best.isComplete()) {
+
+			List<TreeSchedule> children = childGenerator.getChildSchedules(best);
+
+			// if one child is complete they are all complete
+			if (children.get(0).isComplete()) {
+
+				// sort by lowest runtime
+				children.sort(null);
+				TreeSchedule completeSchedule = children.get(0);
+
+				// if false all children are useless
+				if (completeSchedule.getRuntime() < upperBound) {
+					queue.storeSchedule(completeSchedule);
+					upperBound = completeSchedule.getRuntime();
+				}
+
+			} else {
+				for (TreeSchedule partial : children) {
+					if (partial.getLowerBound() < upperBound) {
+						queue.storeSchedule(partial);
+					}
+				}
+			}
+			
+			
 			best = queue.getBestSchedule();
 			getMonitor().setSolutionsExplored(queue.size());
 		}
