@@ -60,7 +60,7 @@ public class PerformanceTest {
 		DIFFICULTIES.put("HARD", s -> true);
 
 		ALGORITHMS.put("A_STAR", (h, f) -> new AStarAlgorithm(f, h));
-		ALGORITHMS.put("BRANCH_BOUND", (h, f) -> new BranchBoundSchedulingAlgorithm());
+		ALGORITHMS.put("BRANCH_BOUND", (h, f) -> new BranchBoundSchedulingAlgorithm(f, h));
 
 		HEURISTICS.put("ZERO", processors -> schedule -> 0);
 		HEURISTICS.put("NO_IDLE", NoIdleTimeHeuristic::new);
@@ -92,7 +92,7 @@ public class PerformanceTest {
 		childFinder = cmd.getOptionValue("c", "BASIC");
 		algorithm = cmd.getOptionValue("a", "A_STAR");
 		
-		int n = Integer.parseInt(cmd.getOptionValue("n", "20"));
+		int n = Integer.parseInt(cmd.getOptionValue("n", "10"));
 		
 		List<IntFunction<MinimumHeuristic>> heuristicBuilders = Arrays.stream(heuristicOptionString.split(","))
 				.map(HEURISTICS::get)
