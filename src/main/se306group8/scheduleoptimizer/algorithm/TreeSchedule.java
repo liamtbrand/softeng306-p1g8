@@ -48,7 +48,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private final Collection<Task> allocated;
 
 	// Booleans
-	private final boolean isCompleate;
+	private final boolean isComplete;
 
 	/**
 	 * Creates an empty schedule.
@@ -79,7 +79,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 
 		allocatable = graph.getRoots();
 		allocated = Collections.emptyList();
-		isCompleate = false;
+		isComplete = false;
 
 		lowerBound = heuristic.estimate(this);
 
@@ -150,11 +150,11 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		allocated = new ArrayList<>(parent.allocated);
 		allocated.add(task);
 
-		isCompleate = allocatable.isEmpty();
+		isComplete = allocatable.isEmpty();
 
 		runtime = Math.max(parent.runtime, allocation.endTime);
 
-		if (isCompleate) {
+		if (isComplete) {
 			lowerBound = runtime;
 		} else {
 			lowerBound = heuristic.estimate(this);
@@ -219,7 +219,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	}
 
 	public boolean isComplete() {
-		return isCompleate;
+		return isComplete;
 	}
 
 	/**
