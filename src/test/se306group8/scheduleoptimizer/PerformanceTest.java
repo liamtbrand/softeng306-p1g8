@@ -27,7 +27,7 @@ import org.apache.commons.cli.ParseException;
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.algorithm.astar.AStarAlgorithm;
+import se306group8.scheduleoptimizer.algorithm.astar.AStarSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.branchbound.BranchBoundSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
@@ -59,7 +59,7 @@ public class PerformanceTest {
 		DIFFICULTIES.put("MEDIUM", s -> s.contains("Nodes_1") || s.contains("Nodes_2"));
 		DIFFICULTIES.put("HARD", s -> true);
 
-		ALGORITHMS.put("A_STAR", (h, f) -> new AStarAlgorithm(f, h));
+		ALGORITHMS.put("A_STAR", (h, f) -> new AStarSchedulingAlgorithm(f, h));
 		ALGORITHMS.put("BRANCH_BOUND", (h, f) -> new BranchBoundSchedulingAlgorithm(f, h));
 
 		HEURISTICS.put("ZERO", processors -> schedule -> 0);
@@ -203,7 +203,7 @@ public class PerformanceTest {
 			MinimumHeuristic heuristic = heuristicBuilder.apply(processors);
 			ChildScheduleFinder child = childScheduleBuilder.apply(processors);
 			Algorithm alg = algorithmConstructor.construct(heuristic, child);
-			alg.setMonitor(monitor);
+			alg.setMonitor(monitor); // TODO fix this please James
 			
 			Schedule s = alg.produceCompleteSchedule(graph, processors);
 			

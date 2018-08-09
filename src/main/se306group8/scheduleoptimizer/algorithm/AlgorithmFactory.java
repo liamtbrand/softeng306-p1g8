@@ -10,6 +10,10 @@ public class AlgorithmFactory {
 	}
 	
 	public Algorithm getAlgorithm() {
+		
+		RuntimeMonitor cliMonitor = new CLIRuntimeMonitor(processors);
+		RuntimeMonitor monitor = new RuntimeMonitorAggregator(cliMonitor);
+		
 		return new GreedySchedulingAlgorithm();
 	}
 }

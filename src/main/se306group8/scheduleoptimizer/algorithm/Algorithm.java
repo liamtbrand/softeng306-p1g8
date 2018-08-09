@@ -53,6 +53,7 @@ public abstract class Algorithm {
 	 * 
 	 * @param monitor The monitor to use, if this is null the monitor is un-set.
 	 */
+	@Deprecated
 	public void setMonitor(RuntimeMonitor monitor) {
 		if(monitor != null) {
 			runtimeMonitor = monitor;
