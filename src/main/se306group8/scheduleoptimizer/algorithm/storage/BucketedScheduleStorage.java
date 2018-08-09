@@ -19,7 +19,7 @@ public class BucketedScheduleStorage implements ScheduleStorage {
 	private final int maximumBound;
 	
 	//These are the running bounds on the solution
-	private int upperBound;
+	private int upperBound = Integer.MAX_VALUE;
 	
 	private int size = 0;
 	private int indexOfFirstArray = 0;

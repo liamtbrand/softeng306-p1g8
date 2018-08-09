@@ -5,6 +5,7 @@ import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
+import se306group8.scheduleoptimizer.algorithm.storage.BucketedScheduleStorage;
 import se306group8.scheduleoptimizer.algorithm.storage.ScheduleStorage;
 import se306group8.scheduleoptimizer.algorithm.storage.SingleQueueScheduleStorage;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
@@ -34,7 +35,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		
 		int storageSizeLimit = 1000000; // TODO calculate properly.
 		
-		ScheduleStorage queue = new SingleQueueScheduleStorage(storageSizeLimit);
+		ScheduleStorage queue = new BucketedScheduleStorage(0, 1);
 		TreeSchedule best = new TreeSchedule(graph, heuristic);
 		
 		while(!best.isComplete()) {
