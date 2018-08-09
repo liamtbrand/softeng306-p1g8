@@ -28,7 +28,7 @@ public class AStarOptimality {
 	
 	
 	private Algorithm initAlgorithm(int numProcessors) {
-		return new AStarAlgorithm(new BasicChildScheduleFinder(numProcessors), new CriticalPathHeuristic());
+		return new AStarSchedulingAlgorithm(new BasicChildScheduleFinder(numProcessors), new CriticalPathHeuristic());
 	}
 	
 	//@Test

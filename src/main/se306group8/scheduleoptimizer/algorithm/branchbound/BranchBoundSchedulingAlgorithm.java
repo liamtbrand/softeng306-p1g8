@@ -2,18 +2,17 @@ package se306group8.scheduleoptimizer.algorithm.branchbound;
 
 import java.util.List;
 
-import se306group8.scheduleoptimizer.algorithm.Algorithm;
-import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
+import se306group8.scheduleoptimizer.algorithm.MonitoredAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
-public class BranchBoundSchedulingAlgorithm implements Algorithm {
+public class BranchBoundSchedulingAlgorithm extends MonitoredAlgorithm {
 	
 	@Override
-	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
+	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
 		
 		TreeSchedule emptySchedule = new TreeSchedule(graph, new CriticalPathHeuristic());
 		
@@ -41,11 +40,6 @@ public class BranchBoundSchedulingAlgorithm implements Algorithm {
 			
 		}	
 		return best;
-	}
-	
-	@Override
-	public void setMonitor(RuntimeMonitor monitor) {
-		// TODO Auto-generated method stub
 	}
 
 }
