@@ -7,7 +7,6 @@ import javafx.application.Application;
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.AlgorithmFactory;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
-import se306group8.scheduleoptimizer.algorithm.RuntimeMonitorAggregator;
 import se306group8.scheduleoptimizer.cli.ArgsParser;
 import se306group8.scheduleoptimizer.config.ArgumentException;
 import se306group8.scheduleoptimizer.config.Config;
@@ -15,16 +14,17 @@ import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.visualisation.CLIRuntimeMonitor;
-import se306group8.scheduleoptimizer.visualisation.FXRuntimeMonitor;
+import se306group8.scheduleoptimizer.visualisation.FXApplication;
 
 public class Main {
+	
+	public static volatile Config config;
 	
 	public static void main(String[] args) {
 		
 		// Parse the arguments and get a Config object.
 		
 		ArgsParser parser = new ArgsParser();
-		Config config;
 		
 		try {
 			config = parser.parse(args);
@@ -33,6 +33,18 @@ public class Main {
 			System.out.println(parser.getHelp());
 			return; // Stop prematurely.
 		}
+		
+		// If we are visualising, we have to start the fx application first.
+		
+		if(config.visualize()) {
+			Application.launch(FXApplication.class);
+		} else {
+			RuntimeMonitor monitor = new CLIRuntimeMonitor(config.P());
+			startAlgorithm(monitor);
+		}
+	}
+
+	public static void startAlgorithm(RuntimeMonitor monitor) {
 		
 		// Read in the task graph from the input file.
 		
@@ -52,7 +64,7 @@ public class Main {
 		AlgorithmFactory algorithmFactory
 		= new AlgorithmFactory(config.P());
 	
-		Algorithm algorithm = algorithmFactory.getAlgorithm();
+		Algorithm algorithm = algorithmFactory.getAlgorithm(monitor);
 		
 		// Run the Algorithm and obtain the Schedule.
 		
@@ -66,7 +78,6 @@ public class Main {
 			System.out.println("Problem writing output file: "+e.getMessage());
 			return; // Stop prematurely.
 		}
-		
 	}
 
 }

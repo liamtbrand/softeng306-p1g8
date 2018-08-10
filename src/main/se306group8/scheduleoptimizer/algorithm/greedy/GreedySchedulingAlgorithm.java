@@ -12,6 +12,14 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
  */
 public class GreedySchedulingAlgorithm extends Algorithm {
 
+	public GreedySchedulingAlgorithm(RuntimeMonitor monitor) {
+		super(monitor);
+	}
+
+	public GreedySchedulingAlgorithm() {
+		super();
+	}
+
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
 

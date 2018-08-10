@@ -52,7 +52,7 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <children>
-        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;" text="Welcome to the visualisation!" textAlignment="CENTER" textFill="#9f9f9f">
+        <Label fx:id="myLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;" text="Welcome to the visualisation!" textAlignment="CENTER" textFill="#9f9f9f">
           <font>
             <Font size="24.0" />
           </font>

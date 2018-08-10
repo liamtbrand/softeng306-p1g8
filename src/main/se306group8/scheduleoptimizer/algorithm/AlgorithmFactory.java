@@ -9,11 +9,7 @@ public class AlgorithmFactory {
 		this.processors = processors;
 	}
 	
-	public Algorithm getAlgorithm() {
-		
-		RuntimeMonitor cliMonitor = new CLIRuntimeMonitor(processors);
-		RuntimeMonitor monitor = new RuntimeMonitorAggregator(cliMonitor);
-		
-		return new GreedySchedulingAlgorithm();
+	public Algorithm getAlgorithm(RuntimeMonitor monitor) {
+		return new GreedySchedulingAlgorithm(monitor);
 	}
 }
