@@ -55,19 +55,18 @@ class TaskGraphEqualsTest {
 	}
 	
 	/** Check equality of two tasks with different costs, dependencies and same names */
-	//@Test
+	@Test
 	void testNotEqualsCosts() {
-		TaskGraphBuilder builder = new TaskGraphBuilder();
-		builder.addTask("a", 1);
-		builder.addTask("a", 2);
+		TaskGraphBuilder builderA = new TaskGraphBuilder();
+		builderA.addTask("a", 1);
 		
-		TaskGraph graph = builder.buildGraph();
+		TaskGraphBuilder builderB = new TaskGraphBuilder();
+		builderB.addTask("a", 2);
 		
-		for(Task t1 : graph.getAll()) {
-			for(Task t2 : graph.getAll()) {
-				Assertions.assertEquals(t1.equals(t2), t1 == t2);
-			}
-		}
+		TaskGraph graphA = builderA.buildGraph();
+		TaskGraph graphB = builderB.buildGraph();
+		
+		Assertions.assertNotEquals(graphA.getAll().get(0), graphB.getAll().get(0));
 	}
 	
 	/** Check the communication cost of two nodes known to be equal, is rendered equal */
@@ -98,6 +97,4 @@ class TaskGraphEqualsTest {
 		Assertions.assertEquals(a.getCost(), d.getCost());
 		Assertions.assertEquals(b.getCost(), c.getCost());
 	}
-	
-	
 }

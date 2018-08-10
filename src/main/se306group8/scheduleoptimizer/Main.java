@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import javafx.application.Application;
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.AlgorithmFactory;
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitorAggregator;
 import se306group8.scheduleoptimizer.cli.ArgsParser;
 import se306group8.scheduleoptimizer.config.ArgumentException;
 import se306group8.scheduleoptimizer.config.Config;
@@ -14,8 +16,6 @@ import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.visualisation.CLIRuntimeMonitor;
 import se306group8.scheduleoptimizer.visualisation.FXRuntimeMonitor;
-import se306group8.scheduleoptimizer.visualisation.RuntimeMonitor;
-import se306group8.scheduleoptimizer.visualisation.RuntimeMonitorAggregator;
 
 public class Main {
 	
@@ -51,15 +51,8 @@ public class Main {
 		
 		AlgorithmFactory algorithmFactory
 		= new AlgorithmFactory(config.P());
-		
-		Algorithm algorithm = algorithmFactory.getAlgorithm();
 	
-		// Set the runtime monitor.
-		
-		RuntimeMonitor cliMonitor = new CLIRuntimeMonitor(config.P());
-		RuntimeMonitor fxMonitor = new FXRuntimeMonitor();
-		RuntimeMonitor monitor = new RuntimeMonitorAggregator(cliMonitor, fxMonitor);
-		algorithm.setMonitor(monitor);
+		Algorithm algorithm = algorithmFactory.getAlgorithm();
 		
 		// Run the Algorithm and obtain the Schedule.
 		

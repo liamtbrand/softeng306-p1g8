@@ -10,21 +10,10 @@ import se306group8.scheduleoptimizer.visualisation.RuntimeMonitor;
 /**
  * Non optimal greedy algorithm for task scheduling
  */
-public class GreedySchedulingAlgorithm implements Algorithm {
+public class GreedySchedulingAlgorithm extends Algorithm {
 
-	// TODO use the monitor
-	private RuntimeMonitor monitor;
-
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
-		
-		// Invoke start() method on RuntimeMonitor instance
-		if(monitor != null) {
-			this.monitor.start();
-		}
+	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
 
 		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(numberOfProcessors);
 		TreeSchedule schedule = new TreeSchedule(graph, (TreeSchedule s) -> 0);
@@ -34,20 +23,7 @@ public class GreedySchedulingAlgorithm implements Algorithm {
 		}
 		
 		// Final (immutable) object to return
-		Schedule finalSchedule = schedule.getFullSchedule();
-		
-		if(monitor != null) {
-			monitor.finish(finalSchedule);
-		}
-		
-		return finalSchedule;
+		return schedule.getFullSchedule();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setMonitor(RuntimeMonitor monitor) {
-		this.monitor = monitor;
-	}
 }

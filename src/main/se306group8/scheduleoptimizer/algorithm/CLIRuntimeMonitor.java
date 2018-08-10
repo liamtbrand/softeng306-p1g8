@@ -1,12 +1,15 @@
-package se306group8.scheduleoptimizer.visualisation;
+package se306group8.scheduleoptimizer.algorithm;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
-import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
+import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 public class CLIRuntimeMonitor implements RuntimeMonitor {
 	
@@ -161,6 +164,9 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 		//Take no action.
 	}
 
-
-
+	@Override
+	public void setSolutionsExplored(int number) {
+		//Take no action.
+		
+	}
 }
