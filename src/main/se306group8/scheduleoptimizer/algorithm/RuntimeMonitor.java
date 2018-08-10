@@ -1,6 +1,5 @@
-package se306group8.scheduleoptimizer.visualisation;
+package se306group8.scheduleoptimizer.algorithm;
 
-import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
 /**
@@ -34,6 +33,6 @@ public interface RuntimeMonitor {
 	/** 
 	 * Sets the number of solutions found so far.
 	 **/
-	void setSolutionsExplored(int number);
+	default void setSolutionsExplored(int number) {  }
 	
 }

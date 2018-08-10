@@ -2,7 +2,6 @@ package se306group8.scheduleoptimizer.algorithm;
 
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
-import se306group8.scheduleoptimizer.visualisation.RuntimeMonitor;
 
 /**
  * The root class for all algorithms for computing a schedule.

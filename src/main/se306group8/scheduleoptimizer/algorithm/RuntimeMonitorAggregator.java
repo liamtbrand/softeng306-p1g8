@@ -1,9 +1,8 @@
-package se306group8.scheduleoptimizer.visualisation;
+package se306group8.scheduleoptimizer.algorithm;
 
 import java.util.Arrays;
 import java.util.List;
 
-import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
 public class RuntimeMonitorAggregator implements RuntimeMonitor {
