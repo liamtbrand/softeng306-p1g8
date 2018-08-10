@@ -29,5 +29,10 @@ public interface RuntimeMonitor {
 	 * @param message
 	 */
 	public void logMessage( String message );
+
+	/** 
+	 * Sets the number of solutions found so far.
+	 **/
+	void setSolutionsExplored(int number);
 	
 }

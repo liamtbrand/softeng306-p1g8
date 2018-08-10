@@ -49,14 +49,8 @@ public class Main {
 		
 		AlgorithmFactory algorithmFactory
 		= new AlgorithmFactory(config.P());
-		
-		Algorithm algorithm = algorithmFactory.getAlgorithm();
 	
-		// Set the runtime monitor.
-		
-		RuntimeMonitor cliMonitor = new CLIRuntimeMonitor(config.P());
-		RuntimeMonitor monitor = new RuntimeMonitorAggregator(cliMonitor);
-		algorithm.setMonitor(monitor);
+		Algorithm algorithm = algorithmFactory.getAlgorithm();
 		
 		// Run the Algorithm and obtain the Schedule.
 		
