@@ -31,6 +31,7 @@ import se306group8.scheduleoptimizer.algorithm.astar.AStarSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.branchbound.BranchBoundSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.DuplicateRemovingChildFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.AggregateHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
@@ -69,7 +70,7 @@ public class PerformanceTest {
 
 		CHILD_FINDER.put("BASIC", BasicChildScheduleFinder::new);
 		CHILD_FINDER.put("GREEDY", GreedyChildScheduleFinder::new);
-		CHILD_FINDER.put("DUPLICATE_REMOVING", p -> { throw new RuntimeException("Not Implemented"); });
+		CHILD_FINDER.put("DUPLICATE_REMOVING", DuplicateRemovingChildFinder::new);
 	}
 
 	//Run through the data-set, creating a mapping from the file name to the length of time, and the number of solutions stored
