@@ -197,6 +197,42 @@ public class PerformanceTest {
 						output.write("\"" + graphName + "\",\"" + (solution.getTotalRuntime() == optimal.getTotalRuntime()) + "\",\"" + timeTaken / 1_000_000 + "\",\"" + numberOfSolutions + "\"\n");
 					} catch (IOException e) { throw new RuntimeException(e); }
 				}
+
+				@Override
+				public void setSchedulesInArray(int number) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void setScheduleInArrayStorageSize(int bytes) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void setSchedulesInQueue(int number) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void setScheduleInQueueStorageSize(int bytes) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void setSchedulesOnDisk(int number) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void setScheduleOnDiskStorageSize(int bytes) {
+					// TODO Auto-generated method stub
+					
+				}
 			};
 			
 			//Create the algorithm objects

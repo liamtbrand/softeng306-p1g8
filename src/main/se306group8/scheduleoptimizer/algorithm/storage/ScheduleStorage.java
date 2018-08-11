@@ -3,6 +3,7 @@ package se306group8.scheduleoptimizer.algorithm.storage;
 import java.util.Arrays;
 import java.util.Collection;
 
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
 public class ScheduleStorage {
@@ -39,5 +40,15 @@ public class ScheduleStorage {
 	
 	public String toString() {
 		return Arrays.deepToString(queue.toArray());
+	}
+
+	public void signalStorageSizes(RuntimeMonitor monitor) {
+		//4 for the pointer to the object, 8 for the storage itself
+		monitor.setScheduleInQueueStorageSize(4 + 8);
+	}
+	
+	/** Communicates the storage state to the monitor */
+	public void signalMonitor(RuntimeMonitor monitor) {
+		monitor.setSchedulesInArray(queue.size());
 	}
 }

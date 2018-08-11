@@ -38,6 +38,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		
 		ScheduleStorage queue = new ScheduleStorage(storageSizeLimit);
 		TreeSchedule best = new TreeSchedule(graph, heuristic);
+		queue.signalStorageSizes(getMonitor());
 		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
@@ -48,11 +49,12 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 		queue.storeSchedule(greedySoln);
 		int upperBound = greedySoln.getRuntime();
+		int explored = 0;
 
 		while (!best.isComplete()) {
 
 			List<TreeSchedule> children = childGenerator.getChildSchedules(best);
-
+			
 			// if one child is complete they are all complete
 			if (children.get(0).isComplete()) {
 
@@ -74,9 +76,11 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 				}
 			}
 			
-			
 			best = queue.getBestSchedule();
-			getMonitor().setSolutionsExplored(queue.size());
+			
+			explored += children.size();
+			getMonitor().setSolutionsExplored(explored);
+			queue.signalMonitor(getMonitor());
 		}
 		
 		return best.getFullSchedule();

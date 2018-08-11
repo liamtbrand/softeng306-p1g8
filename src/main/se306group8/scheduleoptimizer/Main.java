@@ -64,7 +64,7 @@ public class Main {
 		AlgorithmFactory algorithmFactory
 		= new AlgorithmFactory(config.P());
 	
-		Algorithm algorithm = algorithmFactory.getAlgorithm(monitor);
+		Algorithm algorithm = algorithmFactory.getAlgorithm(monitor, config);
 		
 		// Run the Algorithm and obtain the Schedule.
 		
