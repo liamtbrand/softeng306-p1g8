@@ -113,9 +113,8 @@ class ScheduleArray {
 		int parent = block.parentsArray[subIndex];
 		int task = Byte.toUnsignedInt(block.taskArray[subIndex]);
 		int processor = Byte.toUnsignedInt(block.processorArray[subIndex]);
-		int lowerBound = Short.toUnsignedInt(block.lowerBound[subIndex]);
 		
-		return new ArrayBackedSchedule(this, id, parent, rootSchedule.getGraph().getTask(task), processor, lowerBound);
+		return new ArrayBackedSchedule(this, id, parent, rootSchedule.getGraph().getTask(task), processor);
 	}
 	
 	/** Adds a schedule to the array. If this schedule object was already in the array it is not re-added

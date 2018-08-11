@@ -7,6 +7,12 @@ public class BlockScheduleStorage implements ScheduleStorage {
 	private final SchedulePriorityQueue queue;
 	private final BlockScheduleArray array;
 	
+	/**
+	 * Creates a blocked schedule storage
+	 * @param granularity This is the width of the buckets that the schedules are stored in based on their lower bound.
+	 * If this is 10, then all of the schedules with lower bounds from 0-9 will be stored together, 10-19, 20-29 ...
+	 * @param blockSize The size of the smallest allocatable unit of memory, in schedules.
+	 */
 	public BlockScheduleStorage(int granularity, int blockSize) {
 		array = new BlockScheduleArray(blockSize, granularity);
 		queue = new SchedulePriorityQueue(array);
