@@ -1,7 +1,6 @@
 package se306group8.scheduleoptimizer.algorithm.storage;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.IntStream;
 
@@ -15,21 +14,22 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 	private int length;
 	private int[] minHeap;
 	
-	SchedulePriorityQueue() {
-		this.scheduleArray = new ScheduleArray();
+	/** Creates a priority queue. The backing array is used to query the lower bound of the schedule. */
+	SchedulePriorityQueue(ScheduleArray backingArray) {
+		scheduleArray = backingArray;
 		length = 0;
-		minHeap = new int[1024 * 1024]; //Go big or go home :D
+		minHeap = new int[1024 * 1024];
 	}
-	
-	void put(TreeSchedule schedule) {
-		int id = scheduleArray.addOrGetId(schedule);
-		
+
+	/** Places an id into the queue. */
+	void put(int id) {
 		expandIfNeeded();
 		minHeap[length++] = id;
 		fixTail();
-//		checkHeapProperty();
 	}
 
+	/** This is a debug method that is used to check if the heap is valid. It
+	 * has O(N) runtime. */
 	void checkHeapProperty() {
 		checkHeapProperty(0);
 	}
@@ -57,49 +57,47 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 	}
 	
 	private void expandIfNeeded() {
-		if(length == minHeap.length) {
-			minHeap = Arrays.copyOf(minHeap, minHeap.length * 2);
-		}
-	}
-
-	void putAll(Collection<? extends TreeSchedule> c) {
-		for(TreeSchedule s : c) {
-			put(s);
+		if(length >= minHeap.length) {
+			minHeap = Arrays.copyOf(minHeap, Math.max(minHeap.length * 2, 1024));
 		}
 	}
 	
+	/** Returns the number of elements stored in the heap. */
 	int size() {
 		return length;
 	}
 
 	/** Returns and removes the best item from this queue */
-	TreeSchedule poll() {
+	int pop() {
 		int index = minHeap[0];
 		minHeap[0] = minHeap[--length];
 		fixHead();
-//		checkHeapProperty();
 		
-		return scheduleArray.get(index);
+		return index;
 	}
 
 	/** Returns the best item from this queue */
-	TreeSchedule peek() {
-		int index = minHeap[0];
-		return scheduleArray.get(index);
+	int peek() {
+		return minHeap[0];
 	}
 	
+	/** This is a debug method used to return an array of all schedules in this queue. */
 	TreeSchedule[] toArray() {
 		return IntStream.range(0, length).map(i -> minHeap[i]).mapToObj(scheduleArray::get).toArray(TreeSchedule[]::new);
 	}
 	
 	private void fixTail() {
+		if(length <= 1) {
+			return;
+		}
+		
 		int childBound = scheduleArray.getLowerBound(minHeap[length - 1]);
 		for(int parent = length - 1; parent > 0; ) {
 			int child = parent;
 			parent = parent(parent);
 			int parentBound = scheduleArray.getLowerBound(minHeap[parent]);
 			
-			if(childBound < parentBound) {
+			if(isSmallerThan(child, parent, childBound, parentBound)) {
 				swap(child, parent);
 			} else {
 				return; //If we did not swap, stop the fix
@@ -107,6 +105,19 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 		}
 	}
 	
+	private boolean isSmallerThan(int a, int b, int aBound, int bBound) {
+		if(aBound < bBound)
+			return true;
+		
+		if(aBound > bBound)
+			return false;
+		
+		int aDepth = scheduleArray.getNumberOfTasks(minHeap[a]);
+		int bDepth = scheduleArray.getNumberOfTasks(minHeap[b]);
+		
+		return bDepth < aDepth;
+	}
+
 	private void swap(int a, int b) {
 		int tmp = minHeap[a];
 		minHeap[a] = minHeap[b];
@@ -135,7 +146,7 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 				int rightBound = scheduleArray.getLowerBound(minHeap[rightChild]);
 				
 				//There is a valid right child.
-				if(rightBound < smallestChildBound) {
+				if(isSmallerThan(rightChild, smallestChild, rightBound, smallestChildBound)) {
 					smallestChildBound = rightBound;
 					smallestChild = rightChild;
 				}
@@ -144,7 +155,7 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 			}
 			
 			//Check if a swap is needed
-			if(parentBound > smallestChildBound) {
+			if(isSmallerThan(smallestChild, parent, smallestChildBound, parentBound)) {
 				swap(smallestChild, parent);
 				
 				parent = smallestChild;
@@ -183,5 +194,10 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 				return scheduleArray.get(index++);
 			}
 		};
+	}
+	
+	@Override
+	public String toString() {
+		return Arrays.toString(toArray());
 	}
 }

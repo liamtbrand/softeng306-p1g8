@@ -8,8 +8,8 @@ import se306group8.scheduleoptimizer.taskgraph.Task;
 final class ArrayBackedSchedule extends TreeSchedule {
 	private final int index;
 	
-	ArrayBackedSchedule(ScheduleArray array, int index, int parent, Task task, int processor, int lowerBound) {
-		super(task, processor, array.get(parent));
+	ArrayBackedSchedule(ScheduleArray scheduleStorage, int index, int parent, Task task, int processor) {
+		super(task, processor, scheduleStorage.get(parent));
 		
 		this.index = index;
 	}

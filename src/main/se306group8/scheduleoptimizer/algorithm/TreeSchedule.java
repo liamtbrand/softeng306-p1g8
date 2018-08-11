@@ -104,7 +104,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		
 		numberOfUsedProcessors = Math.max(parent.numberOfUsedProcessors, processor);
 		numberOfParentsUncheduled = parent.numberOfParentsUncheduled.clone();
-		allocatable = new ArrayList<>();
+		allocatable = new ArrayList<>(graph.getAll().size());
 		lastAllocationOnProcessor = Arrays.copyOf(parent.lastAllocationOnProcessor, numberOfUsedProcessors);
 		allocations = parent.allocations.clone();
 
