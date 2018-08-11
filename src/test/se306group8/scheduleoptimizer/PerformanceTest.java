@@ -76,7 +76,7 @@ public class PerformanceTest {
 		CHILD_FINDER.put("BASIC", BasicChildScheduleFinder::new);
 		CHILD_FINDER.put("GREEDY", GreedyChildScheduleFinder::new);
 		CHILD_FINDER.put("DUPLICATE_REMOVING", p -> { throw new RuntimeException("Not Implemented"); });
-		
+
 		STORAGE.put("PRUNING", BlockScheduleStorage::new);
 		STORAGE.put("NON_PRUNING", NonPruningScheduleStorage::new);
 		STORAGE.put("OBJECT_QUEUE", ObjectQueueScheduleStorage::new);
@@ -97,19 +97,19 @@ public class PerformanceTest {
 		CommandLine cmd = parser.parse(options, args);
 
 		String difficulty, heuristicOptionString, childFinder, algorithm, storage;
-		
+
 		difficulty = cmd.getOptionValue("d", "EASY");
 		heuristicOptionString = cmd.getOptionValue("h", "CRITICAL_PATH,NO_IDLE,DATA_READY_TIME");
 		childFinder = cmd.getOptionValue("c", "BASIC");
 		algorithm = cmd.getOptionValue("a", "A_STAR");
 		storage = cmd.getOptionValue("s", "PRUNING");
-		
+
 		int n = Integer.parseInt(cmd.getOptionValue("n", "10"));
-		
+
 		List<IntFunction<MinimumHeuristic>> heuristicBuilders = Arrays.stream(heuristicOptionString.split(","))
 				.map(HEURISTICS::get)
 				.collect(Collectors.toList());
-		
+
 		IntFunction<MinimumHeuristic> heuristicBuilder;
 		if(heuristicBuilders.size() == 1) {
 			heuristicBuilder = heuristicBuilders.get(0);
@@ -119,11 +119,11 @@ public class PerformanceTest {
 				return new AggregateHeuristic(heuristics);
 			};
 		}
-		
+
 		//This is the file name, made out of the command options.
 		String fileName = difficulty + "-" + heuristicOptionString + "-" + childFinder + "-" + algorithm + "-" + storage + "-" + (n == -1 ? "NOLIMIT" : Integer.toString(n));
 		System.out.println("Starting test '" + fileName + "'");
-		
+
 		Predicate<String> inputFilter = DIFFICULTIES.get(difficulty);
 		IntFunction<ChildScheduleFinder> childScheduleBuilder = CHILD_FINDER.get(childFinder);
 		AlgorithmConstructor algorithmConstructor = ALGORITHMS.get(algorithm);
@@ -142,89 +142,93 @@ public class PerformanceTest {
 
 		names.sort(null);
 		Pattern numberExtraction = Pattern.compile("^(\\d+)");
-		
+
 		//Create the file
 		Files.createDirectories(Paths.get("performance"));
 		BufferedWriter output = Files.newBufferedWriter(Paths.get("performance", fileName + ".csv"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		int i = 0;
-		
+
 		//Write the header
 		output.write("\"Graph Name\",\"Optimal\",\"Time Taken (ms)\",\"Solutions Searched\"\n");
-		
-		for(String graphName : names) {
-			if(i == n) {
-				break;
-			}
-			
-			i++;
-			
-			System.out.println("Starting Test " + i + "/" + (n == -1 ? names.size() : n) + " " + graphName);
-			
-			DOTFileHandler reader = new DOTFileHandler();
 
-			Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
-			TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
+		try {
+			for(String graphName : names) {
+				if(i == n) {
+					break;
+				}
 
-			int processors;
-			Matcher m = numberExtraction.matcher(graphName);
-			if(!m.matches()) {
-				processors = optimal.getNumberOfUsedProcessors();
-			} else {
-				processors = Integer.parseInt(m.group(1));
-			}
-			
-			RuntimeMonitor monitor = new RuntimeMonitor() {
-				int millionSolutions;
-				int numberOfSolutions;
-				long startTime;
-				
-				@Override
-				public void updateBestSchedule(TreeSchedule optimalSchedule) {}
-				
-				@Override
-				public void start() {
-					millionSolutions = 0;
-					startTime = System.nanoTime();
+				i++;
+
+				System.out.println("Starting Test " + i + "/" + (n == -1 ? names.size() : n) + " " + graphName);
+
+				DOTFileHandler reader = new DOTFileHandler();
+
+				Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
+				TaskGraph graph = reader.readTaskGraph(Paths.get("dataset", "input", graphName));
+
+				int processors;
+				Matcher m = numberExtraction.matcher(graphName);
+				if(!m.matches()) {
+					processors = optimal.getNumberOfUsedProcessors();
+				} else {
+					processors = Integer.parseInt(m.group(1));
 				}
-				
-				@Override
-				public void logMessage(String message) {
-					System.out.println("Msg: " + message + "\n");
-				}
-				
-				@Override
-				public void setSolutionsExplored(int number) {
-					numberOfSolutions = number;
-					
-					if(number / 1_000_000 > millionSolutions) {
-						millionSolutions = number / 1_000_000;
-						System.out.println(millionSolutions + "M solutions");
+
+				RuntimeMonitor monitor = new RuntimeMonitor() {
+					int millionSolutions;
+					int numberOfSolutions;
+					long startTime;
+
+					@Override
+					public void updateBestSchedule(TreeSchedule optimalSchedule) {}
+
+					@Override
+					public void start() {
+						millionSolutions = 0;
+						startTime = System.nanoTime();
 					}
+
+					@Override
+					public void logMessage(String message) {
+						System.out.println("Msg: " + message + "\n");
+					}
+
+					@Override
+					public void setSolutionsExplored(int number) {
+						numberOfSolutions = number;
+
+						if(number / 1_000_000 > millionSolutions) {
+							millionSolutions = number / 1_000_000;
+							System.out.println(millionSolutions + "M solutions");
+						}
+					}
+
+					@Override
+					public void finish(Schedule solution) {
+						long timeTaken = System.nanoTime() - startTime;
+
+						try {
+							output.write("\"" + graphName + "\",\"" + (solution.getTotalRuntime() == optimal.getTotalRuntime()) + "\",\"" + timeTaken / 1_000_000 + "\",\"" + numberOfSolutions + "\"\n");
+						} catch (IOException e) { throw new RuntimeException(e); }
+					}
+				};
+
+				//Create the algorithm objects
+				MinimumHeuristic heuristic = heuristicBuilder.apply(processors);
+				ChildScheduleFinder child = childScheduleBuilder.apply(processors);
+				ScheduleStorage scheduleStorage = storageSupplier.get();
+				Algorithm alg = algorithmConstructor.construct(heuristic, child, monitor, scheduleStorage);
+
+				Schedule s = alg.produceCompleteSchedule(graph, processors);
+
+				if(s.getTotalRuntime() != optimal.getTotalRuntime()) {
+					System.out.println("Failed to find the optimal solution");
 				}
-				
-				@Override
-				public void finish(Schedule solution) {
-					long timeTaken = System.nanoTime() - startTime;
-					
-					try {
-						output.write("\"" + graphName + "\",\"" + (solution.getTotalRuntime() == optimal.getTotalRuntime()) + "\",\"" + timeTaken / 1_000_000 + "\",\"" + numberOfSolutions + "\"\n");
-					} catch (IOException e) { throw new RuntimeException(e); }
-				}
-			};
-			
-			//Create the algorithm objects
-			MinimumHeuristic heuristic = heuristicBuilder.apply(processors);
-			ChildScheduleFinder child = childScheduleBuilder.apply(processors);
-			ScheduleStorage scheduleStorage = storageSupplier.get();
-			Algorithm alg = algorithmConstructor.construct(heuristic, child, monitor, scheduleStorage);
-			
-			Schedule s = alg.produceCompleteSchedule(graph, processors);
-			
-			if(s.getTotalRuntime() != optimal.getTotalRuntime()) {
-				System.out.println("Failed to find the optimal solution");
 			}
+		} catch(OutOfMemoryError oome) {
+			output.write("\"Out of memory\"\n");
 		}
-		
+
 		output.close();
 	}
 }
