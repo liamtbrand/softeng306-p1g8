@@ -5,6 +5,7 @@ import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFi
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.NoIdleTimeHeuristic;
+import se306group8.scheduleoptimizer.algorithm.storage.BlockScheduleStorage;
 import se306group8.scheduleoptimizer.config.Config;
 
 public class AlgorithmFactory {
@@ -20,6 +21,6 @@ public class AlgorithmFactory {
 		
 		MinimumHeuristic heuristic = s -> Math.max(critical.estimate(s), idle.estimate(s));
 		
-		return new AStarSchedulingAlgorithm(new GreedyChildScheduleFinder(config.P()), heuristic, monitor);
+		return new AStarSchedulingAlgorithm(new GreedyChildScheduleFinder(config.P()), heuristic, monitor, new BlockScheduleStorage());
 	}
 }

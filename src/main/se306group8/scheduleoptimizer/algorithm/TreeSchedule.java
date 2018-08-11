@@ -35,6 +35,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private final int numberOfUsedProcessors;
 	private final int runtime;
 
+	private final int largestRoot;
+	
 	// Per task arrays
 	private final ProcessorAllocation[] allocations;
 	private final int[] numberOfParentsUncheduled;
@@ -82,7 +84,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		isComplete = false;
 
 		lowerBound = heuristic.estimate(this);
-
+		largestRoot = -1;
 	}
 
 	/**
@@ -93,9 +95,16 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		this.parent = parent;
 		this.heuristic = parent.heuristic;
 
+		
+		if(processor > parent.numberOfUsedProcessors) {
+			largestRoot = Math.max(parent.largestRoot, task.getId());
+		} else {
+			largestRoot = parent.largestRoot;
+		}
+		
 		numberOfUsedProcessors = Math.max(parent.numberOfUsedProcessors, processor);
 		numberOfParentsUncheduled = parent.numberOfParentsUncheduled.clone();
-		allocatable = new ArrayList<>();
+		allocatable = new ArrayList<>(graph.getAll().size());
 		lastAllocationOnProcessor = Arrays.copyOf(parent.lastAllocationOnProcessor, numberOfUsedProcessors);
 		allocations = parent.allocations.clone();
 
@@ -160,6 +169,10 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			lowerBound = heuristic.estimate(this);
 		}
 
+	}
+
+	public int getLargestRoot() {
+		return largestRoot;
 	}
 
 	/** Returns true if the schedule is empty */

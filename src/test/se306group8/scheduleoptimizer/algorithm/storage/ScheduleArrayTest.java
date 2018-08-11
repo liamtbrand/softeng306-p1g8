@@ -2,8 +2,6 @@ package se306group8.scheduleoptimizer.algorithm.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Objects;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +11,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 import se306group8.scheduleoptimizer.taskgraph.TestGraphUtils;
 
 public class ScheduleArrayTest {
-	private ScheduleArray array;
+	private BlockScheduleArray array;
 	private TaskGraph graph;
 	private Task task;
 	private TreeSchedule parent;
@@ -25,36 +23,34 @@ public class ScheduleArrayTest {
 		graph = TestGraphUtils.buildTestGraphA();
 		task = graph.getAll().get(0);
 		
-		int[] tmp = new int[] { 5 };
-		
 		parent = new TreeSchedule(graph, s -> 0xff & s.hashCode());
 		child1 = new TreeSchedule(task, 1, parent);
 		child2 = new TreeSchedule(task, 2, parent);
 		
-		array = new ScheduleArray();
+		array = new BlockScheduleArray(10, 20);
 	}
 	
 	@Test
 	public void testGetLowerBound() {
-		int id = array.addOrGetId(parent);
+		int id = array.add(parent);
 		assertEquals(parent.getLowerBound(), array.getLowerBound(id));
 		
-		id = array.addOrGetId(child1);
+		id = array.add(child1);
 		assertEquals(child1.getLowerBound(), array.getLowerBound(id));
 		
-		id = array.addOrGetId(child2);
+		id = array.add(child2);
 		assertEquals(child2.getLowerBound(), array.getLowerBound(id));
 	}
 
 	@Test
 	public void testGet() {
-		int id = array.addOrGetId(child1);
+		int id = array.add(child1);
 		assertEquals(child1, array.get(id));
 
-		id = array.addOrGetId(parent);
+		id = array.add(parent);
 		assertEquals(parent, array.get(id));
 		
-		id = array.addOrGetId(child2);
+		id = array.add(child2);
 		assertEquals(child2, array.get(id));
 	}
 	
@@ -63,8 +59,8 @@ public class ScheduleArrayTest {
 	public void addNewBlock() {
 		int lastId = 0;
 		
-		for(int i = 0; i < ScheduleArray.BLOCK_SIZE * 5; i++) {
-			lastId = array.addOrGetId(child1);
+		for(int i = 0; i < 50; i++) {
+			lastId = array.add(child1);
 		}
 		
 		assertEquals(child1, array.get(lastId));

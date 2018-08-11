@@ -1,54 +1,40 @@
 package se306group8.scheduleoptimizer.algorithm.storage;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
-public class ScheduleStorage {
-	private final SchedulePriorityQueue queue;
+public interface ScheduleStorage {
+
+	/** Returns and removes the best schedule from the storage */
+	TreeSchedule pop();
+
+	/** Returns the best schedule from the storage */
+	TreeSchedule peek();
+
+	/** Places a schedule into storage. */
+	void put(TreeSchedule schedule);
 	
-	/** Creates a schedule storage using the given minimum heuristic.
-	 *
-	 * @param minimum The minimum heuristic to use, this may not be null.
-	 * @param sizeLimit The maximum number of Mb to use storing the schedules. More memory than this must not be used.
-	 **/
-	public ScheduleStorage(int sizeLimit) {
-		queue = new SchedulePriorityQueue();
-	}
-	
-	/** Stores a schedule in storage. */
-	public void storeSchedule(TreeSchedule schedule) {
-		queue.put(schedule);
-	}
-	
-	/** Stores a list of schedules in storage. */
-	public void storeSchedules(Collection<TreeSchedule> schedules) {
-		for(TreeSchedule partial : schedules) {
-			storeSchedule(partial);
+	/** Places many schedules into storage. */
+	default void putAll(Collection<? extends TreeSchedule> schedules) {
+		for(TreeSchedule s : schedules) {
+			put(s);
 		}
 	}
 	
-	public TreeSchedule getBestSchedule() {
-		return queue.poll();
-	}
-	
-	public int size() {
-		return queue.size();
-	}
-	
-	public String toString() {
-		return Arrays.deepToString(queue.toArray());
-	}
-
-	public void signalStorageSizes(RuntimeMonitor monitor) {
-		//4 for the pointer to the object, 8 for the storage itself
-		monitor.setScheduleInQueueStorageSize(4 + 8);
-	}
+	void signalMonitor(RuntimeMonitor monitor);
 	
 	/** Communicates the storage state to the monitor */
-	public void signalMonitor(RuntimeMonitor monitor) {
-		monitor.setSchedulesInArray(queue.size());
+	default void signalStorageSizes(RuntimeMonitor monitor) {
+		monitor.setScheduleInArrayStorageSize(9);
+		monitor.setScheduleInQueueStorageSize(4 + 9); //9 for the array, 4 for the queue
 	}
+
+	/** Deletes all schedules with a bound greater than the maximum.
+	 * This method makes a best effort, and may not actually delete the schedules.
+	 * They will not be returned by pop or peek. */
+	void pruneStorage(int maxBound);
+
+	int size();
 }

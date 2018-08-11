@@ -7,44 +7,91 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 /** This class represents a linear array of schedules. All of these schedules must be generated from the
  * same root schedule. */
 class ScheduleArray {
-	static final int BLOCK_SIZE = 100_000;
+	final int blockSize;
+	
+	private int size = 0;
 	
 	/** This class represents a large block of schedules. This represents a storage of about 1Mb.
 	 * This block size is chosen to be small enough so as to not waste memory. But large enough so
 	 * that the object overheads are largely irrelevant. */
-	private class ScheduleBlock {
+	class ScheduleBlock {
+		int size = 0;
+		final int slot;
 		
 		/** Stores the array of parent schedules */
-		final int[] parentsArray = new int[BLOCK_SIZE];
+		final int[] parentsArray = new int[blockSize];
 		/** Stores what processor each schedule places the task on */
-		final byte[] processorArray = new byte[BLOCK_SIZE];
+		final byte[] processorArray = new byte[blockSize];
 		/** Stores the task that each schedule allocates */
-		final byte[] taskArray = new byte[BLOCK_SIZE];
+		final byte[] taskArray = new byte[blockSize];
 		/** Pre-computes the result of the heuristic */
-		final short[] lowerBound = new short[BLOCK_SIZE];
+		final short[] lowerBound = new short[blockSize];
+		/** Counts the number of tasks that have been scheduled on this schedule */
+		final byte[] tasks = new byte[blockSize];
 		
-		void setSchedule(int subIndex, TreeSchedule schedule) {
-			lowerBound[subIndex] = (short) schedule.getLowerBound();
-			parentsArray[subIndex] = addOrGetId(schedule.getParent());
-			taskArray[subIndex] = (byte) schedule.getMostRecentAllocation().task.getId();
-			processorArray[subIndex] = (byte) schedule.getMostRecentAllocation().processor;
+		ScheduleBlock(int slot) {
+			this.slot = slot;
+		}
+		
+		/** Adds a schedule to the block and returns the index it was given. This index is the index that should
+		 * be used to retrieve it from the array. */
+		int add(TreeSchedule schedule) {
+			int index = size;
+			size++;
+			
+			lowerBound[index] = (short) schedule.getLowerBound();
+			parentsArray[index] = ScheduleArray.this.add(schedule.getParent());
+			taskArray[index] = (byte) schedule.getMostRecentAllocation().task.getId();
+			processorArray[index] = (byte) schedule.getMostRecentAllocation().processor;
+			tasks[index] = (byte) schedule.getAllocated().size();
+			
+			return index + slot * blockSize;
+		}
+
+		boolean isFull() {
+			return size >= blockSize;
+		}
+
+		void remove() {
+			blocks.set(slot, null);
+			ScheduleArray.this.size -= size;
+		}
+		
+		@Override
+		public String toString() {
+			return "(" + size + ")";
 		}
 	}
 	
 	/** Each block stores a large number of schedules at 8B per schedule. This limits the cost of resizing the array. */
 	private final ArrayList<ScheduleBlock> blocks = new ArrayList<>();
+	
 	private TreeSchedule rootSchedule;
 	
-	private int nextId = 0;
+	ScheduleArray(int blockSize) {
+		this.blockSize = blockSize;
+	}
 	
 	int getLowerBound(int id) {
 		if(id == -1) {
 			return rootSchedule.getLowerBound();
 		}
 		
-		ScheduleBlock block = blocks.get(id / BLOCK_SIZE);
-		int subIndex = id % BLOCK_SIZE;
+		ScheduleBlock block = blocks.get(id / blockSize);
+		int subIndex = id % blockSize;
+		
 		return block.lowerBound[subIndex];
+	}
+	
+	int getNumberOfTasks(int id) {
+		if(id == -1) {
+			return 0;
+		}
+		
+		ScheduleBlock block = blocks.get(id / blockSize);
+		int subIndex = id % blockSize;
+		
+		return block.tasks[subIndex];
 	}
 	
 	/**
@@ -60,15 +107,14 @@ class ScheduleArray {
 			return rootSchedule;
 		}
 		
-		ScheduleBlock block = blocks.get(id / BLOCK_SIZE);
-		int subIndex = id % BLOCK_SIZE;
+		ScheduleBlock block = blocks.get(id / blockSize);
+		int subIndex = id % blockSize;
 		
 		int parent = block.parentsArray[subIndex];
 		int task = Byte.toUnsignedInt(block.taskArray[subIndex]);
 		int processor = Byte.toUnsignedInt(block.processorArray[subIndex]);
-		int lowerBound = Short.toUnsignedInt(block.lowerBound[subIndex]);
 		
-		return new ArrayBackedSchedule(this, id, parent, rootSchedule.getGraph().getTask(task), processor, lowerBound);
+		return new ArrayBackedSchedule(this, id, parent, rootSchedule.getGraph().getTask(task), processor);
 	}
 	
 	/** Adds a schedule to the array. If this schedule object was already in the array it is not re-added
@@ -77,33 +123,49 @@ class ScheduleArray {
 	 * @throws OutOfMemoryError if there are too many schedules in this array.
 	 * @return the id that was allocated to this object.
 	 **/
-	int addOrGetId(TreeSchedule schedule) throws OutOfMemoryError {
+	int add(TreeSchedule schedule) throws OutOfMemoryError {
 		if(schedule.getParent() == null) {
 			assert rootSchedule == null || rootSchedule.equals(schedule);
 			
-			rootSchedule = schedule; //Update root, this may be the first time.
+			if(rootSchedule == null) {
+				size++;
+				rootSchedule = schedule;
+			}
+			
 			return -1;
 		}
 		
 		if(schedule instanceof ArrayBackedSchedule) {
 			return ((ArrayBackedSchedule) schedule).getIndex();
 		} else {
-			int index = nextId++;
-			ScheduleBlock block = getBlockCheckingForBounds(index / BLOCK_SIZE);
-			int subIndex = index % BLOCK_SIZE;
+			ScheduleBlock block = getBlockFor(schedule);
 			
-			block.setSchedule(subIndex, schedule);
-			
-			return index;
+			size++;
+			return block.add(schedule);
 		}
 	}
-
-	/** Gets a block of schedules, also checking for out of bounds and creating the block if it does not exist. */
-	private ScheduleBlock getBlockCheckingForBounds(int i) {
-		while(i >= blocks.size()) {
-			blocks.add(new ScheduleBlock());
+	
+	ScheduleBlock getBlockFor(TreeSchedule schedule) {
+		if(blocks.isEmpty()) {
+			return allocateNewBlock();
 		}
 		
-		return blocks.get(i);
+		ScheduleBlock block = blocks.get(blocks.size() - 1);
+		if(block == null || block.isFull()) {
+			return allocateNewBlock();
+		}
+		
+		return block;
+	}
+	
+	ScheduleBlock allocateNewBlock() {
+		ScheduleBlock block = new ScheduleBlock(blocks.size());
+		blocks.add(block);
+		
+		return block;
+	}
+	
+	int size() {
+		return size;
 	}
 }
