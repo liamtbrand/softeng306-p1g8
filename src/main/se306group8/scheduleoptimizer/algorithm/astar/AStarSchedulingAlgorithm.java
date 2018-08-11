@@ -15,14 +15,16 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
 public class AStarSchedulingAlgorithm extends Algorithm {
 	
-	private ChildScheduleFinder childGenerator;
-	private MinimumHeuristic heuristic;
+	private final ChildScheduleFinder childGenerator;
+	private final MinimumHeuristic heuristic;
+	private final ScheduleStorage queue;
 	
-	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
+	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor, ScheduleStorage storage) {
 		super(monitor);
 		
 		this.childGenerator = childGenerator;
 		this.heuristic = heuristic;
+		this.queue = storage;
 	}
 
 	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic) {
@@ -30,6 +32,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		
 		this.childGenerator = childGenerator;
 		this.heuristic = heuristic;
+		this.queue = new BlockScheduleStorage(10, 100_000);
 	}
 
 	@Override
@@ -43,8 +46,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
 		}
 
-		ScheduleStorage queue = new BlockScheduleStorage(10, 100_000);
-		
 		queue.put(greedySoln);
 		
 		while (!best.isComplete()) {

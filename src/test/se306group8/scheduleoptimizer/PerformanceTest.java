@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -37,6 +38,10 @@ import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.NoIdleTimeHeuristic;
+import se306group8.scheduleoptimizer.algorithm.storage.BlockScheduleStorage;
+import se306group8.scheduleoptimizer.algorithm.storage.NonePruningScheduleStorage;
+import se306group8.scheduleoptimizer.algorithm.storage.ObjectQueueScheduleStorage;
+import se306group8.scheduleoptimizer.algorithm.storage.ScheduleStorage;
 import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
@@ -47,10 +52,11 @@ public class PerformanceTest {
 	private static final Map<String, AlgorithmConstructor> ALGORITHMS = new HashMap<>();
 	private static final Map<String, IntFunction<MinimumHeuristic>> HEURISTICS = new HashMap<>();
 	private static final Map<String, IntFunction<ChildScheduleFinder>> CHILD_FINDER = new HashMap<>();
+	private static final Map<String, Supplier<ScheduleStorage>> STORAGE = new HashMap<>();
 
 	@FunctionalInterface
 	private static interface AlgorithmConstructor {
-		Algorithm construct(MinimumHeuristic heuristic, ChildScheduleFinder finder, RuntimeMonitor monitor);
+		Algorithm construct(MinimumHeuristic heuristic, ChildScheduleFinder finder, RuntimeMonitor monitor, ScheduleStorage storage);
 	}
 
 	//Set up the various testing options.
@@ -59,8 +65,8 @@ public class PerformanceTest {
 		DIFFICULTIES.put("MEDIUM", s -> s.contains("Nodes_1") || s.contains("Nodes_2"));
 		DIFFICULTIES.put("HARD", s -> true);
 
-		ALGORITHMS.put("A_STAR", (h, f, m) -> new AStarSchedulingAlgorithm(f, h, m));
-		ALGORITHMS.put("BRANCH_BOUND", (h, f, m) -> new BranchBoundSchedulingAlgorithm(f, h, m));
+		ALGORITHMS.put("A_STAR", (h, f, m, s) -> new AStarSchedulingAlgorithm(f, h, m, s));
+		ALGORITHMS.put("BRANCH_BOUND", (h, f, m, s) -> new BranchBoundSchedulingAlgorithm(f, h, m));
 
 		HEURISTICS.put("ZERO", processors -> schedule -> 0);
 		HEURISTICS.put("NO_IDLE", NoIdleTimeHeuristic::new);
@@ -70,6 +76,10 @@ public class PerformanceTest {
 		CHILD_FINDER.put("BASIC", BasicChildScheduleFinder::new);
 		CHILD_FINDER.put("GREEDY", GreedyChildScheduleFinder::new);
 		CHILD_FINDER.put("DUPLICATE_REMOVING", p -> { throw new RuntimeException("Not Implemented"); });
+		
+		STORAGE.put("PRUNING", BlockScheduleStorage::new);
+		STORAGE.put("NON_PRUNING", NonePruningScheduleStorage::new);
+		STORAGE.put("OBJECT_QUEUE", ObjectQueueScheduleStorage::new);
 	}
 
 	//Run through the data-set, creating a mapping from the file name to the length of time, and the number of solutions stored
@@ -81,16 +91,18 @@ public class PerformanceTest {
 		options.addOption("h", true, "The heuristic to use, as a comma seperated list of heuristics, ZERO, NO_IDLE, CRITICAL_PATH, DATA_READY_TIME");
 		options.addOption("c", true, "The child finder to use, BASIC, GREEDY, DUPLICATE_REMOVING");
 		options.addOption("n", true, "The number of files to process.");
+		options.addOption("s", true, "The storage system to use, only used with A*, ignored with anything else.");
 
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(options, args);
 
-		String difficulty, heuristicOptionString, childFinder, algorithm;
+		String difficulty, heuristicOptionString, childFinder, algorithm, storage;
 		
 		difficulty = cmd.getOptionValue("d", "EASY");
 		heuristicOptionString = cmd.getOptionValue("h", "CRITICAL_PATH,NO_IDLE,DATA_READY_TIME");
 		childFinder = cmd.getOptionValue("c", "BASIC");
 		algorithm = cmd.getOptionValue("a", "A_STAR");
+		storage = cmd.getOptionValue("s", "PRUNING");
 		
 		int n = Integer.parseInt(cmd.getOptionValue("n", "10"));
 		
@@ -109,12 +121,13 @@ public class PerformanceTest {
 		}
 		
 		//This is the file name, made out of the command options.
-		String fileName = difficulty + "-" + heuristicOptionString + "-" + childFinder + "-" + algorithm + "-" + (n == -1 ? "NOLIMIT" : Integer.toString(n));
+		String fileName = difficulty + "-" + heuristicOptionString + "-" + childFinder + "-" + algorithm + "-" + storage + "-" + (n == -1 ? "NOLIMIT" : Integer.toString(n));
 		System.out.println("Starting test '" + fileName + "'");
 		
 		Predicate<String> inputFilter = DIFFICULTIES.get(difficulty);
 		IntFunction<ChildScheduleFinder> childScheduleBuilder = CHILD_FINDER.get(childFinder);
 		AlgorithmConstructor algorithmConstructor = ALGORITHMS.get(algorithm);
+		Supplier<ScheduleStorage> storageSupplier = STORAGE.get(storage);
 
 		List<String> names = new ArrayList<>();
 
@@ -202,7 +215,8 @@ public class PerformanceTest {
 			//Create the algorithm objects
 			MinimumHeuristic heuristic = heuristicBuilder.apply(processors);
 			ChildScheduleFinder child = childScheduleBuilder.apply(processors);
-			Algorithm alg = algorithmConstructor.construct(heuristic, child, monitor);
+			ScheduleStorage scheduleStorage = storageSupplier.get();
+			Algorithm alg = algorithmConstructor.construct(heuristic, child, monitor, scheduleStorage);
 			
 			Schedule s = alg.produceCompleteSchedule(graph, processors);
 			
