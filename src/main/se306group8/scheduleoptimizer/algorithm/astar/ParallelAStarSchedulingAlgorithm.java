@@ -30,6 +30,7 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 	
 	private TreeSchedule best;
 
+	//currently not used need to find way of constructing these for each thread
 	private ChildScheduleFinder childGenerator;
 
 	private MinimumHeuristic heuristic;
@@ -50,8 +51,13 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 			//TODO make this plugable
 			ChildScheduleFinder childGenerator = new DuplicateRemovingChildFinder(numProcessors);
 			
+			//done is atomic variable used by all threads to know when to die
+			//done is set to true when optimal is found
 			while (!done.get()) {
-				TreeSchedule threadBest = queue.pop();
+				
+				//this pop may return null if the queue is empty it
+				//can happen if items are taken faster than added
+				threadBest = queue.pop();
 				
 				while (threadBest != null && !threadBest.isComplete() && !done.get()) {
 					List<TreeSchedule> children = childGenerator.getChildSchedules(threadBest);
@@ -63,6 +69,8 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 					getMonitor().setSolutionsExplored(queue.size());
 				}
 				
+				//if we got a completed schedule from the queue we are done
+				//but we need to check another thread hasn't found a better one
 				if (threadBest != null && threadBest.isComplete()) {
 					checkBest(threadBest);
 					done.set(true);
@@ -93,7 +101,10 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
 		}
 		
+		//do not put greedy solution into the queue as it results in a race condition
 		queue.put(best);
+		
+		//instead mark greedy solution here in global variable
 		best = greedySoln;
 		queue.pruneStorage(greedySoln.getRuntime());
 		
@@ -118,6 +129,7 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 	}
 	
 	//multiple threads could get a complete schedule at the same time check for sure
+	//this method is synchronized to avoid race conditions
 	private synchronized void checkBest(TreeSchedule threadBest) {
 		assert(best != null && best.isComplete());
 		if (best.getRuntime()>threadBest.getRuntime()) {

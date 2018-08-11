@@ -1,12 +1,11 @@
 package se306group8.scheduleoptimizer.algorithm.storage;
 
-import java.util.PriorityQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
-/** Stores the schedules in a Java priority queue. */
+/** Stores the schedules in a Java PriorityBlockingQueue. */
 public class CocurrentObjectQueueScheduleStorage implements ScheduleStorage {
 	private final PriorityBlockingQueue<TreeSchedule> queue;
 	
@@ -52,7 +51,8 @@ public class CocurrentObjectQueueScheduleStorage implements ScheduleStorage {
 	private void updateBound(int newbound) {
 		int oldBound = maximumBound.get();
 		
-		//race condition?
+		//to avoid race conditions we use compareAndSet to ensure we have the 
+		//up to date value of maximumBound
 		while (oldBound > newbound && maximumBound.compareAndSet(oldBound, newbound)) {
 			oldBound = maximumBound.get();
 		}
