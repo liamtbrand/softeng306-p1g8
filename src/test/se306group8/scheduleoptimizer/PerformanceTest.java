@@ -39,7 +39,7 @@ import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.NoIdleTimeHeuristic;
 import se306group8.scheduleoptimizer.algorithm.storage.BlockScheduleStorage;
-import se306group8.scheduleoptimizer.algorithm.storage.NonePruningScheduleStorage;
+import se306group8.scheduleoptimizer.algorithm.storage.NonPruningScheduleStorage;
 import se306group8.scheduleoptimizer.algorithm.storage.ObjectQueueScheduleStorage;
 import se306group8.scheduleoptimizer.algorithm.storage.ScheduleStorage;
 import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
@@ -78,7 +78,7 @@ public class PerformanceTest {
 		CHILD_FINDER.put("DUPLICATE_REMOVING", p -> { throw new RuntimeException("Not Implemented"); });
 		
 		STORAGE.put("PRUNING", BlockScheduleStorage::new);
-		STORAGE.put("NON_PRUNING", NonePruningScheduleStorage::new);
+		STORAGE.put("NON_PRUNING", NonPruningScheduleStorage::new);
 		STORAGE.put("OBJECT_QUEUE", ObjectQueueScheduleStorage::new);
 	}
 

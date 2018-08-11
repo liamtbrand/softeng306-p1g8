@@ -97,7 +97,7 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 			parent = parent(parent);
 			int parentBound = scheduleArray.getLowerBound(minHeap[parent]);
 			
-			if(childBound < parentBound) {
+			if(isSmallerThan(child, parent, childBound, parentBound)) {
 				swap(child, parent);
 			} else {
 				return; //If we did not swap, stop the fix
@@ -105,6 +105,19 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 		}
 	}
 	
+	private boolean isSmallerThan(int a, int b, int aBound, int bBound) {
+		if(aBound < bBound)
+			return true;
+		
+		if(aBound > bBound)
+			return false;
+		
+		int aDepth = scheduleArray.getNumberOfTasks(minHeap[a]);
+		int bDepth = scheduleArray.getNumberOfTasks(minHeap[b]);
+		
+		return bDepth < aDepth;
+	}
+
 	private void swap(int a, int b) {
 		int tmp = minHeap[a];
 		minHeap[a] = minHeap[b];
@@ -133,7 +146,7 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 				int rightBound = scheduleArray.getLowerBound(minHeap[rightChild]);
 				
 				//There is a valid right child.
-				if(rightBound < smallestChildBound) {
+				if(isSmallerThan(rightChild, smallestChild, rightBound, smallestChildBound)) {
 					smallestChildBound = rightBound;
 					smallestChild = rightChild;
 				}
@@ -142,7 +155,7 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 			}
 			
 			//Check if a swap is needed
-			if(parentBound > smallestChildBound) {
+			if(isSmallerThan(smallestChild, parent, smallestChildBound, parentBound)) {
 				swap(smallestChild, parent);
 				
 				parent = smallestChild;

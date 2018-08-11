@@ -26,6 +26,8 @@ class ScheduleArray {
 		final byte[] taskArray = new byte[blockSize];
 		/** Pre-computes the result of the heuristic */
 		final short[] lowerBound = new short[blockSize];
+		/** Counts the number of tasks that have been scheduled on this schedule */
+		final byte[] tasks = new byte[blockSize];
 		
 		ScheduleBlock(int slot) {
 			this.slot = slot;
@@ -41,6 +43,7 @@ class ScheduleArray {
 			parentsArray[index] = ScheduleArray.this.add(schedule.getParent());
 			taskArray[index] = (byte) schedule.getMostRecentAllocation().task.getId();
 			processorArray[index] = (byte) schedule.getMostRecentAllocation().processor;
+			tasks[index] = (byte) schedule.getAllocated().size();
 			
 			return index + slot * blockSize;
 		}
@@ -78,6 +81,17 @@ class ScheduleArray {
 		int subIndex = id % blockSize;
 		
 		return block.lowerBound[subIndex];
+	}
+	
+	int getNumberOfTasks(int id) {
+		if(id == -1) {
+			return 0;
+		}
+		
+		ScheduleBlock block = blocks.get(id / blockSize);
+		int subIndex = id % blockSize;
+		
+		return block.tasks[subIndex];
 	}
 	
 	/**

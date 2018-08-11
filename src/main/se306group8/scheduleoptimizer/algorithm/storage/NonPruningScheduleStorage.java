@@ -2,18 +2,18 @@ package se306group8.scheduleoptimizer.algorithm.storage;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
-public class NonePruningScheduleStorage implements ScheduleStorage {
+public class NonPruningScheduleStorage implements ScheduleStorage {
 	private final SchedulePriorityQueue queue;
 	private final ScheduleArray array;
 	
 	private int maximumBound = Integer.MAX_VALUE;
 	
-	public NonePruningScheduleStorage(int blockSize) {
+	public NonPruningScheduleStorage(int blockSize) {
 		array = new ScheduleArray(blockSize);
 		queue = new SchedulePriorityQueue(array);
 	}
 	
-	public NonePruningScheduleStorage() {
+	public NonPruningScheduleStorage() {
 		this(100_000);
 	}
 	
@@ -34,7 +34,7 @@ public class NonePruningScheduleStorage implements ScheduleStorage {
 		}
 		
 		if(schedule.isComplete() && schedule.getRuntime() < maximumBound) {
-			maximumBound = schedule.getRuntime();
+			pruneStorage(schedule.getRuntime());
 		}
 		
 		int id = array.add(schedule);

@@ -46,7 +46,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
 		}
 
-		queue.put(greedySoln);
+		queue.pruneStorage(greedySoln.getRuntime());
 		
 		while (!best.isComplete()) {
 

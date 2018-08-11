@@ -8,12 +8,12 @@ public class BlockScheduleStorage implements ScheduleStorage {
 	private final BlockScheduleArray array;
 	
 	public BlockScheduleStorage(int granularity, int blockSize) {
-		array = new BlockScheduleArray(100_000, 20);
+		array = new BlockScheduleArray(blockSize, granularity);
 		queue = new SchedulePriorityQueue(array);
 	}
 	
 	public BlockScheduleStorage() {
-		this(100_000, 20);
+		this(20, 100_000);
 	}
 	
 	@Override
@@ -46,7 +46,6 @@ public class BlockScheduleStorage implements ScheduleStorage {
 		}
 		
 		int id = array.add(schedule);
-		
 		if(schedule.getLowerBound() < array.getEndOfQueue()) {
 			queue.put(id);
 		}
