@@ -36,6 +36,14 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		bestSchedule = null;
 		messages = new LinkedBlockingQueue<>();
 
+		solutionsExplored = 0;
+		schedulesInArray = 0;
+		scheduleInArrayStorageSize = 0;
+		schedulesInQueue = 0;
+		scheduleInQueueStorageSize = 0;
+		schedulesOnDisk = 0;
+		scheduleOnDiskStorageSize = 0;
+
 		listeners = new ArrayList<>();
 	}
 
@@ -73,6 +81,10 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	@Override
 	public void setSolutionsExplored(int number) {
 		solutionsExplored = number;
+	}
+
+	public int getSolutionsExplored() {
+		return solutionsExplored;
 	}
 
 	@Override

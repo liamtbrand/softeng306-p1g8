@@ -1,6 +1,7 @@
 package se306group8.scheduleoptimizer.visualisation;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +22,13 @@ import java.util.TimerTask;
 public class FXApplication extends Application {
 
 	@FXML
-	private Label myLabel;
+	private Label solutionsExploredLabel;
+	@FXML
+	private Label schedulesInQueueLabel;
+	@FXML
+	private Label schedulesInArrayLabel;
+	@FXML
+	private Label schedulesOnDiskLabel;
 
 	@FXML
 	private StackedBarChart scheduleStorage;
@@ -47,7 +54,7 @@ public class FXApplication extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
-		myLabel.textProperty().bind(Bindings.createStringBinding(() -> monitor.hasStarted() ? "Started!" : "Waiting to start.", monitor ));
+		//myLabel.textProperty().bind(Bindings.createStringBinding(() -> monitor.hasStarted() ? "Started!" : "Waiting to start.", monitor ));
 
 		// Setup memory usage graph.
 
@@ -61,24 +68,24 @@ public class FXApplication extends Application {
 
 		XYChart.Data diskData = new XYChart.Data();
 		diskData.setXValue("Memory");
-		diskData.setYValue(50);
+		diskData.setYValue(0.1);
 		dataSeriesDisk.getData().add(diskData);
 
 		XYChart.Data arrayData = new XYChart.Data();
 		arrayData.setXValue("Memory");
-		arrayData.setYValue(25);
+		arrayData.setYValue(0.1);
 		dataSeriesArray.getData().add(arrayData);
 
 		XYChart.Data queueData = new XYChart.Data();
 		queueData.setXValue("Memory");
-		queueData.setYValue(25);
+		queueData.setYValue(0.1);
 		dataSeriesQueue.getData().add(queueData);
 
 		scheduleStorage.getData().setAll(dataSeriesDisk,dataSeriesArray,dataSeriesQueue);
 
-		PieChart.Data pDiskData = new PieChart.Data("Disk",50);
-		PieChart.Data pArrayData = new PieChart.Data("Array",30);
-		PieChart.Data pQueueData = new PieChart.Data("Queue",20);
+		PieChart.Data pDiskData = new PieChart.Data("Disk",0.1);
+		PieChart.Data pArrayData = new PieChart.Data("Array",0.1);
+		PieChart.Data pQueueData = new PieChart.Data("Queue",0.1);
 		storageBreakdown.getData().setAll(pDiskData,pArrayData,pQueueData);
 
 		Thread th = new Thread(() -> {
@@ -93,35 +100,51 @@ public class FXApplication extends Application {
 		TimerTask updateStatisticsTask = new TimerTask() {
 			@Override
 			public void run() {
+				Platform.runLater(() -> {
 
-				int schedulesOnDisk = monitor.getSchedulesOnDisk();
-				int schedulesInArray = monitor.getSchedulesInArray();
-				int schedulesInQueue = monitor.getSchedulesInQueue();
+					long solutionsExplored = monitor.getSolutionsExplored();
 
-				long totalSchedules = schedulesOnDisk+schedulesInArray+schedulesInQueue;
-				
-				if(totalSchedules == 0) {
-					totalSchedules += 1;
-				}
+					long schedulesOnDisk = monitor.getSchedulesOnDisk();
+					long schedulesInArray = monitor.getSchedulesInArray();
+					long schedulesInQueue = monitor.getSchedulesInQueue();
 
-				int scheduleOnDiskSize = monitor.getScheduleOnDiskStorageSize();
-				int scheduleInArraySize = monitor.getScheduleInArrayStorageSize();
-				int scheduleInQueueSize = monitor.getScheduleInQueueStorageSize();
+					long totalSchedules = schedulesOnDisk+schedulesInArray+schedulesInQueue;
 
-				long onDiskSize = scheduleOnDiskSize*schedulesOnDisk;
-				long inArraySize = scheduleInArraySize*schedulesInArray;
-				long inQueueSize = scheduleInQueueSize*schedulesInQueue;
+					if(totalSchedules == 0) {
+						totalSchedules += 1;
+					}
 
-				long totalSize = onDiskSize+inArraySize+inQueueSize;
+					/*
+					int scheduleOnDiskSize = monitor.getScheduleOnDiskStorageSize();
+					int scheduleInArraySize = monitor.getScheduleInArrayStorageSize();
+					int scheduleInQueueSize = monitor.getScheduleInQueueStorageSize();
 
-				diskData.setYValue(schedulesOnDisk/totalSchedules);
-				arrayData.setYValue(schedulesInArray/totalSchedules);
-				queueData.setYValue(schedulesInQueue/totalSchedules);
+					long onDiskSize = scheduleOnDiskSize*schedulesOnDisk;
+					long inArraySize = scheduleInArraySize*schedulesInArray;
+					long inQueueSize = scheduleInQueueSize*schedulesInQueue;
 
-				pDiskData.setPieValue(schedulesOnDisk/totalSchedules);
-				pArrayData.setPieValue(schedulesInArray/totalSchedules);
-				pQueueData.setPieValue(schedulesInQueue/totalSchedules);
+					long totalSize = onDiskSize+inArraySize+inQueueSize;
+					*/
 
+					solutionsExploredLabel.textProperty().setValue(""+solutionsExplored);
+
+					schedulesInArrayLabel.textProperty().setValue(""+schedulesInArray);
+					schedulesInQueueLabel.textProperty().setValue(""+schedulesInQueue);
+					schedulesOnDiskLabel.textProperty().setValue(""+schedulesOnDisk);
+
+					double percentOnDisk = 100.0 * schedulesOnDisk / totalSchedules;
+					double percentInArray = 100.0 * schedulesInArray / totalSchedules;
+					double percentInQueue = 100.0 * schedulesInQueue / totalSchedules;
+
+					diskData.setYValue(percentOnDisk);
+					arrayData.setYValue(percentInArray);
+					queueData.setYValue(percentInQueue);
+
+					pDiskData.setPieValue(percentOnDisk);
+					pArrayData.setPieValue(percentInArray);
+					pQueueData.setPieValue(percentInQueue);
+
+				});
 			}
 		};
 

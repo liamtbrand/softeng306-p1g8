@@ -15,20 +15,62 @@
   <children>
       <TabPane prefHeight="400.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab fx:id="testingTab" text="Testing Tab">
-            <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0">
-                    <children>
-                        <Label fx:id="myLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="154.0" layoutY="169.0" style="&#10;" text="Welcome to the visualisation!" textAlignment="CENTER" textFill="#9f9f9f" AnchorPane.bottomAnchor="169.0" AnchorPane.leftAnchor="154.0" AnchorPane.rightAnchor="154.0" AnchorPane.topAnchor="169.0">
-                            <font>
-                                <Font size="24.0" />
-                            </font>
+            <Tab text="Dashboard">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <StackedBarChart fx:id="scheduleStorage" animated="false" layoutX="14.0" layoutY="16.0" prefWidth="200.0" title="Schedule Storage" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                          <xAxis>
+                            <CategoryAxis side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis animated="false" autoRanging="false" minorTickVisible="false" side="LEFT" tickUnit="10.0" />
+                          </yAxis>
+                        </StackedBarChart>
+                        <PieChart fx:id="storageBreakdown" layoutX="14.0" layoutY="14.0" prefHeight="250.0" prefWidth="250.0" title="Storage Breakdown" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                        <Label layoutX="14.0" layoutY="264.0" text="Solutions Explored:">
+                           <font>
+                              <Font name="Menlo Regular" size="13.0" />
+                           </font>
                         </Label>
-                        <Label layoutX="204.0" layoutY="152.0" text="This page is just for testing the setup." />
-                    </children>
-                </AnchorPane>
-            </content>
-          </Tab>
+                        <Label layoutX="14.0" layoutY="315.0" prefHeight="17.0" prefWidth="145.0" text="Schedules on Disk:">
+                           <font>
+                              <Font name="Menlo Regular" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="14.0" layoutY="298.0" text="Schedules in Array:">
+                           <font>
+                              <Font name="Menlo Regular" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="14.0" layoutY="281.0" text="Schedules in Queue:">
+                           <font>
+                              <Font name="Menlo Regular" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="solutionsExploredLabel" layoutX="171.0" layoutY="265.0" minWidth="50.0">
+                           <font>
+                              <Font name="Menlo Regular" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="schedulesInQueueLabel" layoutX="171.0" layoutY="282.0" minWidth="50.0">
+                           <font>
+                              <Font name="Menlo Regular" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="schedulesInArrayLabel" layoutX="171.0" layoutY="299.0" minWidth="50.0">
+                           <font>
+                              <Font name="Menlo Regular" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="schedulesOnDiskLabel" layoutX="171.0" layoutY="316.0" minWidth="50.0">
+                           <font>
+                              <Font name="Menlo Regular" size="13.0" />
+                           </font>
+                        </Label>
+                     </children></AnchorPane>
+               </content>
+            </Tab>
           <Tab text="Search Space">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
@@ -40,20 +82,9 @@
                </content>
             </Tab>
             <Tab text="Statistics">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <StackedBarChart fx:id="scheduleStorage" layoutX="14.0" layoutY="16.0" prefWidth="200.0" title="Schedule Storage" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis animated="false" autoRanging="false" minorTickVisible="false" side="LEFT" tickUnit="10.0" />
-                          </yAxis>
-                        </StackedBarChart>
-                        <PieChart fx:id="storageBreakdown" layoutX="14.0" layoutY="14.0" prefHeight="250.0" prefWidth="250.0" title="Storage Breakdown" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
-                     </children></AnchorPane>
-               </content>
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
             </Tab>
         </tabs>
       </TabPane>
