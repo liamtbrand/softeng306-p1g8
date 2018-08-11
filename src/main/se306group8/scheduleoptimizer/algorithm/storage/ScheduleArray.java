@@ -51,6 +51,12 @@ class ScheduleArray {
 
 		void remove() {
 			blocks.set(slot, null);
+			ScheduleArray.this.size -= size;
+		}
+		
+		@Override
+		public String toString() {
+			return "(" + size + ")";
 		}
 	}
 	
@@ -128,17 +134,20 @@ class ScheduleArray {
 	
 	ScheduleBlock getBlockFor(TreeSchedule schedule) {
 		if(blocks.isEmpty()) {
-			ScheduleBlock block = new ScheduleBlock(blocks.size());
-			blocks.add(block);
-			
-			return block;
+			return allocateNewBlock();
 		}
 		
 		ScheduleBlock block = blocks.get(blocks.size() - 1);
-		if(block.isFull()) {
-			block = new ScheduleBlock(blocks.size());
-			blocks.add(block);
+		if(block == null || block.isFull()) {
+			return allocateNewBlock();
 		}
+		
+		return block;
+	}
+	
+	ScheduleBlock allocateNewBlock() {
+		ScheduleBlock block = new ScheduleBlock(blocks.size());
+		blocks.add(block);
 		
 		return block;
 	}

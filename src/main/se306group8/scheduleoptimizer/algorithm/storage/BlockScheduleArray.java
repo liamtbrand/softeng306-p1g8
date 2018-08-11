@@ -34,7 +34,7 @@ final class BlockScheduleArray extends ScheduleArray {
 		List<ScheduleBlock> blocksInWidth = widths.get(width);
 		
 		if(blocksInWidth.size() == 0) {
-			ScheduleBlock newBlock = super.getBlockFor(schedule);
+			ScheduleBlock newBlock = allocateNewBlock();
 			blocksInWidth.add(newBlock);
 			
 			return newBlock;
@@ -42,7 +42,7 @@ final class BlockScheduleArray extends ScheduleArray {
 			ScheduleBlock block = blocksInWidth.get(blocksInWidth.size() - 1);
 			
 			if(block.isFull()) {
-				block = super.getBlockFor(schedule);
+				block = allocateNewBlock();
 				blocksInWidth.add(block);
 				
 				return block;

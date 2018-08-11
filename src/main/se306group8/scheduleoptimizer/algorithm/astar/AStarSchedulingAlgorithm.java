@@ -43,35 +43,18 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
 		}
 
-		int upperBound = greedySoln.getRuntime();
-		
 		ScheduleStorage queue = new BlockScheduleStorage(10, 100_000);
-		queue.pruneStorage(upperBound);
 		
 		queue.put(greedySoln);
-
+		
 		while (!best.isComplete()) {
 
 			List<TreeSchedule> children = childGenerator.getChildSchedules(best);
 
-			// if one child is complete they are all complete
-			if (children.get(0).isComplete()) {
-
-				// sort by lowest runtime
-				children.sort(null);
-				TreeSchedule completeSchedule = children.get(0);
-
-				// if false all children are useless
-				if (completeSchedule.getRuntime() < upperBound) {
-					queue.put(completeSchedule);
-					upperBound = completeSchedule.getRuntime();
-					queue.pruneStorage(upperBound);
-				}
-			}
-			
 			queue.putAll(children);
 
 			best = queue.pop();
+			
 			getMonitor().setSolutionsExplored(queue.size());
 		}
 		

@@ -182,4 +182,9 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 			}
 		};
 	}
+	
+	@Override
+	public String toString() {
+		return Arrays.toString(toArray());
+	}
 }
