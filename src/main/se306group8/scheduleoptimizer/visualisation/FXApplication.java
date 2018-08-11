@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import se306group8.scheduleoptimizer.Main;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitorAggregator;
+import se306group8.scheduleoptimizer.algorithm.CLIRuntimeMonitor;
 
 public class FXApplication extends Application {
 

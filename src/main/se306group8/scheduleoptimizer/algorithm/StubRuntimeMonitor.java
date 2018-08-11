@@ -26,8 +26,37 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 
 	@Override
 	public void setSolutionsExplored(int number) {
-		// TODO Auto-generated method stub
-		
+		// Do Nothing
+	}
+
+	@Override
+	public void setSchedulesInArray(int number) {
+		// Do Nothing
+	}
+
+	@Override
+	public void setScheduleInArrayStorageSize(int bytes) {
+		// Do Nothing
+	}
+
+	@Override
+	public void setSchedulesInQueue(int number) {
+		// Do Nothing
+	}
+
+	@Override
+	public void setScheduleInQueueStorageSize(int bytes) {
+		// Do Nothing
+	}
+
+	@Override
+	public void setSchedulesOnDisk(int number) {
+		// Do Nothing
+	}
+
+	@Override
+	public void setScheduleOnDiskStorageSize(int bytes) {
+		// Do Nothing
 	}
 
 }

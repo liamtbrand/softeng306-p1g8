@@ -18,6 +18,14 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile boolean finished;
 	private volatile TreeSchedule bestSchedule;
 	private volatile Queue<String> messages;
+
+	private volatile int solutionsExplored;
+	private volatile int schedulesInArray;
+	private volatile int scheduleInArrayStorageSize;
+	private volatile int schedulesInQueue;
+	private volatile int scheduleInQueueStorageSize;
+	private volatile int schedulesOnDisk;
+	private volatile int scheduleOnDiskStorageSize;
 	
 	private final List<InvalidationListener> listeners;
 	
@@ -42,7 +50,6 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	@Override
 	public void updateBestSchedule(TreeSchedule optimalSchedule) {
 		bestSchedule = optimalSchedule;
-		invalidateListeners();
 	}
 
 	@Override
@@ -62,7 +69,42 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		messages.add(message);
 		invalidateListeners();
 	}
-	
+
+	@Override
+	public void setSolutionsExplored(int number) {
+		solutionsExplored = number;
+	}
+
+	@Override
+	public void setSchedulesInArray(int number) {
+		schedulesInArray = number;
+	}
+
+	@Override
+	public void setScheduleInArrayStorageSize(int bytes) {
+		scheduleInArrayStorageSize = bytes;
+	}
+
+	@Override
+	public void setSchedulesInQueue(int number) {
+		schedulesInQueue = number;
+	}
+
+	@Override
+	public void setScheduleInQueueStorageSize(int bytes) {
+		scheduleInQueueStorageSize = bytes;
+	}
+
+	@Override
+	public void setSchedulesOnDisk(int number) {
+		schedulesOnDisk = number;
+	}
+
+	@Override
+	public void setScheduleOnDiskStorageSize(int bytes) {
+		scheduleOnDiskStorageSize = bytes;
+	}
+
 	public boolean hasStarted() {
 		return started;
 	}

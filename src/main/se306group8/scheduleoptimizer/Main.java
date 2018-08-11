@@ -13,7 +13,7 @@ import se306group8.scheduleoptimizer.config.Config;
 import se306group8.scheduleoptimizer.dotfile.DOTFileHandler;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
-import se306group8.scheduleoptimizer.visualisation.CLIRuntimeMonitor;
+import se306group8.scheduleoptimizer.algorithm.CLIRuntimeMonitor;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 
 public class Main {
