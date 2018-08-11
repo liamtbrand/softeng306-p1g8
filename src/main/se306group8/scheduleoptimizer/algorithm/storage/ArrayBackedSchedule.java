@@ -7,20 +7,14 @@ import se306group8.scheduleoptimizer.taskgraph.Task;
  * may or may not be instances of this class. */
 final class ArrayBackedSchedule extends TreeSchedule {
 	private final int index;
-	private final ScheduleStorage array;
 	
-	ArrayBackedSchedule(ScheduleStorage array, int index, int parent, Task task, int processor, int lowerBound) {
-		super(task, processor, array.get(parent));
+	ArrayBackedSchedule(ScheduleArray scheduleStorage, int index, int parent, Task task, int processor, int lowerBound) {
+		super(task, processor, scheduleStorage.get(parent));
 		
-		this.array = array;
 		this.index = index;
 	}
 
 	int getIndex() {
 		return index;
-	}
-	
-	ScheduleStorage getArray() {
-		return array;
 	}
 }

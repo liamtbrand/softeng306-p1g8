@@ -9,23 +9,27 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 /** This is an implementation of a priority queue, that holds indexs into the ScheduleArray. */
 final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 	/** This array stores all of the schedule */
-	private final ScheduleStorage scheduleArray;
+	private final ScheduleArray scheduleArray;
 	
 	private int length;
 	private int[] minHeap;
 	
-	SchedulePriorityQueue(ScheduleStorage backingArray) {
+	/** Creates a priority queue. The backing array is used to query the lower bound of the schedule. */
+	SchedulePriorityQueue(ScheduleArray backingArray) {
 		scheduleArray = backingArray;
 		length = 0;
 		minHeap = new int[1024 * 1024];
 	}
 
+	/** Places an id into the queue. */
 	void put(int id) {
 		expandIfNeeded();
 		minHeap[length++] = id;
 		fixTail();
 	}
 
+	/** This is a debug method that is used to check if the heap is valid. It
+	 * has O(N) runtime. */
 	void checkHeapProperty() {
 		checkHeapProperty(0);
 	}
@@ -58,6 +62,7 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 		}
 	}
 	
+	/** Returns the number of elements stored in the heap. */
 	int size() {
 		return length;
 	}
@@ -76,6 +81,7 @@ final class SchedulePriorityQueue implements Iterable<TreeSchedule> {
 		return minHeap[0];
 	}
 	
+	/** This is a debug method used to return an array of all schedules in this queue. */
 	TreeSchedule[] toArray() {
 		return IntStream.range(0, length).map(i -> minHeap[i]).mapToObj(scheduleArray::get).toArray(TreeSchedule[]::new);
 	}

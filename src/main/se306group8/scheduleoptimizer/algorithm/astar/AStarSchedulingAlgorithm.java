@@ -8,6 +8,7 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
+import se306group8.scheduleoptimizer.algorithm.storage.BlockScheduleStorage;
 import se306group8.scheduleoptimizer.algorithm.storage.ScheduleStorage;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
@@ -44,7 +45,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 		int upperBound = greedySoln.getRuntime();
 		
-		ScheduleStorage queue = new ScheduleStorage(10, 100_000);
+		ScheduleStorage queue = new BlockScheduleStorage(10, 100_000);
 		queue.pruneStorage(upperBound);
 		
 		queue.put(greedySoln);
