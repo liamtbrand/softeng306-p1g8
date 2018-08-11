@@ -38,6 +38,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	// Per task arrays
 	private final ProcessorAllocation[] allocations;
 	private final int[] numberOfParentsUncheduled;
+	private final int[] dataReadyTime;
 
 	// Per processor arrays
 	/** This array.length = numberOfUsedProcessors */
@@ -71,6 +72,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		runtime = 0;
 
 		numberOfParentsUncheduled = new int[numberOfTasks];
+		dataReadyTime = new int[numberOfTasks];
 		for (Task task : graph.getAll()) {
 			numberOfParentsUncheduled[task.getId()] = task.getParents().size();
 		}
@@ -97,16 +99,10 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		numberOfParentsUncheduled = parent.numberOfParentsUncheduled.clone();
 		allocatable = new ArrayList<>();
 		lastAllocationOnProcessor = Arrays.copyOf(parent.lastAllocationOnProcessor, numberOfUsedProcessors);
+		dataReadyTime = Arrays.copyOf(parent.dataReadyTime, parent.dataReadyTime.length);
 		allocations = parent.allocations.clone();
 
-		for (Dependency dep : task.getChildren()) {
-			Task child = dep.getTarget();
-			numberOfParentsUncheduled[child.getId()]--;
-
-			if (numberOfParentsUncheduled[child.getId()] == 0) {
-				allocatable.add(child);
-			}
-		}
+		
 
 		int processorReadyTime;
 
@@ -133,6 +129,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 				startTime = dataReadyTime;
 			}
 		}
+		
 
 		idleTime = parent.idleTime + startTime - processorReadyTime;
 
@@ -149,6 +146,19 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 
 		allocated = new ArrayList<>(parent.allocated);
 		allocated.add(task);
+		
+		for (Dependency dep : task.getChildren()) {
+			Task child = dep.getTarget();
+			numberOfParentsUncheduled[child.getId()]--;
+
+			if (numberOfParentsUncheduled[child.getId()] == 0) {
+				allocatable.add(child);
+				
+				//new free task calc drt
+				dataReadyTime[child.getId()] = tdr(child,this);
+			}
+			
+		}
 
 		isComplete = allocatable.isEmpty();
 
@@ -159,6 +169,9 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		} else {
 			lowerBound = heuristic.estimate(this);
 		}
+		
+		
+		
 
 	}
 
@@ -297,5 +310,36 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	 */
 	public int getNumberOfUsedProcessors() {
 		return numberOfUsedProcessors;
+	}
+	
+	/**
+	 * This method returns the data ready time of a task, it is only meaningful if
+	 * the task is free
+	 */
+	public int getDataReadyTime(Task task) {
+		return dataReadyTime[task.getId()];
+	}
+	
+	// formula from "Reducing the solution space of optimal task scheduling" page 3
+	private int tdr(Task nj, int p, TreeSchedule schedule) {
+		int max = 0;
+		for (Dependency dep : nj.getParents()) {
+			ProcessorAllocation pa = schedule.getAlloctionFor(dep.getSource());
+			if (pa.processor == p) {
+				max = Math.max(max, pa.endTime);
+			} else {
+				max = Math.max(max, pa.endTime + dep.getCommunicationCost());
+			}
+		}
+		return max;
+	}
+
+	// formula from "Reducing the solution space of optimal task scheduling" page 5
+	private int tdr(Task n, TreeSchedule schedule) {
+		int min = Integer.MAX_VALUE;
+		for (int p = 1; p <= numberOfUsedProcessors; p++) {
+			min = Math.min(min, tdr(n, p, schedule));
+		}
+		return min;
 	}
 }
