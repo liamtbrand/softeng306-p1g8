@@ -17,10 +17,10 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 
 	private final ReentrantReadWriteLock lock;
 
-	private boolean started;
-	private boolean finished;
-	private TreeSchedule bestSchedule;
-	private Queue<String> messages;
+	private volatile boolean started;
+	private volatile boolean finished;
+	private volatile TreeSchedule bestSchedule;
+	private volatile Queue<String> messages;
 	
 	private final List<InvalidationListener> listeners;
 	
@@ -106,6 +106,33 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		try {
 			lock.readLock().lock();
 			return finished;
+		} finally {
+			lock.readLock().unlock();
+		}
+	}
+
+	public boolean hasMessages() {
+		try {
+			lock.readLock().lock();
+			return messages.size() > 0;
+		} finally {
+			lock.readLock().unlock();
+		}
+	}
+
+	public String nextMessage() {
+		try {
+			lock.writeLock().lock();
+			return messages.poll();
+		} finally {
+			lock.writeLock().unlock();
+		}
+	}
+
+	public TreeSchedule getBestSchedule() {
+		try {
+			lock.readLock().lock();
+			return bestSchedule;
 		} finally {
 			lock.readLock().unlock();
 		}
