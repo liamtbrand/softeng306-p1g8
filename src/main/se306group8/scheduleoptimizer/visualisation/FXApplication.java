@@ -25,7 +25,7 @@ public class FXApplication extends Application {
 		
 		FXMLLoader loader = new FXMLLoader();
 		loader.setController(this);
-		loader.setLocation(getClass().getResource("Visualisation.fxml"));
+		loader.setLocation(getClass().getResource("/fxml/Visualisation.fxml"));
 		
 		Parent root = loader.load();
 		Scene scene = new Scene(root);
