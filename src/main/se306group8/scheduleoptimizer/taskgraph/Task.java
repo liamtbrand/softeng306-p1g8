@@ -12,6 +12,8 @@ public final class Task implements GraphEquality<Task> {
 	private Collection<Dependency> parents;
 	private final int cost;
 	private final int id;
+	private boolean[] isParent;
+	private boolean[] isChild;
 	
 	Task(String name, int cost, int id){
 		this.name = name;
@@ -21,10 +23,32 @@ public final class Task implements GraphEquality<Task> {
 	
 	void setChildDependencies(Collection<Dependency> children){
 		this.children = children;
+		
+		int largestChild = 0;
+		for(Dependency dep : children) {
+			largestChild = Math.max(largestChild, dep.getTarget().getId());
+		}
+		
+		isChild = new boolean[largestChild + 1];
+		
+		for(Dependency dep : children) {
+			isChild[dep.getTarget().getId()] = true;
+		}
 	}
 	
 	void setParentDependencies(Collection<Dependency> parents){
 		this.parents = parents;
+		
+		int largestParent = 0;
+		for(Dependency dep : parents) {
+			largestParent = Math.max(largestParent, dep.getSource().getId());
+		}
+		
+		isParent = new boolean[largestParent + 1];
+		
+		for(Dependency dep : parents) {
+			isParent[dep.getSource().getId()] = true;
+		}
 	}
 	
 	/** 
@@ -99,5 +123,13 @@ public final class Task implements GraphEquality<Task> {
 	@Override
 	public int hashCode() {
 		return Objects.hash(cost, name, children.size(), parents.size());
+	}
+
+	public boolean isChild(Task task) {
+		return task.getId() >= isChild.length ? false : isChild[task.getId()];
+	}
+	
+	public boolean isParent(Task task) {
+		return task.getId() >= isParent.length ? false : isParent[task.getId()];
 	}
 }

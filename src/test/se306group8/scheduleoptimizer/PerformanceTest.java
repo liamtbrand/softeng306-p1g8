@@ -63,7 +63,7 @@ public class PerformanceTest {
 	//Set up the various testing options.
 	static {
 		DIFFICULTIES.put("EASY", s -> s.contains("Nodes_1") && s.startsWith("2p"));
-		DIFFICULTIES.put("MEDIUM", s -> s.contains("Nodes_1") || s.contains("Nodes_2"));
+		DIFFICULTIES.put("MEDIUM", s -> s.contains("Nodes_1") && !s.startsWith("16p"));
 		DIFFICULTIES.put("HARD", s -> true);
 
 		ALGORITHMS.put("A_STAR", (h, f, m, s) -> new AStarSchedulingAlgorithm(f, h, m, s));
@@ -228,8 +228,8 @@ public class PerformanceTest {
 			}
 		} catch(OutOfMemoryError oome) {
 			output.write("\"Out of memory\"\n");
+		} finally {
+			output.close();
 		}
-
-		output.close();
 	}
 }

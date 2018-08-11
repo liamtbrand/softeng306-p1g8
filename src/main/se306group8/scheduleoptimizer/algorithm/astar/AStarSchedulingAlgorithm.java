@@ -32,7 +32,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		
 		this.childGenerator = childGenerator;
 		this.heuristic = heuristic;
-		this.queue = new BlockScheduleStorage(10, 100_000);
+		this.queue = new BlockScheduleStorage();
 	}
 
 	@Override
