@@ -36,7 +36,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	}
 
 	@Override
-	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
+	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		TreeSchedule best = new TreeSchedule(graph, heuristic);
 		queue.signalStorageSizes(getMonitor());
 		
@@ -61,6 +61,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			explored += children.size();
 			getMonitor().setSolutionsExplored(explored);
 			queue.signalMonitor(getMonitor());
+
+			if(Thread.interrupted()) {
+				throw new InterruptedException();
+			}
 		}
 		
 		return best.getFullSchedule();

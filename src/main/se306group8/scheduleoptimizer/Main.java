@@ -67,8 +67,16 @@ public class Main {
 		Algorithm algorithm = algorithmFactory.getAlgorithm(monitor, config);
 		
 		// Run the Algorithm and obtain the Schedule.
-		
-		Schedule schedule = algorithm.produceCompleteSchedule(taskGraph, config.P());
+
+		Schedule schedule;
+		try {
+
+			schedule = algorithm.produceCompleteSchedule(taskGraph, config.P());
+
+		} catch (InterruptedException e) {
+			System.out.println("Algorithm execution was interrupted.");
+			return; // Stop prematurely.
+		}
 		
 		// Write the schedule to disk.
 		

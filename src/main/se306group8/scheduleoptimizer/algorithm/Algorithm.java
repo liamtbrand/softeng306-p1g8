@@ -23,8 +23,16 @@ public abstract class Algorithm {
 	public Algorithm() {
 		this(new StubRuntimeMonitor());
 	}
-	
-	public abstract Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors);
+
+	/**
+	 * This hook method should be implemented by all algorithms.
+	 * This code is called with the same parameters as produceCompleteScheudle().
+	 * @param graph
+	 * @param numberOfProcessors
+	 * @return
+	 * @throws InterruptedException
+	 */
+	public abstract Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException;
 
 	/**
 	 * Starts the computation process for computing a valid complete schedule, returning when the computation is complete.
@@ -33,7 +41,7 @@ public abstract class Algorithm {
 	 * @param numberOfProcessors The maximum number of processors that the algorithm can assign tasks to, must be positive.
 	 * @return The complete schedule.
 	 */
-	public Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) {
+	public final Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		
 		if(runtimeMonitor != null) {
 			runtimeMonitor.start();
@@ -52,7 +60,7 @@ public abstract class Algorithm {
 	 * For use by an algorithm implementing the hook method to get the current monitor.
 	 * @return
 	 */
-	protected RuntimeMonitor getMonitor() {
+	protected final RuntimeMonitor getMonitor() {
 		return runtimeMonitor;
 	}
 }

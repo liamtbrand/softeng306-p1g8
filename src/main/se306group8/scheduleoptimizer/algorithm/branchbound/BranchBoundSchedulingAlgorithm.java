@@ -32,7 +32,7 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 	}
 
 	@Override
-	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
+	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic);
 		visited = 1;
@@ -43,7 +43,7 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 		return schedule;
 	}
 
-	private Schedule branchAndBound(TreeSchedule schedule, Schedule best, int numberOfProcessors) {
+	private Schedule branchAndBound(TreeSchedule schedule, Schedule best, int numberOfProcessors) throws InterruptedException {
 		// Get all children in order from best lower bound to worst
 		// TODO add processor number to GCSF
 		List<TreeSchedule> childSchedules = finder.getChildSchedules(schedule);
@@ -60,6 +60,10 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 				}
 			}
 			
+		}
+
+		if(Thread.interrupted()) {
+			throw new InterruptedException();
 		}
 		
 		getMonitor().setSolutionsExplored(visited);

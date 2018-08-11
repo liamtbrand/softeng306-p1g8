@@ -21,7 +21,7 @@ public class GreedySchedulingAlgorithm extends Algorithm {
 	}
 
 	@Override
-	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
+	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 
 		getMonitor().logMessage("Starting Greedy.");
 
@@ -30,6 +30,10 @@ public class GreedySchedulingAlgorithm extends Algorithm {
 		
 		while (!schedule.isComplete()) {
 			schedule = gcsf.getChildSchedules(schedule).get(0);
+
+			if(Thread.interrupted()) {
+				throw new InterruptedException();
+			}
 		}
 		
 		// Final (immutable) object to return

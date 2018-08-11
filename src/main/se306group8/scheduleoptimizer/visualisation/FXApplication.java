@@ -2,7 +2,6 @@ package se306group8.scheduleoptimizer.visualisation;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,6 +19,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class FXApplication extends Application {
+
+	private Thread algorithmThread;
+	private Timer timer;
 
 	@FXML
 	private Label solutionsExploredLabel;
@@ -96,6 +98,7 @@ public class FXApplication extends Application {
 		});
 		th.setName("Algorithm-thread");
 		th.start();
+		algorithmThread = th;
 
 		TimerTask updateStatisticsTask = new TimerTask() {
 			@Override
@@ -148,9 +151,20 @@ public class FXApplication extends Application {
 			}
 		};
 
-		Timer timer = new Timer();
+		timer = new Timer();
 		timer.schedule(updateStatisticsTask, 0l,200l);
 		
+	}
+
+	@Override
+	public void stop() {
+		timer.cancel();
+		algorithmThread.interrupt();
+		try {
+			algorithmThread.join();
+		} catch (InterruptedException e) {
+			return;
+		}
 	}
 
 }
