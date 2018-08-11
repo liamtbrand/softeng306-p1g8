@@ -1,10 +1,9 @@
 package se306group8.scheduleoptimizer.visualisation;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -15,8 +14,6 @@ import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
 public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 
-	private final ReentrantReadWriteLock lock;
-
 	private volatile boolean started;
 	private volatile boolean finished;
 	private volatile TreeSchedule bestSchedule;
@@ -26,136 +23,74 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	
 	public ObservableRuntimeMonitor() {
 
-		lock = new ReentrantReadWriteLock();
-
 		started = false;
 		finished = false;
 		bestSchedule = null;
-		messages = new LinkedList<>();
+		messages = new LinkedBlockingQueue<>();
 
 		listeners = new ArrayList<>();
 	}
 
 	private void invalidateListeners() {
 		Platform.runLater(() -> {
-			try {
-				lock.writeLock().lock();
-				for (InvalidationListener listener : listeners) {
-					listener.invalidated(this);
-				}
-			} finally {
-				lock.writeLock().unlock();
+			for (InvalidationListener listener : listeners) {
+				listener.invalidated(this);
 			}
 		});
 	}
 
 	@Override
 	public void updateBestSchedule(TreeSchedule optimalSchedule) {
-		try {
-			lock.writeLock().lock();
-			bestSchedule = optimalSchedule;
-			invalidateListeners();
-		} finally {
-			lock.writeLock().unlock();
-		}
+		bestSchedule = optimalSchedule;
+		invalidateListeners();
 	}
 
 	@Override
 	public void start() {
-		try {
-			lock.writeLock().lock();
-			started = true;
-			invalidateListeners();
-		} finally {
-			lock.writeLock().unlock();
-		}
+		started = true;
+		invalidateListeners();
 	}
 
 	@Override
 	public void finish(Schedule solution) {
-		try {
-			lock.writeLock().lock();
-			finished = true;
-			invalidateListeners();
-		} finally {
-			lock.writeLock().unlock();
-		}
+		finished = true;
+		invalidateListeners();
 	}
 
 	@Override
 	public void logMessage(String message) {
-		try {
-			lock.writeLock().lock();
-			messages.add(message);
-			invalidateListeners();
-		} finally {
-			lock.writeLock().unlock();
-		}
+		messages.add(message);
+		invalidateListeners();
 	}
 	
 	public boolean hasStarted() {
-		try {
-			lock.readLock().lock();
-			return started;
-		} finally {
-			lock.readLock().unlock();
-		}
+		return started;
 	}
 
 	public boolean hasFinished() {
-		try {
-			lock.readLock().lock();
-			return finished;
-		} finally {
-			lock.readLock().unlock();
-		}
+		return finished;
 	}
 
 	public boolean hasMessages() {
-		try {
-			lock.readLock().lock();
-			return messages.size() > 0;
-		} finally {
-			lock.readLock().unlock();
-		}
+		return messages.size() > 0;
 	}
 
 	public String nextMessage() {
-		try {
-			lock.writeLock().lock();
-			return messages.poll();
-		} finally {
-			lock.writeLock().unlock();
-		}
+		return messages.poll();
 	}
 
 	public TreeSchedule getBestSchedule() {
-		try {
-			lock.readLock().lock();
-			return bestSchedule;
-		} finally {
-			lock.readLock().unlock();
-		}
+		return bestSchedule;
 	}
 
 	@Override
 	public void addListener(InvalidationListener listener) {
-		try {
-			lock.writeLock().lock();
-			listeners.add(listener);
-		} finally {
-			lock.writeLock().unlock();
-		}
+		listeners.add(listener);
 	}
 
 	@Override
 	public void removeListener(InvalidationListener listener) {
-		try {
-			lock.writeLock().lock();
-			listeners.remove(listener);
-		} finally {
-			lock.writeLock().unlock();
-		}
+		listeners.remove(listener);
 	}
 
 }
