@@ -164,7 +164,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 				allocatable.add(child);
 				
 				//new free task calc drt
-				dataReadyTime[child.getId()] = tdr(child,this);
+				dataReadyTime[child.getId()] = tdr(child,this) + graph.getBottomTime(child);
 			}
 			
 		}

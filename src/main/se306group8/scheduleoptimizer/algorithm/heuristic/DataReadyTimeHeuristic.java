@@ -25,7 +25,7 @@ public class DataReadyTimeHeuristic implements MinimumHeuristic{
 		int max = 0;
 		
 		for (Task n:free) {
-			max=Math.max(max, schedule.getDataReadyTime(n) + tg.getBottomTime(n));
+			max=Math.max(max, schedule.getDataReadyTime(n));
 		}
 		
 		return max;
