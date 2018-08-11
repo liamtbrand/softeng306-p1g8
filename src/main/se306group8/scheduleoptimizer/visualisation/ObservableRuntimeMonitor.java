@@ -71,10 +71,6 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		return finished;
 	}
 
-	public boolean hasMessages() {
-		return messages.size() > 0;
-	}
-
 	public String nextMessage() {
 		return messages.poll();
 	}
