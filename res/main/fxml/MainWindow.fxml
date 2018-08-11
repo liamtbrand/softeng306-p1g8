@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -42,14 +43,15 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <LineChart fx:id="schedulesPerSecond" layoutX="172.0" layoutY="68.0" prefHeight="261.0" prefWidth="375.0" title="Schedules Per Second">
+                        <StackedBarChart fx:id="scheduleStorage" layoutX="14.0" layoutY="16.0" prefWidth="200.0" title="Schedule Storage" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                           <xAxis>
                             <CategoryAxis side="BOTTOM" />
                           </xAxis>
                           <yAxis>
-                            <NumberAxis side="LEFT" />
+                            <NumberAxis animated="false" autoRanging="false" minorTickVisible="false" side="LEFT" tickUnit="10.0" />
                           </yAxis>
-                        </LineChart>
+                        </StackedBarChart>
+                        <PieChart fx:id="storageBreakdown" layoutX="14.0" layoutY="14.0" prefHeight="250.0" prefWidth="250.0" title="Storage Breakdown" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
                      </children></AnchorPane>
                </content>
             </Tab>

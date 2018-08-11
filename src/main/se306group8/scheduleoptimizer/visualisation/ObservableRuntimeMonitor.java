@@ -80,9 +80,17 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		schedulesInArray = number;
 	}
 
+	public int getSchedulesInArray() {
+		return schedulesInArray;
+	}
+
 	@Override
 	public void setScheduleInArrayStorageSize(int bytes) {
 		scheduleInArrayStorageSize = bytes;
+	}
+
+	public int getScheduleInArrayStorageSize() {
+		return scheduleInArrayStorageSize;
 	}
 
 	@Override
@@ -90,9 +98,17 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		schedulesInQueue = number;
 	}
 
+	public int getSchedulesInQueue() {
+		return schedulesInQueue;
+	}
+
 	@Override
 	public void setScheduleInQueueStorageSize(int bytes) {
 		scheduleInQueueStorageSize = bytes;
+	}
+
+	public int getScheduleInQueueStorageSize() {
+		return scheduleInQueueStorageSize;
 	}
 
 	@Override
@@ -100,9 +116,17 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		schedulesOnDisk = number;
 	}
 
+	public int getSchedulesOnDisk() {
+		return schedulesOnDisk;
+	}
+
 	@Override
 	public void setScheduleOnDiskStorageSize(int bytes) {
 		scheduleOnDiskStorageSize = bytes;
+	}
+
+	public int getScheduleOnDiskStorageSize() {
+		return scheduleOnDiskStorageSize;
 	}
 
 	public boolean hasStarted() {
