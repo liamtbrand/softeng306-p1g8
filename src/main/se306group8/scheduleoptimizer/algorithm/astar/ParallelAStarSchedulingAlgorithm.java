@@ -119,9 +119,8 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 	
 	//multiple threads could get a complete schedule at the same time check for sure
 	private synchronized void checkBest(TreeSchedule threadBest) {
-		if (best == null) {
-			best = threadBest;
-		}else if (best.getRuntime()>threadBest.getRuntime()) {
+		assert(best != null && best.isComplete());
+		if (best.getRuntime()>threadBest.getRuntime()) {
 			best = threadBest;
 		}
 	}
