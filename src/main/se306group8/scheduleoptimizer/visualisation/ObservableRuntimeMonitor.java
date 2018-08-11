@@ -1,7 +1,9 @@
 package se306group8.scheduleoptimizer.visualisation;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javafx.application.Platform;
@@ -12,33 +14,33 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
 public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
-	
-	private Schedule schedule;
-	
+
+	private final ReentrantReadWriteLock lock;
+
 	private boolean started;
+	private boolean finished;
+	private TreeSchedule bestSchedule;
+	private Queue<String> messages;
 	
 	private final List<InvalidationListener> listeners;
 	
-	private final ReentrantReadWriteLock lock;
-	
 	public ObservableRuntimeMonitor() {
+
 		lock = new ReentrantReadWriteLock();
+
 		started = false;
+		finished = false;
+		bestSchedule = null;
+		messages = new LinkedList<>();
+
 		listeners = new ArrayList<>();
 	}
 
-	@Override
-	public void updateBestSchedule(TreeSchedule optimalSchedule) {
-		
-	}
-
-	@Override
-	public void start() {
+	private void invalidateListeners() {
 		Platform.runLater(() -> {
 			try {
 				lock.writeLock().lock();
-				started = true;
-				for(InvalidationListener listener : listeners) {
+				for (InvalidationListener listener : listeners) {
 					listener.invalidated(this);
 				}
 			} finally {
@@ -48,15 +50,47 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
+	public void updateBestSchedule(TreeSchedule optimalSchedule) {
+		try {
+			lock.writeLock().lock();
+			bestSchedule = optimalSchedule;
+			invalidateListeners();
+		} finally {
+			lock.writeLock().unlock();
+		}
+	}
+
+	@Override
+	public void start() {
+		try {
+			lock.writeLock().lock();
+			started = true;
+			invalidateListeners();
+		} finally {
+			lock.writeLock().unlock();
+		}
+	}
+
+	@Override
 	public void finish(Schedule solution) {
-		// TODO Auto-generated method stub
-		
+		try {
+			lock.writeLock().lock();
+			finished = true;
+			invalidateListeners();
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	@Override
 	public void logMessage(String message) {
-		// TODO Auto-generated method stub
-		
+		try {
+			lock.writeLock().lock();
+			messages.add(message);
+			invalidateListeners();
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 	
 	public boolean hasStarted() {
@@ -68,28 +102,33 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		}
 	}
 
+	public boolean hasFinished() {
+		try {
+			lock.readLock().lock();
+			return finished;
+		} finally {
+			lock.readLock().unlock();
+		}
+	}
+
 	@Override
 	public void addListener(InvalidationListener listener) {
-		Platform.runLater(() -> {
-			try {
-				lock.writeLock().lock();
-				listeners.add(listener);
-			} finally {
-				lock.writeLock().unlock();
-			}
-		});
+		try {
+			lock.writeLock().lock();
+			listeners.add(listener);
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 	@Override
 	public void removeListener(InvalidationListener listener) {
-		Platform.runLater(() -> {
-			try {
-				lock.writeLock().lock();
-				listeners.remove(listener);
-			} finally {
-				lock.writeLock().unlock();
-			}
-		});
+		try {
+			lock.writeLock().lock();
+			listeners.remove(listener);
+		} finally {
+			lock.writeLock().unlock();
+		}
 	}
 
 }

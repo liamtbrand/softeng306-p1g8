@@ -23,6 +23,8 @@ public class GreedySchedulingAlgorithm extends Algorithm {
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
 
+		getMonitor().logMessage("Starting Greedy.");
+
 		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(numberOfProcessors);
 		TreeSchedule schedule = new TreeSchedule(graph, (TreeSchedule s) -> 0);
 		

@@ -12,7 +12,7 @@ import se306group8.scheduleoptimizer.Main;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitorAggregator;
 
 public class FXApplication extends Application {
-	
+
 	@FXML
 	private Label myLabel;
 	
@@ -25,7 +25,7 @@ public class FXApplication extends Application {
 		
 		FXMLLoader loader = new FXMLLoader();
 		loader.setController(this);
-		loader.setLocation(getClass().getResource("/fxml/Visualisation.fxml"));
+		loader.setLocation(getClass().getResource("/fxml/MainWindow.fxml"));
 		
 		Parent root = loader.load();
 		Scene scene = new Scene(root);
@@ -35,7 +35,7 @@ public class FXApplication extends Application {
 		primaryStage.show();
 		
 		myLabel.textProperty().bind(Bindings.createStringBinding(() -> monitor.hasStarted() ? "Started!" : "Waiting to start.", monitor ));
-	
+
 		Thread th = new Thread(() -> {
 			Main.startAlgorithm(
 					new RuntimeMonitorAggregator(

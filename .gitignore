@@ -193,3 +193,5 @@ gradle-app.setting
 performance/
 
 \.idea/
+
+dataset/canvasinput/Nodes_10_Random-output\.dot
