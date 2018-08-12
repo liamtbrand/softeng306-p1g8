@@ -63,7 +63,7 @@ public class PerformanceTest {
 	//Set up the various testing options.
 	static {
 		DIFFICULTIES.put("EASY", s -> s.contains("Nodes_1") && s.startsWith("2p"));
-		DIFFICULTIES.put("MEDIUM", s -> s.contains("Nodes_1") && !s.startsWith("16p"));
+		DIFFICULTIES.put("MEDIUM", s -> !s.contains("Nodes_3") && !s.matches(".*(Fork_Join_Nodes_21|Fork_Nodes_21|Join_Nodes_21).*"));
 		DIFFICULTIES.put("HARD", s -> true);
 
 		ALGORITHMS.put("A_STAR", (h, f, m, s) -> new AStarSchedulingAlgorithm(f, h, m, s));

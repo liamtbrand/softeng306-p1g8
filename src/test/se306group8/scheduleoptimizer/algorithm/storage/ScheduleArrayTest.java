@@ -23,7 +23,7 @@ public class ScheduleArrayTest {
 		graph = TestGraphUtils.buildTestGraphA();
 		task = graph.getAll().get(0);
 		
-		parent = new TreeSchedule(graph, s -> 0xff & s.hashCode());
+		parent = new TreeSchedule(graph, s -> 0xff & s.hashCode(), 2);
 		child1 = new TreeSchedule(task, 1, parent);
 		child2 = new TreeSchedule(task, 2, parent);
 		

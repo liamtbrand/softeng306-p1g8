@@ -34,7 +34,7 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
 		
-		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic);
+		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic, numberOfProcessors);
 		
 		// Kick off BnB (current 'best schedule' is null)
 		Schedule schedule =  branchAndBound(emptySchedule, null, numberOfProcessors);

@@ -45,7 +45,10 @@ class ScheduleArray {
 			processorArray[index] = (byte) schedule.getMostRecentAllocation().processor;
 			tasks[index] = (byte) schedule.getAllocated().size();
 			
-			return index + slot * blockSize;
+			index += slot * blockSize;
+			schedule.setId(index);
+			
+			return index;
 		}
 
 		boolean isFull() {
@@ -113,8 +116,9 @@ class ScheduleArray {
 		int parent = block.parentsArray[subIndex];
 		int task = Byte.toUnsignedInt(block.taskArray[subIndex]);
 		int processor = Byte.toUnsignedInt(block.processorArray[subIndex]);
+		int lowerBound = Short.toUnsignedInt(block.lowerBound[subIndex]);
 		
-		return new ArrayBackedSchedule(this, id, parent, rootSchedule.getGraph().getTask(task), processor);
+		return new TreeSchedule(lowerBound, id, rootSchedule.getGraph().getTask(task), processor, get(parent));
 	}
 	
 	/** Adds a schedule to the array. If this schedule object was already in the array it is not re-added
@@ -135,8 +139,8 @@ class ScheduleArray {
 			return -1;
 		}
 		
-		if(schedule instanceof ArrayBackedSchedule) {
-			return ((ArrayBackedSchedule) schedule).getIndex();
+		if(schedule.hasId()) {
+			return schedule.getId();
 		} else {
 			ScheduleBlock block = getBlockFor(schedule);
 			

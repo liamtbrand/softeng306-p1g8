@@ -15,7 +15,7 @@ public class GreedySchedulingAlgorithm extends Algorithm {
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
 
 		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(numberOfProcessors);
-		TreeSchedule schedule = new TreeSchedule(graph, (TreeSchedule s) -> 0);
+		TreeSchedule schedule = new TreeSchedule(graph, (TreeSchedule s) -> 0, numberOfProcessors);
 		
 		while (!schedule.isComplete()) {
 			schedule = gcsf.getChildSchedules(schedule).get(0);

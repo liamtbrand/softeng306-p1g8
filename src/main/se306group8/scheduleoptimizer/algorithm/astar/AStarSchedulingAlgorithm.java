@@ -37,7 +37,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
-		TreeSchedule best = new TreeSchedule(graph, heuristic);
+		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
 		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
