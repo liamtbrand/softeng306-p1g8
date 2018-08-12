@@ -3,7 +3,6 @@ package se306group8.scheduleoptimizer.algorithm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,8 +48,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private final boolean[] removableTasks;
 	
 	//Sets
-	private final Collection<Task> allocatable;
-	private final Collection<Task> allocated;
+	private final List<Task> allocatable;
+	private final List<Task> allocated;
 
 	// Booleans
 	private final boolean isComplete;
@@ -148,8 +147,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		
 		numberOfTasksOnProcessor[processor - 1]++;
 
-		for (Dependency dep : task.getChildren()) {
-			Task child = dep.getTarget();
+		for (int i = 0; i < task.getChildren().size(); i++) {
+			Task child = task.getChildren().get(i).getTarget();
 			
 			numberOfParentsUncheduled[child.getId()]--;
 
@@ -169,7 +168,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 
 		int startTime = processorReadyTime;
 
-		for (Dependency dep : task.getParents()) {
+		for (int i = 0; i < task.getParents().size(); i++) {
+			Dependency dep = task.getParents().get(i);
 			Task parentTask = dep.getSource();
 			removableTasks[parentTask.getId()] = false; //None of the parents can be removed.
 			
@@ -189,7 +189,9 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 
 		idleTime = parent.idleTime + startTime - processorReadyTime;
 
-		for (Task oldAllocatable : parent.allocatable) {
+		for (int i = 0; i < parent.allocatable.size(); i++) {
+			Task oldAllocatable = parent.allocatable.get(i);
+			
 			if (oldAllocatable != task) {
 				allocatable.add(oldAllocatable);
 			}
