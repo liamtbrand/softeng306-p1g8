@@ -1,6 +1,5 @@
 package se306group8.scheduleoptimizer.visualisation.controller;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
@@ -13,7 +12,6 @@ import se306group8.scheduleoptimizer.visualisation.manager.ProcessorStatisticsMa
 import se306group8.scheduleoptimizer.visualisation.manager.ScheduleStatisticsManager;
 
 import java.net.URL;
-import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;

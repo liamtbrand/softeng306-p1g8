@@ -1,7 +1,6 @@
 package se306group8.scheduleoptimizer.visualisation;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,9 +8,7 @@ import javafx.stage.Stage;
 import se306group8.scheduleoptimizer.Main;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitorAggregator;
 import se306group8.scheduleoptimizer.algorithm.CLIRuntimeMonitor;
-import se306group8.scheduleoptimizer.visualisation.controller.DashboardController;
 import se306group8.scheduleoptimizer.visualisation.controller.MainController;
-import se306group8.scheduleoptimizer.visualisation.controller.StatisticsController;
 
 public class FXApplication extends Application {
 

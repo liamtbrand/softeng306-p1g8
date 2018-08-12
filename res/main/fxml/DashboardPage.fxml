@@ -26,9 +26,9 @@
                                     </Label>
                                  </children>
                               </VBox>
-                              <VBox HBox.hgrow="ALWAYS">
+                              <VBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Label fx:id="availableProcessorsLabel" minWidth="20.0">
+                                    <Label fx:id="availableProcessorsLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="20.0">
                                        <font>
                                           <Font name="Menlo Regular" size="13.0" />
                                        </font>

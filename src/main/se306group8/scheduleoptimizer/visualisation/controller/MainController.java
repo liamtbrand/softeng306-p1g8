@@ -21,5 +21,4 @@ public class MainController implements Initializable {
 		statisticsPageController.stop();
 	}
 
-
 }

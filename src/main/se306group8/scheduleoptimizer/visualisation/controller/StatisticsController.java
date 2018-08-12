@@ -1,6 +1,5 @@
 package se306group8.scheduleoptimizer.visualisation.controller;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.StackedBarChart;
@@ -30,41 +29,39 @@ public class StatisticsController implements Initializable {
 		TimerTask updateStatisticsTask = new TimerTask() {
 			@Override
 			public void run() {
-				Platform.runLater(() -> {
 
-					ObservableRuntimeMonitor monitor = FXApplication.getMonitor();
+				ObservableRuntimeMonitor monitor = FXApplication.getMonitor();
 
-					int schedulesExplored = monitor.getSchedulesExplored();
+				int schedulesExplored = monitor.getSchedulesExplored();
 
-					int schedulesInArray = monitor.getSchedulesInArray();
-					int schedulesInQueue = monitor.getSchedulesInQueue();
-					int schedulesOnDisk = monitor.getSchedulesOnDisk();
+				int schedulesInArray = monitor.getSchedulesInArray();
+				int schedulesInQueue = monitor.getSchedulesInQueue();
+				int schedulesOnDisk = monitor.getSchedulesOnDisk();
 
-					long totalSchedules = schedulesInArray + schedulesInQueue + schedulesOnDisk;
+				long totalSchedules = schedulesInArray + schedulesInQueue + schedulesOnDisk;
 
-					if(totalSchedules == 0) {
-						totalSchedules += 1;
-					}
+				if(totalSchedules == 0) {
+					totalSchedules += 1;
+				}
 
-					/*
-					int scheduleOnDiskSize = monitor.getScheduleOnDiskStorageSize();
-					int scheduleInArraySize = monitor.getScheduleInArrayStorageSize();
-					int scheduleInQueueSize = monitor.getScheduleInQueueStorageSize();
+				/*
+				int scheduleOnDiskSize = monitor.getScheduleOnDiskStorageSize();
+				int scheduleInArraySize = monitor.getScheduleInArrayStorageSize();
+				int scheduleInQueueSize = monitor.getScheduleInQueueStorageSize();
 
-					long onDiskSize = scheduleOnDiskSize*schedulesOnDisk;
-					long inArraySize = scheduleInArraySize*schedulesInArray;
-					long inQueueSize = scheduleInQueueSize*schedulesInQueue;
+				long onDiskSize = scheduleOnDiskSize*schedulesOnDisk;
+				long inArraySize = scheduleInArraySize*schedulesInArray;
+				long inQueueSize = scheduleInQueueSize*schedulesInQueue;
 
-					long totalSize = onDiskSize+inArraySize+inQueueSize;
-					*/
+				long totalSize = onDiskSize+inArraySize+inQueueSize;
+				*/
 
-					double percentOnDisk = 100.0 * schedulesOnDisk / totalSchedules;
-					double percentInArray = 100.0 * schedulesInArray / totalSchedules;
-					double percentInQueue = 100.0 * schedulesInQueue / totalSchedules;
+				double percentOnDisk = 100.0 * schedulesOnDisk / totalSchedules;
+				double percentInArray = 100.0 * schedulesInArray / totalSchedules;
+				double percentInQueue = 100.0 * schedulesInQueue / totalSchedules;
 
-					stackedBarChartManager.update(percentOnDisk,percentInArray,percentInQueue);
+				stackedBarChartManager.update(percentOnDisk,percentInArray,percentInQueue);
 
-				});
 			}
 		};
 
