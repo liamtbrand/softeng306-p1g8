@@ -65,16 +65,17 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 				
 				while (threadBest != null && threadBest.getLowerBound() < upperBound.get()) {
 					
-					if (threadBest.isComplete()) {
-						checkBest(threadBest);
-						break;
-					}
-					
 					//we said we were done but proved wrong
 					if (doneVote) {
 						doneVote = false;
 						doneVotes.decrementAndGet();
 					}
+					
+					if (threadBest.isComplete()) {
+						checkBest(threadBest);
+						break;
+					}
+							
 					
 					List<TreeSchedule> children = childGenerator.getChildSchedules(threadBest);
 
