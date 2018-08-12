@@ -84,7 +84,7 @@ public class PerformanceTest {
 	}
 
 	//Run through the data-set, creating a mapping from the file name to the length of time, and the number of solutions stored
-	public static void main(String[] args) throws ParseException, IOException {
+	public static void main(String[] args) throws ParseException, IOException, InterruptedException {
 		Options options = new Options();
 
 		options.addOption("d", true, "The difficulty, EASY, MEDIUM or HARD");
@@ -195,7 +195,7 @@ public class PerformanceTest {
 					}
 
 					@Override
-					public void setSolutionsExplored(int number) {
+					public void setSchedulesExplored(int number) {
 						numberOfSolutions = number;
 
 						if(number / 1_000_000 > millionSolutions) {
@@ -211,6 +211,42 @@ public class PerformanceTest {
 						try {
 							output.write("\"" + graphName + "\",\"" + (solution.getTotalRuntime() == optimal.getTotalRuntime()) + "\",\"" + timeTaken / 1_000_000 + "\",\"" + numberOfSolutions + "\"\n");
 						} catch (IOException e) { throw new RuntimeException(e); }
+					}
+
+					@Override
+					public void setSchedulesInArray(int number) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void setScheduleInArrayStorageSize(int bytes) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void setSchedulesInQueue(int number) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void setScheduleInQueueStorageSize(int bytes) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void setSchedulesOnDisk(int number) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void setScheduleOnDiskStorageSize(int bytes) {
+						// TODO Auto-generated method stub
+
 					}
 				};
 

@@ -24,11 +24,14 @@ sourceSets {
 
 	test {
 		java.srcDirs = ['src/test']
+		resources.srcDirs = ['res/test'] 
 	}
 }
 
 dependencies {
 	compile group: 'commons-cli', name: 'commons-cli', version:'1.4'
+	compile 'com.jfoenix:jfoenix:8.0.7' // For Java 8
+	//compile 'com.jfoenix:jfoenix:9.0.6' // For Java 9
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.2.0'
 	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.2.0'
 }

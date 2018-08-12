@@ -33,6 +33,17 @@ public interface RuntimeMonitor {
 	/** 
 	 * Sets the number of solutions found so far.
 	 **/
-	void setSolutionsExplored(int number);
+	public void setSchedulesExplored(int number);
+
+	public void setSchedulesInArray(int number);
+	public void setScheduleInArrayStorageSize(int bytes);
+
+	public void setSchedulesInQueue(int number);
+	public void setScheduleInQueueStorageSize(int bytes);
+
+	public void setSchedulesOnDisk(int number);
+	public void setScheduleOnDiskStorageSize(int bytes);
+
+
 	
 }

@@ -20,7 +20,7 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 public class TestGreedyValidity {
 	
 	@Test
-	void testProduceCompleteScheduleAll10NodeGraphs() throws IOException {
+	void testProduceCompleteScheduleAll10NodeGraphs() throws IOException, InterruptedException {
 		List<String> names = new ArrayList<>();
 
 		try(DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("dataset", "input"))) {
@@ -37,7 +37,6 @@ public class TestGreedyValidity {
 			DOTFileHandler reader = new DOTFileHandler();
 			
 			long start = System.nanoTime();
-			Schedule optimal = reader.readSchedule(Paths.get("dataset", "output", graphName));
 			
 			System.out.println("Starting '" + graphName + "'");
 			

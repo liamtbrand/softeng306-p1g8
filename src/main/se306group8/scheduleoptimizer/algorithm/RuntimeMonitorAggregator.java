@@ -34,7 +34,38 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSolutionsExplored(int number) {
-		runtimeMonitors.forEach(m -> m.setSolutionsExplored(number));
+	public void setSchedulesExplored(int number) {
+		runtimeMonitors.forEach(m -> m.setSchedulesExplored(number));
 	}
+
+	@Override
+	public void setSchedulesInArray(int number) {
+		runtimeMonitors.forEach(m -> m.setSchedulesInArray(number));
+	}
+
+	@Override
+	public void setScheduleInArrayStorageSize(int bytes) {
+		runtimeMonitors.forEach(m -> m.setScheduleInArrayStorageSize(bytes));
+	}
+
+	@Override
+	public void setSchedulesInQueue(int number) {
+		runtimeMonitors.forEach(m -> m.setSchedulesInQueue(number));
+	}
+
+	@Override
+	public void setScheduleInQueueStorageSize(int bytes) {
+		runtimeMonitors.forEach(m -> m.setScheduleInQueueStorageSize(bytes));
+	}
+
+	@Override
+	public void setSchedulesOnDisk(int number) {
+		runtimeMonitors.forEach(m -> m.setSchedulesOnDisk(number));
+	}
+
+	@Override
+	public void setScheduleOnDiskStorageSize(int bytes) {
+		runtimeMonitors.forEach(m -> m.setScheduleOnDiskStorageSize(bytes));
+	}
+
 }

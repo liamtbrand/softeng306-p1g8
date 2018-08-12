@@ -2,6 +2,7 @@ package se306group8.scheduleoptimizer.algorithm.storage;
 
 import java.util.Collection;
 
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
 public interface ScheduleStorage {
@@ -20,6 +21,14 @@ public interface ScheduleStorage {
 		for(TreeSchedule s : schedules) {
 			put(s);
 		}
+	}
+	
+	void signalMonitor(RuntimeMonitor monitor);
+	
+	/** Communicates the storage state to the monitor */
+	default void signalStorageSizes(RuntimeMonitor monitor) {
+		monitor.setScheduleInArrayStorageSize(9);
+		monitor.setScheduleInQueueStorageSize(4 + 9); //9 for the array, 4 for the queue
 	}
 
 	/** Deletes all schedules with a bound greater than the maximum.

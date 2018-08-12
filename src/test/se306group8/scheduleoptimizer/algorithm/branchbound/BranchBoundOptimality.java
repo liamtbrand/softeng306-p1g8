@@ -26,7 +26,7 @@ public class BranchBoundOptimality {
 
 	//@Test
 	// Test ignored to please Travis
-	void testProduceCompleteScheduleMediumGraph() throws IOException {
+	void testProduceCompleteScheduleMediumGraph() throws IOException, InterruptedException {
 		String graphName = "2p_Fork_Nodes_10_CCR_1.97_WeightType_Random.dot";
 
 		DOTFileHandler reader = new DOTFileHandler();
@@ -44,7 +44,7 @@ public class BranchBoundOptimality {
 
 
 	//@Test
-	void testProduceCompleteScheduleAll10NodeGraphs() throws IOException {
+	void testProduceCompleteScheduleAll10NodeGraphs() throws IOException, InterruptedException {
 		List<String> names = new ArrayList<>();
 
 		try(DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("dataset", "input"))) {
@@ -80,7 +80,7 @@ public class BranchBoundOptimality {
 	}
 
 	@Test
-	void testProduceCompleteScheduleTinyGraph() throws IOException {
+	void testProduceCompleteScheduleTinyGraph() throws IOException, InterruptedException {
 		TaskGraph graph = TestGraphUtils.buildTestGraphA();
 		Assertions.assertEquals(8, new BranchBoundSchedulingAlgorithm(new GreedyChildScheduleFinder(2), new CriticalPathHeuristic()).produceCompleteSchedule(graph, 2).getTotalRuntime());
 	}

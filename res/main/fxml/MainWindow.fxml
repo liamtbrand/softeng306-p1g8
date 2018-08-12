@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.MainController">
+  <children>
+      <TabPane prefHeight="400.0" prefWidth="640.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <Tab text="Dashboard">
+               <content>
+                  <fx:include fx:id="dashboardPage" source="DashboardPage.fxml" />
+               </content>
+            </Tab>
+          <Tab text="Search Space">
+            <content>
+                <fx:include fx:id="searchSpacePage" source="SearchSpacePage.fxml" />
+            </content>
+          </Tab>
+            <Tab text="Task Graph">
+               <content>
+                   <fx:include fx:id="taskGraphPage" source="TaskGraphPage.fxml" />
+               </content>
+            </Tab>
+            <Tab text="Statistics">
+              <content>
+                  <fx:include fx:id="statisticsPage" source="StatisticsPage.fxml" />
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+  </children>
+</VBox>

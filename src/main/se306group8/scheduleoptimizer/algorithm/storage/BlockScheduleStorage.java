@@ -1,5 +1,6 @@
 package se306group8.scheduleoptimizer.algorithm.storage;
 
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
 /** This class represents a compressed collection of schedules. It has support for querying the best, clearing the un-needed and other actions. */
@@ -65,5 +66,11 @@ public class BlockScheduleStorage implements ScheduleStorage {
 	@Override
 	public int size() {
 		return array.size();
+	}
+
+	@Override
+	public void signalMonitor(RuntimeMonitor monitor) {
+		monitor.setSchedulesInArray(array.size() - queue.size());
+		monitor.setSchedulesInQueue(queue.size());
 	}
 }

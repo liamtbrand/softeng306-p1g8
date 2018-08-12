@@ -165,8 +165,38 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSolutionsExplored(int number) {
+	public void setSchedulesExplored(int number) {
 		//Take no action.
 		
+	}
+
+	@Override
+	public void setSchedulesInArray(int number) {
+		// TODO
+	}
+
+	@Override
+	public void setScheduleInArrayStorageSize(int bytes) {
+		// TODO
+	}
+
+	@Override
+	public void setSchedulesInQueue(int number) {
+		// TODO
+	}
+
+	@Override
+	public void setScheduleInQueueStorageSize(int bytes) {
+		// TODO
+	}
+
+	@Override
+	public void setSchedulesOnDisk(int number) {
+		// TODO
+	}
+
+	@Override
+	public void setScheduleOnDiskStorageSize(int bytes) {
+		// TODO
 	}
 }

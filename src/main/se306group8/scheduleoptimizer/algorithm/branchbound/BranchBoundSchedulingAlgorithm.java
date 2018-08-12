@@ -15,7 +15,7 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 	private final ChildScheduleFinder finder;
 	private final MinimumHeuristic heuristic;
 	
-	private int children = 0;
+	private int visited = 0;
 	
 	public BranchBoundSchedulingAlgorithm(ChildScheduleFinder finder, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
 		super(monitor);
@@ -32,9 +32,10 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 	}
 
 	@Override
-	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
+	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic);
+		visited = 1;
 		
 		// Kick off BnB (current 'best schedule' is null)
 		Schedule schedule =  branchAndBound(emptySchedule, null, numberOfProcessors);
@@ -42,17 +43,13 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 		return schedule;
 	}
 
-	private Schedule branchAndBound(TreeSchedule schedule, Schedule best, int numberOfProcessors) {
-		children++;
-		
-		getMonitor().setSolutionsExplored(children);
-		
+	private Schedule branchAndBound(TreeSchedule schedule, Schedule best, int numberOfProcessors) throws InterruptedException {
 		// Get all children in order from best lower bound to worst
 		// TODO add processor number to GCSF
 		List<TreeSchedule> childSchedules = finder.getChildSchedules(schedule);
 		
 		for (TreeSchedule child : childSchedules) {
-			
+			visited++;
 			// Only consider the child if its lower bound is better than current best
 			if (best == null || child.getLowerBound() < best.getTotalRuntime()) {
 				if (child.isComplete()) {
@@ -64,6 +61,12 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 			}
 			
 		}
+
+		if(Thread.interrupted()) {
+			throw new InterruptedException();
+		}
+		
+		getMonitor().setSchedulesExplored(visited);
 		
 		return best;
 	}

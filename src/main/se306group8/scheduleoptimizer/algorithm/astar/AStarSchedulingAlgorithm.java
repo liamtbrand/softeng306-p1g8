@@ -36,8 +36,9 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	}
 
 	@Override
-	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
+	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		TreeSchedule best = new TreeSchedule(graph, heuristic);
+		queue.signalStorageSizes(getMonitor());
 		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
@@ -46,6 +47,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
 		}
 
+		int explored = 0;
 		queue.pruneStorage(greedySoln.getRuntime());
 		
 		while (!best.isComplete()) {
@@ -56,7 +58,13 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 			best = queue.pop();
 			
-			getMonitor().setSolutionsExplored(queue.size());
+			explored += children.size();
+			getMonitor().setSchedulesExplored(explored);
+			queue.signalMonitor(getMonitor());
+
+			if(Thread.interrupted()) {
+				throw new InterruptedException();
+			}
 		}
 		
 		return best.getFullSchedule();

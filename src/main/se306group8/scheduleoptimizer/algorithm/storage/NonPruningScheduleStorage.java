@@ -1,5 +1,6 @@
 package se306group8.scheduleoptimizer.algorithm.storage;
 
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
 public class NonPruningScheduleStorage implements ScheduleStorage {
@@ -50,5 +51,11 @@ public class NonPruningScheduleStorage implements ScheduleStorage {
 	@Override
 	public int size() {
 		return array.size();
+	}
+
+	@Override
+	public void signalMonitor(RuntimeMonitor monitor) {
+		monitor.setSchedulesInArray(array.size());
+		monitor.setSchedulesInQueue(queue.size() - array.size());
 	}
 }

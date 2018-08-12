@@ -2,6 +2,7 @@ package se306group8.scheduleoptimizer.algorithm.storage;
 
 import java.util.PriorityQueue;
 
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
 /** Stores the schedules in a Java priority queue. */
@@ -46,5 +47,17 @@ public class ObjectQueueScheduleStorage implements ScheduleStorage {
 	@Override
 	public int size() {
 		return queue.size();
+	}
+	
+	@Override
+	public void signalMonitor(RuntimeMonitor monitor) {
+		monitor.setSchedulesInQueue(queue.size());
+	}
+	
+	/** Communicates the storage state to the monitor */
+	@Override
+	public void signalStorageSizes(RuntimeMonitor monitor) {
+		//I'm not sure about the size of TreeSchedule in memory. But it is big.
+		monitor.setScheduleInQueueStorageSize(4 + 210);
 	}
 }
