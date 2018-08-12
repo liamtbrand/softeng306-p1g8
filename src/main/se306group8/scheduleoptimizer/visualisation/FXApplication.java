@@ -10,10 +10,12 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import se306group8.scheduleoptimizer.Main;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitorAggregator;
 import se306group8.scheduleoptimizer.algorithm.CLIRuntimeMonitor;
+import se306group8.scheduleoptimizer.visualisation.manager.*;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,20 +25,19 @@ public class FXApplication extends Application {
 	private Thread algorithmThread;
 	private Timer timer;
 
-	@FXML
-	private Label solutionsExploredLabel;
-	@FXML
-	private Label schedulesInQueueLabel;
-	@FXML
-	private Label schedulesInArrayLabel;
-	@FXML
-	private Label schedulesOnDiskLabel;
+	@FXML private Label solutionsExploredLabel;
+	@FXML private Label schedulesInArrayLabel;
+	@FXML private Label schedulesInQueueLabel;
+	@FXML private Label schedulesOnDiskLabel;
+	@FXML private Label schedulesPerSecondLabel;
 
-	@FXML
-	private StackedBarChart scheduleStorage;
+	@FXML private Label availableProcessorsLabel;
+	@FXML private Label maxMemoryLabel;
+	@FXML private Label usedMemoryLabel;
+	@FXML private Label freeMemoryLabel;
 
-	@FXML
-	private PieChart storageBreakdown;
+	@FXML private StackedBarChart scheduleStorage;
+	@FXML private PieChart storageBreakdown;
 	
 	private ObservableRuntimeMonitor monitor;
 
@@ -58,37 +59,32 @@ public class FXApplication extends Application {
 		
 		//myLabel.textProperty().bind(Bindings.createStringBinding(() -> monitor.hasStarted() ? "Started!" : "Waiting to start.", monitor ));
 
-		// Setup memory usage graph.
+		ScheduleStatisticsManager scheduleStatisticsManager = new ScheduleStatisticsManager(
+				solutionsExploredLabel,
+				schedulesInArrayLabel,
+				schedulesInQueueLabel,
+				schedulesOnDiskLabel,
+				schedulesPerSecondLabel,
+				1
+		);
 
-		XYChart.Series dataSeriesDisk = new XYChart.Series();
-		XYChart.Series dataSeriesArray = new XYChart.Series();
-		XYChart.Series dataSeriesQueue = new XYChart.Series();
+		StackedBarChartManager stackedBarChartManager = new StackedBarChartManager(
+				scheduleStorage
+		);
 
-		dataSeriesDisk.setName("Disk");
-		dataSeriesArray.setName("Array");
-		dataSeriesQueue.setName("Queue");
+		PieChartManager pieChartManager = new PieChartManager(
+				storageBreakdown
+		);
 
-		XYChart.Data diskData = new XYChart.Data();
-		diskData.setXValue("Memory");
-		diskData.setYValue(0.1);
-		dataSeriesDisk.getData().add(diskData);
+		MemoryStatisticsManager memoryStatisticsManager = new MemoryStatisticsManager(
+				maxMemoryLabel,
+				usedMemoryLabel,
+				freeMemoryLabel
+		);
 
-		XYChart.Data arrayData = new XYChart.Data();
-		arrayData.setXValue("Memory");
-		arrayData.setYValue(0.1);
-		dataSeriesArray.getData().add(arrayData);
-
-		XYChart.Data queueData = new XYChart.Data();
-		queueData.setXValue("Memory");
-		queueData.setYValue(0.1);
-		dataSeriesQueue.getData().add(queueData);
-
-		scheduleStorage.getData().setAll(dataSeriesDisk,dataSeriesArray,dataSeriesQueue);
-
-		PieChart.Data pDiskData = new PieChart.Data("Disk",0.1);
-		PieChart.Data pArrayData = new PieChart.Data("Array",0.1);
-		PieChart.Data pQueueData = new PieChart.Data("Queue",0.1);
-		storageBreakdown.getData().setAll(pDiskData,pArrayData,pQueueData);
+		ProcessorStatisticsManager processorStatisticsManager = new ProcessorStatisticsManager(
+				availableProcessorsLabel
+		);
 
 		Thread th = new Thread(() -> {
 			Main.startAlgorithm(
@@ -105,13 +101,13 @@ public class FXApplication extends Application {
 			public void run() {
 				Platform.runLater(() -> {
 
-					long solutionsExplored = monitor.getSolutionsExplored();
+					int solutionsExplored = monitor.getSolutionsExplored();
 
-					long schedulesOnDisk = monitor.getSchedulesOnDisk();
-					long schedulesInArray = monitor.getSchedulesInArray();
-					long schedulesInQueue = monitor.getSchedulesInQueue();
+					int schedulesInArray = monitor.getSchedulesInArray();
+					int schedulesInQueue = monitor.getSchedulesInQueue();
+					int schedulesOnDisk = monitor.getSchedulesOnDisk();
 
-					long totalSchedules = schedulesOnDisk+schedulesInArray+schedulesInQueue;
+					long totalSchedules = schedulesInArray + schedulesInQueue + schedulesOnDisk;
 
 					if(totalSchedules == 0) {
 						totalSchedules += 1;
@@ -129,31 +125,31 @@ public class FXApplication extends Application {
 					long totalSize = onDiskSize+inArraySize+inQueueSize;
 					*/
 
-					solutionsExploredLabel.textProperty().setValue(""+solutionsExplored);
-
-					schedulesInArrayLabel.textProperty().setValue(""+schedulesInArray);
-					schedulesInQueueLabel.textProperty().setValue(""+schedulesInQueue);
-					schedulesOnDiskLabel.textProperty().setValue(""+schedulesOnDisk);
+					scheduleStatisticsManager.update(
+							solutionsExplored,
+							schedulesInArray,
+							schedulesInQueue,
+							schedulesOnDisk
+					);
 
 					double percentOnDisk = 100.0 * schedulesOnDisk / totalSchedules;
 					double percentInArray = 100.0 * schedulesInArray / totalSchedules;
 					double percentInQueue = 100.0 * schedulesInQueue / totalSchedules;
 
-					diskData.setYValue(percentOnDisk);
-					arrayData.setYValue(percentInArray);
-					queueData.setYValue(percentInQueue);
+					stackedBarChartManager.update(percentOnDisk,percentInArray,percentInQueue);
 
-					pDiskData.setPieValue(percentOnDisk);
-					pArrayData.setPieValue(percentInArray);
-					pQueueData.setPieValue(percentInQueue);
+					pieChartManager.update(percentOnDisk,percentInArray,percentInQueue);
+
+					processorStatisticsManager.update();
+					memoryStatisticsManager.update();
 
 				});
 			}
 		};
 
 		timer = new Timer();
-		timer.schedule(updateStatisticsTask, 0l,200l);
-		
+		timer.schedule(updateStatisticsTask, 0l,1000l);
+
 	}
 
 	@Override
