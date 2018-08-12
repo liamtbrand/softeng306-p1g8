@@ -8,9 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import se306group8.scheduleoptimizer.Main;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitorAggregator;
@@ -25,7 +23,7 @@ public class FXApplication extends Application {
 	private Thread algorithmThread;
 	private Timer timer;
 
-	@FXML private Label solutionsExploredLabel;
+	@FXML private Label schedulesExploredLabel;
 	@FXML private Label schedulesInArrayLabel;
 	@FXML private Label schedulesInQueueLabel;
 	@FXML private Label schedulesOnDiskLabel;
@@ -60,7 +58,7 @@ public class FXApplication extends Application {
 		//myLabel.textProperty().bind(Bindings.createStringBinding(() -> monitor.hasStarted() ? "Started!" : "Waiting to start.", monitor ));
 
 		ScheduleStatisticsManager scheduleStatisticsManager = new ScheduleStatisticsManager(
-				solutionsExploredLabel,
+				schedulesExploredLabel,
 				schedulesInArrayLabel,
 				schedulesInQueueLabel,
 				schedulesOnDiskLabel,
@@ -101,7 +99,7 @@ public class FXApplication extends Application {
 			public void run() {
 				Platform.runLater(() -> {
 
-					int solutionsExplored = monitor.getSolutionsExplored();
+					int schedulesExplored = monitor.getSchedulesExplored();
 
 					int schedulesInArray = monitor.getSchedulesInArray();
 					int schedulesInQueue = monitor.getSchedulesInQueue();
@@ -126,7 +124,7 @@ public class FXApplication extends Application {
 					*/
 
 					scheduleStatisticsManager.update(
-							solutionsExplored,
+							schedulesExplored,
 							schedulesInArray,
 							schedulesInQueue,
 							schedulesOnDisk

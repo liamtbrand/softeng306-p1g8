@@ -34,8 +34,8 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSolutionsExplored(int number) {
-		runtimeMonitors.forEach(m -> m.setSolutionsExplored(number));
+	public void setSchedulesExplored(int number) {
+		runtimeMonitors.forEach(m -> m.setSchedulesExplored(number));
 	}
 
 	@Override

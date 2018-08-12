@@ -25,7 +25,7 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSolutionsExplored(int number) {
+	public void setSchedulesExplored(int number) {
 		// Do Nothing
 	}
 

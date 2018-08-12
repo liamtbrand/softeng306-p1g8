@@ -52,7 +52,7 @@
                                  <children>
                                     <VBox>
                                        <children>
-                                          <Label text="Solutions Explored:">
+                                          <Label text="Schedules Explored:">
                                              <font>
                                                 <Font name="Menlo Regular" size="13.0" />
                                              </font>
@@ -81,7 +81,7 @@
                                     </VBox>
                                     <VBox alignment="TOP_RIGHT">
                                        <children>
-                                          <Label fx:id="solutionsExploredLabel" alignment="CENTER_RIGHT" minWidth="50.0" prefHeight="16.0" textAlignment="RIGHT">
+                                          <Label fx:id="schedulesExploredLabel" alignment="CENTER_RIGHT" minWidth="50.0" prefHeight="16.0" textAlignment="RIGHT">
                                              <font>
                                                 <Font name="Menlo Regular" size="13.0" />
                                              </font>

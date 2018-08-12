@@ -195,7 +195,7 @@ public class PerformanceTest {
 					}
 
 					@Override
-					public void setSolutionsExplored(int number) {
+					public void setSchedulesExplored(int number) {
 						numberOfSolutions = number;
 
 						if(number / 1_000_000 > millionSolutions) {

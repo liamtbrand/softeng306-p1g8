@@ -19,7 +19,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile TreeSchedule bestSchedule;
 	private volatile Queue<String> messages;
 
-	private volatile int solutionsExplored;
+	private volatile int schedulesExplored;
 	private volatile int schedulesInArray;
 	private volatile int scheduleInArrayStorageSize;
 	private volatile int schedulesInQueue;
@@ -36,7 +36,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		bestSchedule = null;
 		messages = new LinkedBlockingQueue<>();
 
-		solutionsExplored = 0;
+		schedulesExplored = 0;
 		schedulesInArray = 0;
 		scheduleInArrayStorageSize = 0;
 		schedulesInQueue = 0;
@@ -79,12 +79,12 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void setSolutionsExplored(int number) {
-		solutionsExplored = number;
+	public void setSchedulesExplored(int number) {
+		schedulesExplored = number;
 	}
 
-	public int getSolutionsExplored() {
-		return solutionsExplored;
+	public int getSchedulesExplored() {
+		return schedulesExplored;
 	}
 
 	@Override

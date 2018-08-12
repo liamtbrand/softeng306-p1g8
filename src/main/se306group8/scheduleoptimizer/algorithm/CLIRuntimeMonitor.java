@@ -165,7 +165,7 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSolutionsExplored(int number) {
+	public void setSchedulesExplored(int number) {
 		//Take no action.
 		
 	}

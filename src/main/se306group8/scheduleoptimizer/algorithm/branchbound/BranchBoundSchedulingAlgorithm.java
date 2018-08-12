@@ -66,7 +66,7 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 			throw new InterruptedException();
 		}
 		
-		getMonitor().setSolutionsExplored(visited);
+		getMonitor().setSchedulesExplored(visited);
 		
 		return best;
 	}
