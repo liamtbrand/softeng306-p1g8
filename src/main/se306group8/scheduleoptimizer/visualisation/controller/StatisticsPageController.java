@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class StatisticsController implements Initializable {
+public class StatisticsPageController implements Initializable {
 
 	private Timer timer;
 

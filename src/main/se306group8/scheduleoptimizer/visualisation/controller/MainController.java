@@ -12,8 +12,14 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
 	// The controllers are injected here. Convention is: fx:id+Controller.
-	@FXML DashboardController dashboardPageController;
-	@FXML StatisticsController statisticsPageController;
+	@FXML
+	DashboardPageController dashboardPageController;
+	@FXML
+	StatisticsPageController statisticsPageController;
+	@FXML
+	TaskGraphPageController taskGraphPageController;
+	@FXML
+	SearchSpacePageController searchSpacePageController;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -29,6 +35,8 @@ public class MainController implements Initializable {
 	public void stop() {
 		dashboardPageController.stop();
 		statisticsPageController.stop();
+		taskGraphPageController.stop();
+		searchSpacePageController.stop();
 	}
 
 }

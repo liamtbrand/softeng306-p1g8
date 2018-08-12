@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class DashboardController implements Initializable {
+public class DashboardPageController implements Initializable {
 
 	private Timer timer;
 
@@ -108,4 +108,5 @@ public class DashboardController implements Initializable {
 	public void stop() {
 		timer.cancel();
 	}
+
 }
