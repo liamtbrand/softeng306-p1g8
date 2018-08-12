@@ -5,7 +5,6 @@ import java.util.List;
 
 import se306group8.scheduleoptimizer.algorithm.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 
 public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
@@ -18,7 +17,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 	public List<TreeSchedule> getChildSchedules(TreeSchedule schedule) {
 		//Only add the schedule if it is the earliest schedule that can create it.
 		//Schedule a is smaller than schedule b if 
-		List<TreeSchedule> childrenSchedules = new ArrayList<>();
+		List<TreeSchedule> childrenSchedules = new ArrayList<>(processors * schedule.getAllocatable().size());
 		
 		for (Task task : schedule.getAllocatable()) {
 			int processorsToAllocate;

@@ -141,7 +141,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			lastAllocationOnProcessor = parent.lastAllocationOnProcessor.clone();
 			numberOfTasksOnProcessor = parent.numberOfTasksOnProcessor.clone();
 			removableTasks = parent.removableTasks.clone();
-			allocated = new ArrayList<>(parent.allocated);
+			allocated = new ArrayList<>(graph.getAll().size());
+			allocated.addAll(parent.allocated);
 			allocations = parent.allocations.clone();
 		}
 		
