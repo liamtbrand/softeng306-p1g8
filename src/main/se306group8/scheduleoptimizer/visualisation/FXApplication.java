@@ -40,7 +40,7 @@ public class FXApplication extends Application {
 
 		mainController = loader.<MainController>getController();
 		
-		primaryStage.setTitle("Visulalisation");
+		primaryStage.setTitle("Visualisation");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
