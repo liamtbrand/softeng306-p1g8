@@ -15,12 +15,13 @@ public class PieChartManager {
 
 		this.pieChart = pieChart;
 
-		diskData = new PieChart.Data("Disk",0.1);
-		arrayData = new PieChart.Data("Array",0.1);
-		queueData = new PieChart.Data("Queue",0.1);
+		diskData = new PieChart.Data("Disk",0);
+		arrayData = new PieChart.Data("Array",0);
+		queueData = new PieChart.Data("Queue",0);
 
 		pieChart.getData().setAll(diskData,arrayData,queueData);
-
+		pieChart.labelsVisibleProperty().setValue(true);
+		pieChart.legendVisibleProperty().setValue(true);
 	}
 
 	public void update(double percentOnDisk, double percentInArray, double percentInQueue) {
