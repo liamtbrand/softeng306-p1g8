@@ -84,7 +84,7 @@ public class PerformanceTest {
 	}
 
 	//Run through the data-set, creating a mapping from the file name to the length of time, and the number of solutions stored
-	public static void main(String[] args) throws ParseException, IOException {
+	public static void main(String[] args) throws ParseException, IOException, InterruptedException {
 		Options options = new Options();
 
 		options.addOption("d", true, "The difficulty, EASY, MEDIUM or HARD");
