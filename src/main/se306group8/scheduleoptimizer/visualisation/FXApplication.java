@@ -12,15 +12,22 @@ import se306group8.scheduleoptimizer.visualisation.controller.MainController;
 
 public class FXApplication extends Application {
 
+	/**
+	 * Reference to the thread that is running the algorithm.
+	 * This is used for cleanup.
+	 */
 	private Thread algorithmThread;
 
+	/**
+	 * A reference to the main controller being used.
+	 * This is needed for cleanup.
+	 */
 	MainController mainController;
 	
 	private static ObservableRuntimeMonitor monitor;
 
 	/**
 	 * Controllers use this to get the runtime monitor.
-	 * This might need to be rethought...
 	 * @return
 	 */
 	public static ObservableRuntimeMonitor getMonitor() {
@@ -29,20 +36,27 @@ public class FXApplication extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
+
+		// Keep a reference to the monitor.
+
 		monitor = new ObservableRuntimeMonitor();
-		
+
+		// Load the FXML
+
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/fxml/MainWindow.fxml"));
 		
 		Parent root = loader.load();
 		Scene scene = new Scene(root);
 
+		// Get the reference to the main controller.
 		mainController = loader.<MainController>getController();
 		
 		primaryStage.setTitle("Visulalisation");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+
+		// Start the algorithm on its own thread.
 
 		Thread th = new Thread(() -> {
 			Main.startAlgorithm(
@@ -58,7 +72,11 @@ public class FXApplication extends Application {
 
 	@Override
 	public void stop() {
+
+		// Stop the main controller, this will stop everything in the gui.
 		mainController.stop();
+
+		// Stop the algorithm.
 		algorithmThread.interrupt();
 		try {
 			algorithmThread.join();

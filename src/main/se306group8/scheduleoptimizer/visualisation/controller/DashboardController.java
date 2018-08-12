@@ -36,6 +36,8 @@ public class DashboardController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
+		// Create our managers for the dashboard components
+
 		ScheduleStatisticsManager scheduleStatisticsManager = new ScheduleStatisticsManager(
 				schedulesExploredLabel,
 				schedulesInArrayLabel,
@@ -58,6 +60,8 @@ public class DashboardController implements Initializable {
 		ProcessorStatisticsManager processorStatisticsManager = new ProcessorStatisticsManager(
 				availableProcessorsLabel
 		);
+
+		// Create a timerTask to do the updating of our components
 
 		TimerTask updateStatisticsTask = new TimerTask() {
 			@Override
