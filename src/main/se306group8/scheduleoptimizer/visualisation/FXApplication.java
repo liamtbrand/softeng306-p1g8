@@ -52,7 +52,7 @@ public class FXApplication extends Application {
 		// Get the reference to the main controller.
 		mainController = loader.<MainController>getController();
 		
-		primaryStage.setTitle("Visulalisation");
+		primaryStage.setTitle("Visualisation");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
