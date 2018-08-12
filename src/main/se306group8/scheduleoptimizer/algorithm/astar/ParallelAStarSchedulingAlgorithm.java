@@ -22,9 +22,10 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 	
 	private ScheduleStorage queue;
 	
-	//used to kill all threads
-	private AtomicBoolean done;
+	//kill all threads when they all agree its over
+	private AtomicInteger doneVotes;
 	
+	private AtomicInteger upperBound;
 	
 	private final int numThreads;
 	
@@ -41,8 +42,11 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 		
 		private TreeSchedule threadBest;
 		
+		private boolean doneVote;
+		
 		public WorkerThread(int numProcessors) {
 			this.numProcessors=numProcessors;
+			this.doneVote=false;
 		}
 
 		@Override
@@ -51,15 +55,27 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 			//TODO make this plugable
 			ChildScheduleFinder childGenerator = new DuplicateRemovingChildFinder(numProcessors);
 			
-			//done is atomic variable used by all threads to know when to die
-			//done is set to true when optimal is found
-			while (!done.get()) {
+
+			//only die when all threads want to die
+			while (doneVotes.get() != numThreads) {
 				
 				//this pop may return null if the queue is empty it
 				//can happen if items are taken faster than added
 				threadBest = queue.pop();
 				
-				while (threadBest != null && !threadBest.isComplete() && !done.get()) {
+				while (threadBest != null && threadBest.getLowerBound() < upperBound.get()) {
+					
+					if (threadBest.isComplete()) {
+						checkBest(threadBest);
+						break;
+					}
+					
+					//we said we were done but proved wrong
+					if (doneVote) {
+						doneVote = false;
+						doneVotes.decrementAndGet();
+					}
+					
 					List<TreeSchedule> children = childGenerator.getChildSchedules(threadBest);
 
 					queue.putAll(children);
@@ -69,11 +85,10 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 					getMonitor().setSolutionsExplored(queue.size());
 				}
 				
-				//if we got a completed schedule from the queue we are done
-				//but we need to check another thread hasn't found a better one
-				if (threadBest != null && threadBest.isComplete()) {
-					checkBest(threadBest);
-					done.set(true);
+				//if we were not done before we are now
+				if (!doneVote) {
+					doneVote=true;
+					doneVotes.incrementAndGet();
 				}
 			}
 			
@@ -92,7 +107,6 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) {
 		queue = new CocurrentObjectQueueScheduleStorage();
 		best = new TreeSchedule(graph, heuristic);
-		done = new AtomicBoolean(false);
 		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
@@ -106,9 +120,11 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 		
 		//instead mark greedy solution here in global variable
 		best = greedySoln;
+		
+		upperBound = new AtomicInteger(greedySoln.getRuntime());
 		queue.pruneStorage(greedySoln.getRuntime());
 		
-		
+		doneVotes = new AtomicInteger(0);
 		Thread[] threads = new Thread[numThreads];
 		for (int i=0;i<numThreads;i++) {
 			threads[i]= new WorkerThread(numberOfProcessors);
@@ -134,6 +150,7 @@ public class ParallelAStarSchedulingAlgorithm extends Algorithm{
 		assert(best != null && best.isComplete());
 		if (best.getRuntime()>threadBest.getRuntime()) {
 			best = threadBest;
+			upperBound.set(best.getRuntime());
 		}
 	}
 
