@@ -26,22 +26,30 @@ public class BlockScheduleStorage implements ScheduleStorage {
 	
 	@Override
 	public TreeSchedule pop() {
-		while(queue.size() == 0 && array.addNextWidthTo(queue));
+		while(queue.size() == 0) {
+			if(!array.addNextWidthTo(queue)) {
+				return bestComplete; //We are out of solutions
+			}
+		}
 		
-		TreeSchedule next = array.get(queue.pop());
+		int index = queue.pop();
 		
-		if(next.getLowerBound() >= bestComplete.getRuntime()) {
+		if(array.getLowerBound(index) >= bestComplete.getRuntime()) {
+			queue.put(index);
 			return bestComplete;
 		} else {
 			//This is safe as the block that is in the queue should never be pruned.
-			return next;
+			return array.get(index);
 		}
 	}
 	
 	@Override
 	public TreeSchedule peek() {
-		while(queue.size() == 0 && array.addNextWidthTo(queue));
-
+		while(queue.size() == 0) {
+			if(!array.addNextWidthTo(queue)) {
+				return bestComplete; //We are out of solutions
+			}
+		}
 		TreeSchedule next = array.get(queue.peek());
 
 		if(next.getLowerBound() >= bestComplete.getRuntime()) {
