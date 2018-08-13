@@ -31,7 +31,7 @@ public interface ScheduleStorage {
 		monitor.setScheduleInQueueStorageSize(4 + 9); //9 for the array, 4 for the queue
 	}
 
-	/** Deletes all schedules with a bound greater than the maximum.
+	/** Deletes all schedules with a bound greater than or equal to the maximum.
 	 * This method makes a best effort, and may not actually delete the schedules.
 	 * They will not be returned by pop or peek. */
 	void pruneStorage(int maxBound);

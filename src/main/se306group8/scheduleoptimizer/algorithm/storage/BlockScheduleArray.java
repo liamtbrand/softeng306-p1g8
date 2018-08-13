@@ -52,18 +52,20 @@ final class BlockScheduleArray extends ScheduleArray {
 		}
 	}
 	
-	/** Prunes all solutions with a bound greater than max */
+	/** Prunes all solutions with a bound greater than or equal to max. */
 	void setPruneMaximum(int max) {
 		if(max >= maximumBound) {
 			return;
 		}
 		
-		int newLargestWidth = getWidth(max);
-		int oldLargestWidth = getWidth(maximumBound);
-		
-		assert newLargestWidth >= widthAfterQueue - 1 : "The width in the queue should not be pruned.";
-		
+		int newLargestWidth = getWidth(max - 1);
+		int oldLargestWidth = getWidth(maximumBound - 1);
 		maximumBound = max;
+		
+		if(newLargestWidth < widthAfterQueue - 1) {
+			//Don't prune the widths in the queue.
+			newLargestWidth = widthAfterQueue - 1;
+		}
 		
 		//Prune useless widths
 		for(int i = newLargestWidth + 1; i < widths.size() && i <= oldLargestWidth; i++) {
@@ -79,12 +81,19 @@ final class BlockScheduleArray extends ScheduleArray {
 		return maximumBound;
 	}
 	
-	void addNextWidthTo(SchedulePriorityQueue queue) {
+	/** Returns false if there are no more widths to add */
+	boolean addNextWidthTo(SchedulePriorityQueue queue) {
+		if(widthAfterQueue == widths.size()) {
+			return false;
+		}
+		
 		List<ScheduleBlock> width = widths.get(widthAfterQueue++);
 		
 		for(ScheduleBlock block : width) {
 			block.addToQueue(queue);
 		}
+		
+		return true;
 	}
 	
 	private int getWidth(int bound) {

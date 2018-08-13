@@ -7,6 +7,7 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 public class BlockScheduleStorage implements ScheduleStorage {
 	private final SchedulePriorityQueue queue;
 	private final BlockScheduleArray array;
+	private TreeSchedule bestComplete = null;
 	
 	/**
 	 * Creates a blocked schedule storage
@@ -25,38 +26,48 @@ public class BlockScheduleStorage implements ScheduleStorage {
 	
 	@Override
 	public TreeSchedule pop() {
-		while(queue.size() == 0) {
-			array.addNextWidthTo(queue);
-		}
+		while(queue.size() == 0 && array.addNextWidthTo(queue));
 		
-		//This is safe as the block that is in the queue should never be pruned.
-		return array.get(queue.pop());
+		TreeSchedule next = array.get(queue.pop());
+		
+		if(next.getLowerBound() >= bestComplete.getRuntime()) {
+			return bestComplete;
+		} else {
+			//This is safe as the block that is in the queue should never be pruned.
+			return next;
+		}
 	}
 	
 	@Override
 	public TreeSchedule peek() {
-		while(queue.size() == 0) {
-			array.addNextWidthTo(queue);
+		while(queue.size() == 0 && array.addNextWidthTo(queue));
+
+		TreeSchedule next = array.get(queue.peek());
+
+		if(next.getLowerBound() >= bestComplete.getRuntime()) {
+			return bestComplete;
+		} else {
+			//This is safe as the block that is in the queue should never be pruned.
+			return next;
 		}
-		
-		return array.get(queue.peek());
 	}
 	
 	@Override
 	public void put(TreeSchedule schedule) {
-		if(schedule.getLowerBound() > array.getPruneMaximum()) {
+		if(schedule.getLowerBound() >= array.getPruneMaximum()) {
 			return;
 		}
 		
 		if(schedule.isComplete()) {
 			array.setPruneMaximum(schedule.getRuntime());
-		}
+			bestComplete = schedule;
+		} else {
+			boolean addedToQueue = schedule.getLowerBound() < array.getEndOfQueue();
 		
-		boolean addedToQueue = schedule.getLowerBound() < array.getEndOfQueue();
-		
-		int id = array.add(schedule, !addedToQueue); //If we did not add it later, flag it for addition now
-		if(addedToQueue) {
-			queue.put(id);
+			int id = array.add(schedule, !addedToQueue); //If we did not add it later, flag it for addition now
+			if(addedToQueue) {
+				queue.put(id);
+			}
 		}
 	}
 	
