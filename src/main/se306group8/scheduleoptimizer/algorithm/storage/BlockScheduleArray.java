@@ -83,12 +83,7 @@ final class BlockScheduleArray extends ScheduleArray {
 		List<ScheduleBlock> width = widths.get(widthAfterQueue++);
 		
 		for(ScheduleBlock block : width) {
-			int start = block.slot * blockSize;
-			int end = start + block.size;
-			
-			for(int i = start; i < end; i++) {
-				queue.put(i);
-			}
+			block.addToQueue(queue);
 		}
 	}
 	

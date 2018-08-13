@@ -52,8 +52,10 @@ public class BlockScheduleStorage implements ScheduleStorage {
 			array.setPruneMaximum(schedule.getRuntime());
 		}
 		
-		int id = array.add(schedule);
-		if(schedule.getLowerBound() < array.getEndOfQueue()) {
+		boolean addedToQueue = schedule.getLowerBound() < array.getEndOfQueue();
+		
+		int id = array.add(schedule, !addedToQueue); //If we did not add it later, flag it for addition now
+		if(addedToQueue) {
 			queue.put(id);
 		}
 	}

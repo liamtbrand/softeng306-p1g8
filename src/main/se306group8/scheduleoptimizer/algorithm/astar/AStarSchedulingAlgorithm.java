@@ -48,7 +48,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		}
 
 		int explored = 0;
-		queue.pruneStorage(greedySoln.getRuntime());
+		queue.put(greedySoln);
 		
 		while (!best.isComplete()) {
 

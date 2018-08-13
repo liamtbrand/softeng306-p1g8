@@ -28,6 +28,8 @@ class ScheduleArray {
 		final short[] lowerBound = new short[blockSize];
 		/** Counts the number of tasks that have been scheduled on this schedule */
 		final byte[] tasks = new byte[blockSize];
+		/** Whether this schedule needs to be added to the queue. */
+		final boolean[] needsToBeAddedToQueue = new boolean[blockSize];
 		
 		ScheduleBlock(int slot) {
 			this.slot = slot;
@@ -35,15 +37,16 @@ class ScheduleArray {
 		
 		/** Adds a schedule to the block and returns the index it was given. This index is the index that should
 		 * be used to retrieve it from the array. */
-		int add(TreeSchedule schedule) {
+		int add(TreeSchedule schedule, boolean addToQueue) {
 			int index = size;
 			size++;
 			
 			lowerBound[index] = (short) schedule.getLowerBound();
-			parentsArray[index] = ScheduleArray.this.add(schedule.getParent());
+			parentsArray[index] = ScheduleArray.this.add(schedule.getParent(), false);
 			taskArray[index] = (byte) schedule.getMostRecentAllocation().task.getId();
 			processorArray[index] = (byte) schedule.getMostRecentAllocation().processor;
 			tasks[index] = (byte) schedule.getAllocated().size();
+			needsToBeAddedToQueue[index] = addToQueue;
 			
 			return index + slot * blockSize;
 		}
@@ -60,6 +63,18 @@ class ScheduleArray {
 		@Override
 		public String toString() {
 			return "(" + size + ")";
+		}
+		
+		void addToQueue(SchedulePriorityQueue queue) {
+			int start = slot * blockSize;
+			int end = start + size;
+			
+			for(int i = start; i < end; i++) {
+				if(needsToBeAddedToQueue[i - start]) {
+					queue.put(i);
+					needsToBeAddedToQueue[i - start] = false;
+				}
+			}
 		}
 	}
 	
@@ -120,10 +135,12 @@ class ScheduleArray {
 	/** Adds a schedule to the array. If this schedule object was already in the array it is not re-added
 	 * and the index is returned.
 	 * 
+	 * @param Whether the addToQueue boolean should be set to true
+	 * 
 	 * @throws OutOfMemoryError if there are too many schedules in this array.
 	 * @return the id that was allocated to this object.
 	 **/
-	int add(TreeSchedule schedule) throws OutOfMemoryError {
+	int add(TreeSchedule schedule, boolean addToQueue) throws OutOfMemoryError {
 		if(schedule.getParent() == null) {
 			assert rootSchedule == null || rootSchedule.equals(schedule);
 			
@@ -141,8 +158,13 @@ class ScheduleArray {
 			ScheduleBlock block = getBlockFor(schedule);
 			
 			size++;
-			return block.add(schedule);
+			return block.add(schedule, addToQueue);
 		}
+	}
+	
+	/** Adds an item to the array. With the addToQueue field true. */
+	int add(TreeSchedule schedule) throws OutOfMemoryError {
+		return add(schedule, true);
 	}
 	
 	ScheduleBlock getBlockFor(TreeSchedule schedule) {
