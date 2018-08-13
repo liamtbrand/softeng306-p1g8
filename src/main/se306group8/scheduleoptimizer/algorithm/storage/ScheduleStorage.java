@@ -35,6 +35,11 @@ public interface ScheduleStorage {
 	 * This method makes a best effort, and may not actually delete the schedules.
 	 * They will not be returned by pop or peek. */
 	void pruneStorage(int maxBound);
-
+	
+	/**
+	 * Returns the complete schedule with lowest runtime
+	 */
+	TreeSchedule getBestSchedule();
+	
 	int size();
 }

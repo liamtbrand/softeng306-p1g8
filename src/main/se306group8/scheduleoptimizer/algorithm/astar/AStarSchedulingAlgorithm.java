@@ -50,8 +50,21 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 		queue.put(greedySoln);
 		
+		Runtime memory = Runtime.getRuntime();
+		
 		while (!best.isComplete()) {
-			explore(best);
+			
+			
+			
+			//100 MB
+			
+			if (memory.freeMemory() > 100_000_000) {
+				explore(best);
+			} else {
+				queue.put(branchAndBound(best));		
+				
+			}
+			
 			best = queue.pop();
 			
 			getMonitor().setSchedulesExplored(explored);
@@ -76,7 +89,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		for(TreeSchedule child : children) {
 			explored++;
 			
-			if(child.getLowerBound() == best.getLargestRoot()) {				
+			if(child.getLowerBound() < best.getLargestRoot()) {				
 				TreeSchedule s = explore(child);
 				
 				if(s != null) {
@@ -88,5 +101,37 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		}
 		
 		return null;
+	}
+	
+	
+	private TreeSchedule branchAndBound(TreeSchedule schedule) throws InterruptedException {
+		// Get all children in order from best lower bound to worst
+		List<TreeSchedule> childSchedules = childGenerator.getChildSchedules(schedule);
+		childSchedules.sort(null);
+		TreeSchedule best = queue.getBestSchedule();
+		
+		explored += childSchedules.size();
+		
+		for (TreeSchedule child : childSchedules) {
+			// Only consider the child if its lower bound is better than current best
+			if (best == null || child.getLowerBound() < best.getRuntime()) {
+				if (child.isComplete()) {
+					best = child;
+				} else {
+					// Check if the child schedule is complete or not
+					best = branchAndBound(child);
+				}
+			} else {
+				break;
+			}
+		}
+
+		if(Thread.interrupted()) {
+			throw new InterruptedException();
+		}
+		
+		getMonitor().setSchedulesExplored(explored);
+		
+		return best;
 	}
 }
