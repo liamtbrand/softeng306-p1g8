@@ -42,7 +42,7 @@ public class ScheduleManager {
 			
 			processor++;
 			for (Task task : list) {
-				int startTime = schedule.getAlloctionFor(task).startTime*550/schedule.getRuntime();
+				int startTime = schedule.getAllocationFor(task).startTime*550/schedule.getRuntime();
 				
 				Rectangle rectangle = new Rectangle(startTime, y, task.getCost()*550/schedule.getRuntime(), 30);
 				if (schedule.isComplete()) {

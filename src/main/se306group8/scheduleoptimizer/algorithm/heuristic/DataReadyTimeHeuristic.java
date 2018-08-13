@@ -36,7 +36,7 @@ public class DataReadyTimeHeuristic implements MinimumHeuristic{
 	private int tdr(Task nj, int p, TreeSchedule schedule) {
 		int max = 0;
 		for (Dependency dep:nj.getParents()) {
-			ProcessorAllocation pa = schedule.getAlloctionFor(dep.getSource());
+			ProcessorAllocation pa = schedule.getAllocationFor(dep.getSource());
 			if (pa.processor==p) {
 				max = Math.max(max, pa.endTime);
 			}else{

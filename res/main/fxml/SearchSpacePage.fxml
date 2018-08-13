@@ -4,11 +4,11 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="305.0" prefWidth="482.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.SearchSpacePageController">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="367.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.SearchSpacePageController">
    <children>
       <Group>
          <children>
-            <Canvas fx:id="canvas" height="299.0" width="481.0" />
+            <Canvas fx:id="canvas" height="367.0" width="640.0" />
          </children>
       </Group>
    </children>

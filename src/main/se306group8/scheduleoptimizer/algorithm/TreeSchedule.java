@@ -145,7 +145,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			Task parentTask = dep.getSource();
 			removableTasks[parentTask.getId()] = false; //None of the parents can be removed.
 			
-			ProcessorAllocation alloc = parent.getAlloctionFor(parentTask);
+			ProcessorAllocation alloc = parent.getAllocationFor(parentTask);
 			int dataReadyTime;
 
 			if (alloc.processor == processor) {
@@ -218,12 +218,12 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	 * Returns the ProcessorAllocation instance that this task was scheduled on.
 	 * This returns null if the task has not been scheduled.
 	 */
-	public ProcessorAllocation getAlloctionFor(Task t) {
+	public ProcessorAllocation getAllocationFor(Task t) {
 		return allocations[t.getId()];
 	}
 
 	/**
-	 * Returns the last processor allocation on a processor null if no allocation
+	 * Returns the last processor allocation on a processor, null if no allocation
 	 * 
 	 * @param processor
 	 * @return

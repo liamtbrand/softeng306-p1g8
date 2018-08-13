@@ -15,9 +15,6 @@ public class SearchSpacePageController extends Controller {
 	@FXML
 	private Canvas canvas;
 
-    // This method is called by the 
-    // FXMLLoader when initialization 
-    // is complete
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 	    GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -26,22 +23,22 @@ public class SearchSpacePageController extends Controller {
 		startManager(new CanvasFillManager(canvas));	
 	}
 
-	// Method to INITIALLY draw what's needed for the SearchSpace page
+	/**
+	 * 
+	 * @param gc - input graphics context
+	 * @param width - input canvas width
+	 * @param height - input canvas height
+	 * Method to INITIALLY draw what's needed for the SearchSpace page including triangle bounds, etc.
+	 */
     private void draw(GraphicsContext gc, double width, double height) {
  
-      gc.setFill(Color.ORANGE);
-      gc.setStroke(Color.ORANGE);
+      gc.setStroke(Color.BLACK);
       
       double[] x = {width/6.0, width/2.0, 5*width/6.0};
-      double[] y = {3.0*height/4.0, height/4.0, 3.0*height/4.0};
-      int n;
-      // A simple triangle.
-      n = 3;
-
+      double[] y = {7.0*height/8.0, height/8.0, 7.0*height/8.0};
+      int n = 3;
+      
       gc.strokePolygon(x, y, n);
-      
-      
-     // gc.fillPolygon(x, y, n);     // Fills the triangle above.
       
     }
 
