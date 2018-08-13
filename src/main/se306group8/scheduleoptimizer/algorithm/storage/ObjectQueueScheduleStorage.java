@@ -27,7 +27,7 @@ public class ObjectQueueScheduleStorage implements ScheduleStorage {
 	
 	@Override
 	public void put(TreeSchedule schedule) {
-		if(schedule.getLowerBound() > maximumBound) {
+		if(schedule.getLowerBound() >= maximumBound) {
 			return;
 		}
 		
