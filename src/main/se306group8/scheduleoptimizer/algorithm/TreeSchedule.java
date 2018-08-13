@@ -19,7 +19,6 @@ import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
  * with model of a schedule.
  */
 public class TreeSchedule implements Comparable<TreeSchedule> {
-
 	// Constructed fields
 	private final TreeSchedule parent;
 
@@ -49,8 +48,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private final boolean[] removableTasks;
 	
 	//Sets
-	private final Collection<Task> allocatable;
-	private final Collection<Task> allocated;
+	private final List<Task> allocatable;
+	private final List<Task> allocated;
 
 	// Booleans
 	private final boolean isComplete;
@@ -82,8 +81,10 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		}
 
 		lastAllocationOnProcessor = new ProcessorAllocation[0];
-
-		allocatable = graph.getRoots();
+		
+		allocatable = new ArrayList<>(graph.getRoots());
+		allocatable.sort((a, b) -> a.getId() - b.getId());
+		
 		allocated = Collections.emptyList();
 		isComplete = false;
 
@@ -115,7 +116,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		lastAllocationOnProcessor = Arrays.copyOf(parent.lastAllocationOnProcessor, numberOfUsedProcessors);
 		numberOfTasksOnProcessor = Arrays.copyOf(parent.numberOfTasksOnProcessor, numberOfUsedProcessors);
 		removableTasks = parent.removableTasks.clone();
-		
+				
 		numberOfTasksOnProcessor[processor - 1]++;
 		
 		allocations = parent.allocations.clone();
@@ -167,6 +168,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			}
 		}
 
+		allocatable.sort((a, b) -> a.getId() - b.getId());
+		
 		allocation = new ProcessorAllocation(task, startTime, processor);
 
 		lastAllocationOnProcessor[processor - 1] = allocation;
@@ -299,7 +302,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	public Collection<Task> getAllocated() {
 		return allocated;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof TreeSchedule)) {

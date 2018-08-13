@@ -14,6 +14,7 @@ public final class Task implements GraphEquality<Task> {
 	private final int id;
 	private boolean[] isParent;
 	private boolean[] isChild;
+	private boolean isIndependant = true;
 	
 	Task(String name, int cost, int id){
 		this.name = name;
@@ -22,6 +23,10 @@ public final class Task implements GraphEquality<Task> {
 	}
 	
 	void setChildDependencies(Collection<Dependency> children){
+		if(children.size() != 0) {
+			isIndependant = false;
+		}
+		
 		this.children = children;
 		
 		int largestChild = 0;
@@ -37,6 +42,10 @@ public final class Task implements GraphEquality<Task> {
 	}
 	
 	void setParentDependencies(Collection<Dependency> parents){
+		if(parents.size() != 0) {
+			isIndependant = false;
+		}
+		
 		this.parents = parents;
 		
 		int largestParent = 0;
@@ -102,6 +111,10 @@ public final class Task implements GraphEquality<Task> {
 			return true;
 		
 		return other.name.equals(name) && other.cost == cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, other.parents);
+	}
+	
+	public boolean isIndependant() {
+		return isIndependant;
 	}
 	
 	@Override
