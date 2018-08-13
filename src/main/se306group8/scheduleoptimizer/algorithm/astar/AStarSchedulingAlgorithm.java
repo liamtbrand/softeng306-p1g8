@@ -76,7 +76,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		for(TreeSchedule child : children) {
 			explored++;
 			
-			if(child.getLowerBound() == best.getLargestRoot()) {				
+			if(child.getLowerBound() == best.getLowerBound()) {				
 				TreeSchedule s = explore(child);
 				
 				if(s != null) {
