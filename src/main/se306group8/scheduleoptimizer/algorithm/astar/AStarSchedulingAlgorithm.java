@@ -59,6 +59,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			best = queue.pop();
 			
 			explored += children.size();
+			getMonitor().updateBestSchedule(best);
 			getMonitor().setSchedulesExplored(explored);
 			queue.signalMonitor(getMonitor());
 
