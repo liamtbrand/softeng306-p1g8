@@ -19,6 +19,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	private final MinimumHeuristic heuristic;
 	private final ScheduleStorage queue;
 	private int explored = 0;
+	private TreeSchedule dfsBest;
 	
 	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor, ScheduleStorage storage) {
 		super(monitor);
@@ -51,16 +52,20 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		queue.put(greedySoln);
 		
 		Runtime memory = Runtime.getRuntime();
+		long maxMemory = (long) (memory.maxMemory() * 0.8);
 		
 		while (!best.isComplete()) {
 			
+			queue.signalMonitor(getMonitor());
 			
-			
-			//100 MB
-			
-			if (memory.freeMemory() > 100_000_000) {
+			long queuememory = queue.size() * 10L;
+						
+			if ( queuememory < maxMemory) {
 				explore(best);
 			} else {
+				//System.out.println("Using contingency plan");
+				//getMonitor().logMessage("Using contingency plan");
+				dfsBest = queue.getBestSchedule();
 				queue.put(branchAndBound(best));		
 				
 			}
@@ -68,7 +73,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			best = queue.pop();
 			
 			getMonitor().setSchedulesExplored(explored);
-			queue.signalMonitor(getMonitor());
+			
 
 			if(Thread.interrupted()) {
 				throw new InterruptedException();
@@ -89,7 +94,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		for(TreeSchedule child : children) {
 			explored++;
 			
-			if(child.getLowerBound() < best.getLargestRoot()) {				
+			if(child.getLowerBound() == best.getLowerBound()) {				
 				TreeSchedule s = explore(child);
 				
 				if(s != null) {
@@ -108,18 +113,17 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		// Get all children in order from best lower bound to worst
 		List<TreeSchedule> childSchedules = childGenerator.getChildSchedules(schedule);
 		childSchedules.sort(null);
-		TreeSchedule best = queue.getBestSchedule();
 		
 		explored += childSchedules.size();
 		
 		for (TreeSchedule child : childSchedules) {
 			// Only consider the child if its lower bound is better than current best
-			if (best == null || child.getLowerBound() < best.getRuntime()) {
+			if (child.getLowerBound() < dfsBest.getRuntime()) {
 				if (child.isComplete()) {
-					best = child;
+					dfsBest=child;
 				} else {
 					// Check if the child schedule is complete or not
-					best = branchAndBound(child);
+					dfsBest = branchAndBound(child);
 				}
 			} else {
 				break;
@@ -132,6 +136,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		
 		getMonitor().setSchedulesExplored(explored);
 		
-		return best;
+		return dfsBest;
 	}
 }
