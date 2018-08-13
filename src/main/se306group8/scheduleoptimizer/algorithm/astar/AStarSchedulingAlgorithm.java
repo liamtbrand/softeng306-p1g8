@@ -18,6 +18,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	private final ChildScheduleFinder childGenerator;
 	private final MinimumHeuristic heuristic;
 	private final ScheduleStorage queue;
+	private int explored = 0;
 	
 	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor, ScheduleStorage storage) {
 		super(monitor);
@@ -47,18 +48,12 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
 		}
 
-		int explored = 0;
 		queue.put(greedySoln);
 		
 		while (!best.isComplete()) {
-
-			List<TreeSchedule> children = childGenerator.getChildSchedules(best);
-
-			queue.putAll(children);
-
+			explore(best);
 			best = queue.pop();
 			
-			explored += children.size();
 			getMonitor().setSchedulesExplored(explored);
 			queue.signalMonitor(getMonitor());
 
@@ -70,4 +65,28 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		return best.getFullSchedule();
 	}
 
+	TreeSchedule explore(TreeSchedule best) {
+		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
+		
+		if(best.isComplete()) {
+			queue.put(best);
+			return best;
+		}
+		
+		for(TreeSchedule child : children) {
+			explored++;
+			
+			if(child.getLowerBound() == best.getLargestRoot()) {				
+				TreeSchedule s = explore(child);
+				
+				if(s != null) {
+					return s;
+				}
+			} else {
+				queue.put(child);
+			}
+		}
+		
+		return null;
+	}
 }
