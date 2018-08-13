@@ -26,7 +26,7 @@ class SchedulePriorityQueueTest {
 		
 		array = new ScheduleArray(100_000);
 		
-		parent = array.add(new TreeSchedule(graph, s -> code(s)));
+		parent = array.add(new TreeSchedule(graph, s -> code(s), 2));
 		child1 = array.add(new TreeSchedule(task1, 1, array.get(parent)));
 		child2 = array.add(new TreeSchedule(task1, 2, array.get(parent)));
 		child3 = array.add(new TreeSchedule(task2, 1, array.get(child1)));
