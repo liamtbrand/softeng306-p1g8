@@ -29,6 +29,11 @@
                   <fx:include fx:id="statisticsPage" source="StatisticsPage.fxml" />
               </content>
             </Tab>
+            <Tab text="Console">
+                <content>
+                    <fx:include fx:id="consolePage" source="ConsolePage.fxml" />
+                </content>
+            </Tab>
         </tabs>
       </TabPane>
   </children>

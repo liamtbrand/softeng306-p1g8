@@ -6,14 +6,10 @@ import javafx.fxml.Initializable;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class TaskGraphPageController implements Initializable {
+public class TaskGraphPageController extends Controller {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
-	}
-
-	public void stop() {
 
 	}
 

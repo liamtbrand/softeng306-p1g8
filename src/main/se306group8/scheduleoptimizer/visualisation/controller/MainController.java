@@ -20,6 +20,8 @@ public class MainController implements Initializable {
 	TaskGraphPageController taskGraphPageController;
 	@FXML
 	SearchSpacePageController searchSpacePageController;
+	@FXML
+	ConsolePageController consolePageController;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -37,6 +39,7 @@ public class MainController implements Initializable {
 		statisticsPageController.stop();
 		taskGraphPageController.stop();
 		searchSpacePageController.stop();
+		consolePageController.stop();
 	}
 
 }

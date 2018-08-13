@@ -3,7 +3,7 @@ package se306group8.scheduleoptimizer.visualisation.manager;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 
-public class MemoryStatisticsManager {
+public class MemoryStatisticsManager extends ManagerThread {
 
 	private Label maxMemoryLabel;
 	private Label usedMemoryLabel;
@@ -21,7 +21,8 @@ public class MemoryStatisticsManager {
 
 	}
 
-	public void update() {
+	@Override
+	protected void updateHook() {
 		double freeMemory = runtime.freeMemory() / 1_000_000.0;
 		double maxMemory = runtime.maxMemory() / 1_000_000.0;
 		double usedMemory = maxMemory - freeMemory;

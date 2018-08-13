@@ -2,8 +2,10 @@ package se306group8.scheduleoptimizer.visualisation.manager;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import se306group8.scheduleoptimizer.visualisation.FXApplication;
+import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
-public class ScheduleStatisticsManager {
+public class ScheduleStatisticsManager extends ManagerThread {
 
 	private Label schedulesExploredLabel;
 	private Label schedulesInArrayLabel;
@@ -40,7 +42,16 @@ public class ScheduleStatisticsManager {
 
 	}
 
-	public void update(int schedulesExplored, int schedulesInArray, int schedulesInQueue, int schedulesOnDisk) {
+	@Override
+	protected void updateHook() {
+
+		ObservableRuntimeMonitor monitor = FXApplication.getMonitor();
+
+		int schedulesExplored = monitor.getSchedulesExplored();
+
+		int schedulesInArray = monitor.getSchedulesInArray();
+		int schedulesInQueue = monitor.getSchedulesInQueue();
+		int schedulesOnDisk = monitor.getSchedulesOnDisk();
 
 		long currentSampleTime = System.currentTimeMillis();
 		int newScheduleCount = schedulesExplored - lastScheduleCount;
@@ -62,5 +73,4 @@ public class ScheduleStatisticsManager {
 			schedulesPerSecondLabel.textProperty().setValue(""+(int)schedulesPerSecond);
 		});
 	}
-
 }

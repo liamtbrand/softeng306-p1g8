@@ -3,7 +3,7 @@ package se306group8.scheduleoptimizer.visualisation.manager;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 
-public class ProcessorStatisticsManager {
+public class ProcessorStatisticsManager extends ManagerThread {
 
 	private Label availableProcessorsLabel;
 
@@ -14,7 +14,7 @@ public class ProcessorStatisticsManager {
 		runtime = Runtime.getRuntime();
 	}
 
-	public void update() {
+	protected void updateHook() {
 		int availableProcessors = runtime.availableProcessors();
 		Platform.runLater(() -> {
 			availableProcessorsLabel.textProperty().setValue(""+availableProcessors);

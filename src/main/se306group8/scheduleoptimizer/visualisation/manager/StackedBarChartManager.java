@@ -3,8 +3,10 @@ package se306group8.scheduleoptimizer.visualisation.manager;
 import javafx.application.Platform;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
+import se306group8.scheduleoptimizer.visualisation.FXApplication;
+import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
-public class StackedBarChartManager {
+public class StackedBarChartManager extends ManagerThread {
 
 	private StackedBarChart stackedBarChart;
 
@@ -42,12 +44,29 @@ public class StackedBarChartManager {
 		stackedBarChart.getData().setAll(dataSeriesDisk,dataSeriesArray,dataSeriesQueue);
 	}
 
-	public void update(double percentOnDisk, double percentInArray, double percentInQueue) {
+	@Override
+	protected void updateHook() {
+
+		ObservableRuntimeMonitor monitor = FXApplication.getMonitor();
+
+		int schedulesInArray = monitor.getSchedulesInArray();
+		int schedulesInQueue = monitor.getSchedulesInQueue();
+		int schedulesOnDisk = monitor.getSchedulesOnDisk();
+
+		long totalSchedules = schedulesInArray + schedulesInQueue + schedulesOnDisk;
+
+		if(totalSchedules == 0) {
+			totalSchedules += 1;
+		}
+
+		double percentOnDisk = 100.0 * schedulesOnDisk / totalSchedules;
+		double percentInArray = 100.0 * schedulesInArray / totalSchedules;
+		double percentInQueue = 100.0 * schedulesInQueue / totalSchedules;
+
 		Platform.runLater(() -> {
 			diskData.setYValue(percentOnDisk);
 			arrayData.setYValue(percentInArray);
 			queueData.setYValue(percentInQueue);
 		});
 	}
-
 }
