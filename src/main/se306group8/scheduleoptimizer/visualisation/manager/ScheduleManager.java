@@ -5,75 +5,98 @@ import java.util.List;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
+import se306group8.scheduleoptimizer.visualisation.FXApplication;
 
-public class ScheduleManager {
+public class ScheduleManager extends ManagerThread {
 
-	private Pane pane;
-	private VBox processors;
+	private final VBox tasks;
+	private final VBox processors;
+	
+	private final int graphWidth = 550;
 
-	public ScheduleManager(Pane pane, VBox processors) {
-		this.pane = pane;
+	private final Paint green = Color.web("#55B655");
+	private final Paint orange = Color.web("#FBA51C");
+	
+	public ScheduleManager(VBox tasks, VBox processors) {
+		this.tasks = tasks;
 		this.processors = processors;
 	}
 
-	public void update(TreeSchedule schedule) {
+	@Override
+	protected void updateHook() {
 		
-		List<Rectangle> rectangles = new ArrayList<Rectangle>();
-		List<Label> names = new ArrayList<Label>();
+		TreeSchedule bestSchedule = FXApplication.getMonitor().getBestSchedule();
+		
+		if (bestSchedule == null) {
+			return;
+		}
+		
+		int runtime = bestSchedule.getRuntime();
+		int currentProcessor = 1;
+		
+		List<AnchorPane> taskPanes = new ArrayList<AnchorPane>();
 		List<Label> processorLabels = new ArrayList<Label>();
 		
-		int processor = 1;
-		int y = 0;
-		
-		for (List<Task> list : schedule.computeTaskLists()) {
+		for (List<Task> list : bestSchedule.computeTaskLists()) {
 			
-			Label label = new Label("P"+processor);
+			Label label = new Label("P"+currentProcessor);
 			label.setMinWidth(50);
 			label.setMinHeight(30);
 			label.setAlignment(Pos.CENTER);
 			processorLabels.add(label);
 			
-			processor++;
+			AnchorPane taskPane = new AnchorPane();
+			List<Rectangle> rectangles = new ArrayList<Rectangle>();
+			List<Label> taskNames = new ArrayList<Label>();
+			
+			currentProcessor++;
 			for (Task task : list) {
-				int startTime = schedule.getAlloctionFor(task).startTime*550/schedule.getRuntime();
+				int startTime = bestSchedule.getAlloctionFor(task).startTime;
+				int graphCost = task.getCost()*graphWidth/runtime;
+				int graphStartTime = startTime*graphWidth/runtime;
 				
-				Rectangle rectangle = new Rectangle(startTime, y, task.getCost()*550/schedule.getRuntime(), 30);
-				if (schedule.isComplete()) {
-					rectangle.setFill(Color.CORNFLOWERBLUE);
+				Rectangle rectangle = new Rectangle(graphStartTime, 0, graphCost, 30);
+				if (bestSchedule.isComplete()) {
+					rectangle.setFill(green);
 				} else {
-					rectangle.setFill(Color.DARKORANGE);
+					rectangle.setFill(orange);
 				}
 				rectangle.setStroke(Color.WHITE);
 				rectangles.add(rectangle);
-				
+
 				Label name = new Label(task.getName());
 				name.setTextFill(Color.WHITE);
 				name.setAlignment(Pos.CENTER);
-				name.setLayoutX(startTime);
-				name.setLayoutY(y);
-				name.setMinWidth(task.getCost()*550/schedule.getRuntime());
+				name.setLayoutX(graphStartTime);
+				name.setLayoutY(0);
+				name.setMinWidth(graphCost);
 				name.setMinHeight(30);
-				name.setMaxWidth(task.getCost()*550/schedule.getRuntime());
 				name.setFont(new Font(8));
-				names.add(name);
+				taskNames.add(name);
 			}
-			y = y + 40;
+			
+			Platform.runLater(() -> {
+				taskPane.getChildren().addAll(rectangles);
+				taskPane.getChildren().addAll(taskNames);
+			});
+
+			taskPanes.add(taskPane);
 		}
 		
 		Platform.runLater(() -> {
-			processors.getChildren().clear();
-			processors.getChildren().addAll(processorLabels);
-			pane.getChildren().clear();
-			pane.getChildren().addAll(rectangles);
-			pane.getChildren().addAll(names);
+			processors.getChildren().setAll(processorLabels);
+			tasks.getChildren().setAll(taskPanes);
 		});
+		
+		
 	}
 
 }
