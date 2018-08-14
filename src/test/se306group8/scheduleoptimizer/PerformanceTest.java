@@ -248,6 +248,12 @@ public class PerformanceTest {
 						// TODO Auto-generated method stub
 
 					}
+
+					@Override
+					public void setNumberOfProcessors(int processors) {
+						// TODO Auto-generated method stub
+						
+					}
 				};
 
 				//Create the algorithm objects
