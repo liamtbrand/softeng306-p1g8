@@ -66,12 +66,12 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	}
 
 	TreeSchedule explore(TreeSchedule best) {
-		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
-		
 		if(best.isComplete()) {
 			queue.put(best);
 			return best;
 		}
+		
+		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
 		
 		for(TreeSchedule child : children) {
 			explored++;
