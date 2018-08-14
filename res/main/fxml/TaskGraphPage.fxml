@@ -1,18 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.TaskGraphPageController">
+<AnchorPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.TaskGraphPageController">
    <children>
-      	<HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-   			<VBox fx:id="processors" spacing="10"/>
-      		<Pane fx:id="pane" />
-   		</HBox>
+      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <left>
+      			<VBox fx:id="processors" alignment="CENTER" spacing="10" BorderPane.alignment="CENTER" />
+         </left>
+         <center>
+            <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <LineChart alternativeRowFillVisible="false" horizontalGridLinesVisible="false" maxWidth="580.0" nodeOrientation="LEFT_TO_RIGHT" verticalGridLinesVisible="true">
+                    <xAxis>
+                      <NumberAxis fx:id="runtimeAxis" autoRanging="false" label="Time" side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis fx:id="chartHeight" autoRanging="false" forceZeroInRange="false" maxWidth="0.0" minWidth="0.0" minorTickVisible="false" prefWidth="0.0" tickLabelsVisible="false" tickMarkVisible="false" />
+                    </yAxis>
+                     <StackPane.margin>
+                        <Insets left="-17.0" right="-13.0" />
+                     </StackPane.margin>
+                  </LineChart>
+                  <VBox fx:id="tasks" alignment="CENTER" spacing="10">
+            </VBox>
+               </children>
+            </StackPane>
+         </center>
+      </BorderPane>
    </children>
 </AnchorPane>
