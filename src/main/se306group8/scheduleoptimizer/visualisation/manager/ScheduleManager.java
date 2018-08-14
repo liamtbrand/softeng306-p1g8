@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -19,20 +20,24 @@ public class ScheduleManager extends ManagerThread {
 
 	private final VBox tasks;
 	private final VBox processors;
+	private final NumberAxis runtimeAxis;
 	
-	private final int graphWidth = 550;
+	private final int GRAPH_WIDTH = 550;
+	private final int TASK_HEIGHT = 30;
 
-	private final Paint green = Color.web("#55B655");
-	private final Paint orange = Color.web("#FBA51C");
+	private final Paint GREEN = Color.web("#55B655");
+	private final Paint ORANGE = Color.web("#FBA51C");
 	
-	public ScheduleManager(VBox tasks, VBox processors) {
+	public ScheduleManager(VBox tasks, VBox processors, NumberAxis runtimeAxis) {
 		this.tasks = tasks;
 		this.processors = processors;
+		this.runtimeAxis = runtimeAxis;
 	}
 
 	@Override
 	protected void updateHook() {
 		
+		int currentProcessor = 1;
 		TreeSchedule bestSchedule = FXApplication.getMonitor().getBestSchedule();
 		
 		if (bestSchedule == null) {
@@ -40,7 +45,6 @@ public class ScheduleManager extends ManagerThread {
 		}
 		
 		int runtime = bestSchedule.getRuntime();
-		int currentProcessor = 1;
 		
 		List<AnchorPane> taskPanes = new ArrayList<AnchorPane>();
 		List<Label> processorLabels = new ArrayList<Label>();
@@ -53,33 +57,34 @@ public class ScheduleManager extends ManagerThread {
 			label.setAlignment(Pos.CENTER);
 			processorLabels.add(label);
 			
+			currentProcessor++;
+			
 			AnchorPane taskPane = new AnchorPane();
 			List<Rectangle> rectangles = new ArrayList<Rectangle>();
 			List<Label> taskNames = new ArrayList<Label>();
 			
-			currentProcessor++;
 			for (Task task : list) {
 				int startTime = bestSchedule.getAlloctionFor(task).startTime;
-				int graphCost = task.getCost()*graphWidth/runtime;
-				int graphStartTime = startTime*graphWidth/runtime;
+				int graphStartTime = startTime*GRAPH_WIDTH/runtime;
+				int graphCost = task.getCost()*GRAPH_WIDTH/runtime;
 				
-				Rectangle rectangle = new Rectangle(graphStartTime, 0, graphCost, 30);
-				if (bestSchedule.isComplete()) {
-					rectangle.setFill(green);
-				} else {
-					rectangle.setFill(orange);
-				}
+				Rectangle rectangle = new Rectangle(graphStartTime, 0, graphCost, TASK_HEIGHT);
 				rectangle.setStroke(Color.WHITE);
-				rectangles.add(rectangle);
+				if (bestSchedule.isComplete()) {
+					rectangle.setFill(GREEN);
+				} else {
+					rectangle.setFill(ORANGE);
+				}
 
 				Label name = new Label(task.getName());
 				name.setTextFill(Color.WHITE);
 				name.setAlignment(Pos.CENTER);
 				name.setLayoutX(graphStartTime);
-				name.setLayoutY(0);
 				name.setMinWidth(graphCost);
-				name.setMinHeight(30);
+				name.setMinHeight(TASK_HEIGHT);
 				name.setFont(new Font(8));
+				
+				rectangles.add(rectangle);
 				taskNames.add(name);
 			}
 			
@@ -94,6 +99,7 @@ public class ScheduleManager extends ManagerThread {
 		Platform.runLater(() -> {
 			processors.getChildren().setAll(processorLabels);
 			tasks.getChildren().setAll(taskPanes);
+			runtimeAxis.setUpperBound(runtime);
 		});
 		
 		
