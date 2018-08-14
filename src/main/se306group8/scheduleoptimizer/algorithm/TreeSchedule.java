@@ -38,6 +38,10 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	// Per task arrays
 	private final ProcessorAllocation[] allocations;
 	private final int[] numberOfParentsUncheduled;
+	private final int[] dataReadyTime;
+	
+	//The time when a task is required to have started by by tasks that have already been scheduled.
+	private final int[] requiredBy;
 
 	// Per processor arrays
 	/** This array.length = numberOfUsedProcessors */
@@ -56,6 +60,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	//Id caching for the blockschedule
 	private boolean hasId = false;
 	private int id;
+
+//	private final boolean isFixed;
 
 	/**
 	 * Creates an empty schedule.
@@ -100,8 +106,15 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		removableTasks = new boolean[graph.getAll().size()];
 		Arrays.fill(removableTasks, true);
 		
+		requiredBy = new int[graph.getAll().size()];
+		Arrays.fill(requiredBy, Integer.MAX_VALUE);
+		
 		hasId = true;
 		id = -1;
+		
+		dataReadyTime = new int[graph.getAll().size()];
+		
+//		isFixed = isFixedOrder();
 	}
 
 	/**
@@ -135,6 +148,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			removableTasks = parent.removableTasks;
 			allocated = parent.allocated;
 			allocations = parent.allocations;
+			dataReadyTime = parent.dataReadyTime;
+			requiredBy = parent.requiredBy;
 		} else {
 			numberOfParentsUncheduled = parent.numberOfParentsUncheduled.clone();
 			lastAllocationOnProcessor = parent.lastAllocationOnProcessor.clone();
@@ -143,6 +158,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			allocated = new ArrayList<>(graph.getAll().size());
 			allocated.addAll(parent.allocated);
 			allocations = parent.allocations.clone();
+			dataReadyTime = parent.dataReadyTime.clone();
+			requiredBy = parent.requiredBy.clone();
 		}
 		
 		numberOfTasksOnProcessor[processor - 1]++;
@@ -166,8 +183,8 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			processorReadyTime = 0;
 		}
 
-		int startTime = processorReadyTime;
-
+		int startTime = 0;
+		
 		for (int i = 0; i < task.getParents().size(); i++) {
 			Dependency dep = task.getParents().get(i);
 			Task parentTask = dep.getSource();
@@ -186,7 +203,21 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 				startTime = dataReadyTime;
 			}
 		}
+		
+		for (int i = 0; i < task.getParents().size(); i++) {
+			Dependency dep = task.getParents().get(i);
+			Task parentTask = dep.getSource();
+			ProcessorAllocation alloc = parent.getAlloctionFor(parentTask);
+			
+			if(alloc.processor != processor) {
+				requiredBy[parentTask.getId()] = startTime - parentTask.getCost() - dep.getCommunicationCost();
+			}
+		}
+		
+		dataReadyTime[task.getId()] = startTime;
 
+		startTime = Math.max(startTime, processorReadyTime);
+		
 		idleTime = parent.idleTime + startTime - processorReadyTime;
 
 		for (int i = 0; i < parent.allocatable.size(); i++) {
@@ -199,7 +230,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 
 		allocatable.sort((a, b) -> a.getId() - b.getId());
 		
-		allocation = new ProcessorAllocation(task, startTime, processor);
+		allocation = new ProcessorAllocation(task, startTime, processor, getLastAllocationForProcessor(processor));
 
 		lastAllocationOnProcessor[processor - 1] = allocation;
 		allocations[task.getId()] = allocation;
@@ -219,7 +250,81 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		} else {
 			this.lowerBound = lowerBound;
 		}
+		
+//		isFixed = isFixedOrder();
 	}
+	
+//	private boolean isFixedOrder() {
+//		int[] outWeight = new int[graph.getAll().size()];
+//		int[] dataReadyTime = new int[graph.getAll().size()];
+//		
+//		int parentProcessor = 0;
+//		int childId = -1;
+//		
+//		//Populate the child values
+//		for(Task task : allocatable) {
+//			switch(task.getParents().size()) {
+//			case 0:
+//				break;
+//			case 1:
+//				Dependency dep = task.getParents().get(0);
+//				dataReadyTime[task.getId()] = dep.getCommunicationCost() + getAlloctionFor(dep.getSource()).endTime;
+//				
+//				ProcessorAllocation alloc = getAlloctionFor(dep.getSource());
+//				
+//				//Check if this parent processor is different, if it is cry.
+//				if(parentProcessor != 0 && alloc.processor != parentProcessor) {
+//					return false;
+//				} else {
+//					parentProcessor = alloc.processor;
+//				}
+//				break;
+//			default:
+//				return false;
+//			}
+//			
+//			switch(task.getChildren().size()) {
+//			case 0:
+//				break;
+//			case 1:
+//				Dependency dep = task.getChildren().get(0);
+//				outWeight[task.getId()] = dep.getCommunicationCost();
+//				
+//				//Check if this child is the same as all the other children
+//				if(childId != -1 && dep.getTarget().getId() != childId) {
+//					return false;
+//				} else {
+//					childId = dep.getTarget().getId();
+//				}
+//				break;
+//			default:
+//				return false;
+//			}
+//		}
+//		
+//		allocatable.sort((a, b) -> {
+//			//Sort by non decreasing data-ready time.
+//			//Break ties by sorting by non-increasing out-edge cost
+//			//Break ties by sorting by increasing id.
+//			
+//			if(dataReadyTime[a.getId()] != dataReadyTime[b.getId()]) {
+//				return dataReadyTime[a.getId()] - dataReadyTime[b.getId()];
+//			}
+//			
+//			if(outWeight[a.getId()] != outWeight[b.getId()]) {
+//				return outWeight[b.getId()] - outWeight[a.getId()];
+//			}
+//			
+//			return a.getId() - b.getId();
+//		});
+//		
+//		for(int i = 1; i < allocatable.size(); i++) {
+//			if(outWeight[allocatable.get(i - 1).getId()] < outWeight[allocatable.get(i).getId()])
+//				return false;
+//		}
+//		
+//		return true;
+//	}
 	
 	/** Returns true if this task can be removed while keeping the topological ordering. */
 	public boolean isRemovable(Task t) {
@@ -228,6 +333,11 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	
 	public int getNumberOfTasksOnProcessor(int p) {
 		return p > numberOfTasksOnProcessor.length ? 0 : numberOfTasksOnProcessor[p - 1];
+	}
+	
+	/** Gets the data ready time of an already scheduled task */
+	public int getDataReadyTime(Task task) {
+		return dataReadyTime[task.getId()];
 	}
 	
 	public int getLargestRoot() {
@@ -255,6 +365,10 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	public ProcessorAllocation getAlloctionFor(Task t) {
 		return allocations[t.getId()];
 	}
+	
+//	public boolean isFixed() {
+//		return isFixed;
+//	}
 
 	/**
 	 * Returns the last processor allocation on a processor null if no allocation
@@ -350,7 +464,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		return Objects.hash(graph, Arrays.hashCode(allocations));
 	}
 
-	public Collection<Task> getAllocatable() {
+	public List<Task> getAllocatable() {
 		return allocatable;
 	}
 
@@ -373,5 +487,10 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	
 	public boolean hasId() {
 		return hasId;
+	}
+
+	/** Returns the time by which a task must have started for the outgoing costs to be valid. */
+	public int getRequiredBy(Task task) {
+		return requiredBy[task.getId()];
 	}
 }

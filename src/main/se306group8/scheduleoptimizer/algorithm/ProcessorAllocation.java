@@ -9,13 +9,16 @@ public final class ProcessorAllocation {
 	public final int startTime;
 	public final int processor;
 	public final int endTime;
+	
 	public final Task task;
-
-	public ProcessorAllocation(Task task, int startTime, int processor) {
+	public final ProcessorAllocation previousAlloc;
+	
+	public ProcessorAllocation(Task task, int startTime, int processor, ProcessorAllocation previous) {
 		this.startTime = startTime;
 		this.endTime = startTime + task.getCost();
 		this.processor = processor;
 		this.task = task;
+		this.previousAlloc = previous;
 	}
 
 	@Override
