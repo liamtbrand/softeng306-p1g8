@@ -1,5 +1,6 @@
 package se306group8.scheduleoptimizer.algorithm.branchbound;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
@@ -40,24 +41,27 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 			
 			//visited += childSchedules.size();
 			TreeSchedule best = bestSoFar.get();
+			List<ForkJob> jobs = new ArrayList<ForkJob>();
 			for (TreeSchedule child : childSchedules) {
 				// Only consider the child if its lower bound is better than current best
 				if (best == null || child.getLowerBound() < best.getRuntime()) {
 					if (child.isComplete()) {
 						best = updateBest(child);
 					} else {
+						jobs.add(new ForkJob(child));
 						// Check if the child schedule is complete or not
 						
-						if(child.getAllocated().size() < child.getGraph().getAll().size() * 0.8) {
-							invokeAll(new ForkJob(child));
-						} else {
-							compute(child);
-						}
+//						if(child.getAllocated().size() < child.getGraph().getAll().size() * 0.8) {
+//							invokeAll(new ForkJob(child));
+//						} else {
+//							compute(child);
+//						}
 					}
 				} else {
 					break;
 				}
 			}
+			invokeAll(jobs);
 		}
 		
 		private TreeSchedule updateBest(TreeSchedule candinate) {
