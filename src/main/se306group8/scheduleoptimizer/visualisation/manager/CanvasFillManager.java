@@ -63,14 +63,14 @@ public class CanvasFillManager extends ManagerThread {
 		Platform.runLater(() -> {
 			
 			// Currently a debug line
-			System.out.println("RUNTIME: " + monitor.getBestSchedule().getRuntime() + ", IS COMPLETE: " + monitor.getBestSchedule().isComplete());
+			//System.out.println("RUNTIME: " + monitor.getBestSchedule().getRuntime() + ", IS COMPLETE: " + monitor.getBestSchedule().isComplete());
 			
 			Object[] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
 			
-			// Method call to draw out a given partial/full schedule (red if incomplete, green if complete
+			// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
 			if (keepDrawing) {
 				if (monitor.getBestSchedule().isComplete()) {
-					drawPixels(this.canvas, Color.LIGHTGREEN, (int [])coordinates[0], (int [])coordinates[1], 3);
+					drawPixels(this.canvas, Color.GREEN, (int [])coordinates[0], (int [])coordinates[1], 3);
 					this.keepDrawing = false;
 				} else {
 					drawPixels(this.canvas, getRandomColor(), (int [])coordinates[0], (int [])coordinates[1], 1);
@@ -94,7 +94,7 @@ public class CanvasFillManager extends ManagerThread {
     	
     	// List representing ordering of tasks by smallest to largest cost
     	List<Task> tasks = new ArrayList(allocations);
-    			
+    	
     	Collections.sort(tasks, new Comparator<Task>(){
 		     public int compare(Task t1, Task t2){
 		         if(t1.getCost() == t2.getCost())
@@ -109,14 +109,22 @@ public class CanvasFillManager extends ManagerThread {
     	double depth = 0.0;
     	
     	// Arrays to buffer pixel coordinates into
-    	int[] xValues = new int[allocations.size()];
-		int[] yValues = new int[allocations.size()];
+    	int[] xValues = new int[allocations.size() + 1];
+		int[] yValues = new int[allocations.size() + 1];
 		
 		double xCoord = this.startPointX;
 		double yCoord = this.startPointY;
 		double range;
     	
-		int i = 0;
+		int i = 1;
+		
+		xValues[0] = (int)this.startPointX;
+		yValues[0] = (int)this.startPointY;
+		
+		yCoord+=heightIncrement;
+		depth+=heightIncrement;
+		
+		// System.out.println("Number of allocations: " + allocations.size());
 		
 		// Loop through all allocations, setting coordinates for each
     	for (Task t : allocations) {
@@ -124,7 +132,10 @@ public class CanvasFillManager extends ManagerThread {
     		
     		double partitionLength = horizontalLength(depth);
     		
-    		xCoord = nextXCoord((double)tasks.indexOf(t), schedule.getAllocationFor(t), xCoord, depth, tasks.size(), numberOfProcessors);
+    		//xCoord = nextXCoord((double)tasks.indexOf(t), schedule.getAllocationFor(t), xCoord, (depth + 1.0), tasks.size(), numberOfProcessors);
+    		
+    		range = ((canvas.getWidth()/2.0) + partitionLength) - ((canvas.getWidth()/2.0 - partitionLength)) + 1.0;
+    		xCoord = (int)(Math.random()*range) + (canvas.getWidth()/2.0 - partitionLength);
     		
     		xValues[i] = (int)xCoord;
     		yValues[i] = (int)yCoord;
@@ -135,7 +146,6 @@ public class CanvasFillManager extends ManagerThread {
     		depth+=heightIncrement;
     	}
      	
-    	
     	
 //		for (int j = 0; j < 1000; j++) {
 //			xValues[j] = (int) Math.floor(Math.random() * 641);
@@ -150,11 +160,11 @@ public class CanvasFillManager extends ManagerThread {
     	
     	// Calculate total horizontal width of triangle at a given point
     	double horLength = horizontalLength(depth);
-    	double partitionedRange = horLength/(Math.pow((numberOfProcessors*numberOfTasks), depth));
-    	double sumToAdd = partitionedRange*((allocation.processor + 1.0)/numberOfProcessors)*((taskIndex + 1.0)/numberOfTasks);
+    	double partitionedRange = horLength/(numberOfProcessors*numberOfTasks);//(Math.pow((numberOfProcessors*numberOfTasks), depth));
+    	double sumToAdd = partitionedRange*((allocation.processor/numberOfProcessors)*((taskIndex + 1.0)/numberOfTasks));
     	double nextX = (currentXCoord - partitionedRange/2.0) + sumToAdd;
     	
-    	System.out.println("horLength: " + horLength + ", partitionedRange: " + partitionedRange + ", sumToAdd: " + sumToAdd + ", nextX: " + nextX);
+    	// System.out.println("horLength: " + horLength + ", partitionedRange: " + partitionedRange + ", sumToAdd: " + sumToAdd + ", nextX: " + nextX);
     	
     	return nextX;
     }
@@ -173,7 +183,9 @@ public class CanvasFillManager extends ManagerThread {
 		
 		// Loop through all points
 		for (int i = 0; i < x.length; i++) {
-			System.out.println("X: " + x[i] + "\tY: " + y[i]);
+			
+			//System.out.println("X: " + x[i] + "\tY: " + y[i]);
+			
 			// Both draw a point, then a line to the next point, as you traverse coordinates
 			pixelWriter.setColor(x[i], y[i], color);
 			
