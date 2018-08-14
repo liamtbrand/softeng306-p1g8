@@ -59,4 +59,8 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 		// Do Nothing
 	}
 
+	@Override
+	public void setNumberOfProcessors(int processors) {
+		// Do Nothing
+	}
 }

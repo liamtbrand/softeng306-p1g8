@@ -40,6 +40,8 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		TreeSchedule best = new TreeSchedule(graph, heuristic);
 		queue.signalStorageSizes(getMonitor());
 		
+		getMonitor().setNumberOfProcessors(numberOfProcessors);
+		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
 		TreeSchedule greedySoln = best;

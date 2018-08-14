@@ -67,5 +67,10 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	public void setScheduleOnDiskStorageSize(int bytes) {
 		runtimeMonitors.forEach(m -> m.setScheduleOnDiskStorageSize(bytes));
 	}
+	
+	@Override
+	public void setNumberOfProcessors(int processors) {
+		runtimeMonitors.forEach(m -> m.setNumberOfProcessors(processors));
+	}
 
 }
