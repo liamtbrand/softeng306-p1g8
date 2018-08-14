@@ -1,8 +1,11 @@
 package se306group8.scheduleoptimizer.visualisation.manager;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
@@ -42,6 +45,15 @@ public class CanvasFillManager extends ManagerThread {
 		this.totalTriangleHeight = 6.0*canvas.getHeight()/8.0;
 	}
 	
+	public Color getRandomColor() {
+		//to get rainbow, pastel colors
+		Random random = new Random();
+		final float hue = random.nextFloat();
+		final float saturation = 0.9f;//1.0 for brilliant, 0.0 for dull
+		final float luminance = 1.0f; //1.0 for brighter, 0.0 for black
+		return Color.hsb(hue, saturation, luminance);
+	}
+	
 	
 	@Override
 	protected void updateHook() {
@@ -55,15 +67,13 @@ public class CanvasFillManager extends ManagerThread {
 			
 			Object[] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
 			
-			int lineWidth = 1;
-			
 			// Method call to draw out a given partial/full schedule (red if incomplete, green if complete
 			if (keepDrawing) {
 				if (monitor.getBestSchedule().isComplete()) {
-					drawPixels(this.canvas, Color.GREEN, (int [])coordinates[0], (int [])coordinates[1], lineWidth);
+					drawPixels(this.canvas, Color.LIGHTGREEN, (int [])coordinates[0], (int [])coordinates[1], 3);
 					this.keepDrawing = false;
 				} else {
-					drawPixels(this.canvas, Color.RED, (int [])coordinates[0], (int [])coordinates[1], lineWidth);
+					drawPixels(this.canvas, getRandomColor(), (int [])coordinates[0], (int [])coordinates[1], 1);
 				}
 			} else {
 				// Stop drawing
@@ -71,25 +81,6 @@ public class CanvasFillManager extends ManagerThread {
 			
 		});
 	}
-	
-	// Method to draw a set of dots, and interconnected lines, from arrays passed to it (representing a schedule)
-	private void drawPixels(Canvas canvas, Color color, int[] x, int[] y, int width) {
-		PixelWriter pixelWriter = canvas.getGraphicsContext2D().getPixelWriter();
-		
-		// Loop through all points
-		for (int i = 0; i < x.length; i++) {
-			System.out.println("X: " + x[i] + "\tY: " + y[i]);
-			// Both draw a point, then a line to the next point, as you traverse coordinates
-			pixelWriter.setColor(x[i], y[i], color);
-			
-			if (i != x.length - 1) {
-				drawLine(x[i], y[i], x[i+1], y[i+1], color, width);
-			} else {
-				
-			}
-		}
-	}
-	
 	
 	// Method that translates an input partial schedule, into a series of x/y coordinates
 	// representing task allocations at given points
@@ -101,6 +92,17 @@ public class CanvasFillManager extends ManagerThread {
     	// Get currently allocated tasks
     	Collection<Task> allocations = schedule.getAllocated();
     	
+    	// List representing ordering of tasks by smallest to largest cost
+    	List<Task> tasks = new ArrayList(allocations);
+    			
+    	Collections.sort(tasks, new Comparator<Task>(){
+		     public int compare(Task t1, Task t2){
+		         if(t1.getCost() == t2.getCost())
+		             return 0;
+		         return t1.getCost() < t2.getCost() ? -1 : 1;
+		     }
+    	});
+    	
     	double heightIncrement = this.totalTriangleHeight/(double)totalNumberOfTasks;
     	
     	// Represents current depth down the graph
@@ -110,7 +112,7 @@ public class CanvasFillManager extends ManagerThread {
     	int[] xValues = new int[allocations.size()];
 		int[] yValues = new int[allocations.size()];
 		
-		double xCoord;
+		double xCoord = this.startPointX;
 		double yCoord = this.startPointY;
 		double range;
     	
@@ -122,10 +124,7 @@ public class CanvasFillManager extends ManagerThread {
     		
     		double partitionLength = horizontalLength(depth);
     		
-    		System.out.println("HEIGHT COORD IS: " + yCoord);
-    		
-    		range = (canvas.getWidth()/2.0 + partitionLength/2.0) - (canvas.getWidth()/2.0 - partitionLength/2.0) + 1.0;
-    		xCoord = (int)(Math.random()*range) + (canvas.getWidth()/2.0 - partitionLength/2.0);
+    		xCoord = nextXCoord((double)tasks.indexOf(t), schedule.getAllocationFor(t), xCoord, depth, tasks.size(), numberOfProcessors);
     		
     		xValues[i] = (int)xCoord;
     		yValues[i] = (int)yCoord;
@@ -146,17 +145,46 @@ public class CanvasFillManager extends ManagerThread {
     	return new Object[]{xValues, yValues};
     }
     
+    // The meat of the entire functionality; partitioning space via choice of Task and Allocation
+    private double nextXCoord(double taskIndex, ProcessorAllocation allocation, double currentXCoord, double depth, int numberOfTasks, int numberOfProcessors) {
+    	
+    	// Calculate total horizontal width of triangle at a given point
+    	double horLength = horizontalLength(depth);
+    	double partitionedRange = horLength/(Math.pow((numberOfProcessors*numberOfTasks), depth));
+    	double sumToAdd = partitionedRange*((allocation.processor + 1.0)/numberOfProcessors)*((taskIndex + 1.0)/numberOfTasks);
+    	double nextX = (currentXCoord - partitionedRange/2.0) + sumToAdd;
+    	
+    	System.out.println("horLength: " + horLength + ", partitionedRange: " + partitionedRange + ", sumToAdd: " + sumToAdd + ", nextX: " + nextX);
+    	
+    	return nextX;
+    }
+    
     // Calculates the horizontal length by which to section up, at any given depth in the triangle
     private double horizontalLength(double depth) {
-    	
     	double bottomDegree = Math.tan(this.totalTriangleHeight/(this.totalTriangleWidth*2));
-    	
     	double currentWidth=depth*bottomDegree;
-    	
-    	System.out.println("CURRENT WIDTH: " + currentWidth + "\tAT DEPTH OF: " + depth + ", WITH CONST DEGREE OF: " + bottomDegree);
-
+    	//System.out.println("CURRENT WIDTH: " + currentWidth + "\tAT DEPTH OF: " + depth + ", WITH CONST DEGREE OF: " + bottomDegree);
     	return currentWidth*2.0;
     }
+    
+	// Method to draw a set of dots, and interconnected lines, from arrays passed to it (representing a schedule)
+	private void drawPixels(Canvas canvas, Color color, int[] x, int[] y, int width) {
+		PixelWriter pixelWriter = canvas.getGraphicsContext2D().getPixelWriter();
+		
+		// Loop through all points
+		for (int i = 0; i < x.length; i++) {
+			System.out.println("X: " + x[i] + "\tY: " + y[i]);
+			// Both draw a point, then a line to the next point, as you traverse coordinates
+			pixelWriter.setColor(x[i], y[i], color);
+			
+			if ((i + 1) == x.length) {
+				
+			} else {
+				drawLine(x[i], y[i], x[i+1], y[i+1], color, width);
+			}
+			
+		}
+	}
     
     // Method to draw line with input color/width
     private void drawLine(double x1, double y1, double x2, double y2, Color color, int width) {
@@ -164,7 +192,4 @@ public class CanvasFillManager extends ManagerThread {
     	this.canvas.getGraphicsContext2D().setStroke(color);
     	this.canvas.getGraphicsContext2D().strokeLine(x1, y1, x2, y2);
     }
-    
-    
-
 }
