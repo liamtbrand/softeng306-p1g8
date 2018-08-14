@@ -28,6 +28,8 @@ public class CanvasFillManager extends ManagerThread {
 	// Required for multiple methods within the CanvasFillManager
 	private double totalTriangleWidth;
 	private double totalTriangleHeight;
+	
+	private boolean keepDrawing = true;
 
 	public CanvasFillManager(Canvas canvas) {
 		this.canvas = canvas;
@@ -51,14 +53,21 @@ public class CanvasFillManager extends ManagerThread {
 			// Currently a debug line
 			System.out.println("RUNTIME: " + monitor.getBestSchedule().getRuntime() + ", IS COMPLETE: " + monitor.getBestSchedule().isComplete());
 			
-			//Object[] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getBestSchedule().getGraph().getAll().size(), );
+			Object[] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
+			
+			int lineWidth = 1;
 			
 			// Method call to draw out a given partial/full schedule (red if incomplete, green if complete
-//			if (monitor.getBestSchedule().isComplete()) {
-//				drawPixels(this.canvas, Color.GREEN, (int [])coordinates[0], (int [])coordinates[1]);
-//			} else {
-//				drawPixels(this.canvas, Color.RED, (int [])coordinates[0], (int [])coordinates[1]);
-//			}
+			if (keepDrawing) {
+				if (monitor.getBestSchedule().isComplete()) {
+					drawPixels(this.canvas, Color.GREEN, (int [])coordinates[0], (int [])coordinates[1], lineWidth);
+					this.keepDrawing = false;
+				} else {
+					drawPixels(this.canvas, Color.RED, (int [])coordinates[0], (int [])coordinates[1], lineWidth);
+				}
+			} else {
+				// Stop drawing
+			}
 			
 		});
 	}
@@ -69,17 +78,25 @@ public class CanvasFillManager extends ManagerThread {
 		
 		// Loop through all points
 		for (int i = 0; i < x.length; i++) {
-			
+			System.out.println("X: " + x[i] + "\tY: " + y[i]);
 			// Both draw a point, then a line to the next point, as you traverse coordinates
 			pixelWriter.setColor(x[i], y[i], color);
-			drawLine(x[i], y[i], x[i+1], y[i+2], color, width);
+			
+			if (i != x.length - 1) {
+				drawLine(x[i], y[i], x[i+1], y[i+1], color, width);
+			} else {
+				
+			}
 		}
 	}
 	
 	
 	// Method that translates an input partial schedule, into a series of x/y coordinates
 	// representing task allocations at given points
-    private Object[] scheduleToPixels(TreeSchedule schedule, int totalNumberOfTasks, int numberOfProcessors) {
+    private Object[] scheduleToPixels(TreeSchedule schedule, int numberOfProcessors) {
+    	
+    	// Number to aid in space partitioning
+    	int totalNumberOfTasks = schedule.getGraph().getAll().size();
     	
     	// Get currently allocated tasks
     	Collection<Task> allocations = schedule.getAllocated();
@@ -92,15 +109,35 @@ public class CanvasFillManager extends ManagerThread {
     	// Arrays to buffer pixel coordinates into
     	int[] xValues = new int[allocations.size()];
 		int[] yValues = new int[allocations.size()];
+		
+		double xCoord;
+		double yCoord = this.startPointY;
+		double range;
     	
+		int i = 0;
+		
 		// Loop through all allocations, setting coordinates for each
     	for (Task t : allocations) {
     		ProcessorAllocation allocation = schedule.getAllocationFor(t);
     		
     		double partitionLength = horizontalLength(depth);
     		
+    		System.out.println("HEIGHT COORD IS: " + yCoord);
+    		
+    		range = (canvas.getWidth()/2.0 + partitionLength/2.0) - (canvas.getWidth()/2.0 - partitionLength/2.0) + 1.0;
+    		xCoord = (int)(Math.random()*range) + (canvas.getWidth()/2.0 - partitionLength/2.0);
+    		
+    		xValues[i] = (int)xCoord;
+    		yValues[i] = (int)yCoord;
+    		
+    		i++;
+
+    		yCoord+=heightIncrement;
+    		depth+=heightIncrement;
     	}
      	
+    	
+    	
 //		for (int j = 0; j < 1000; j++) {
 //			xValues[j] = (int) Math.floor(Math.random() * 641);
 //			yValues[j] = (int) Math.floor(Math.random() * 368);
@@ -114,9 +151,11 @@ public class CanvasFillManager extends ManagerThread {
     	
     	double bottomDegree = Math.tan(this.totalTriangleHeight/(this.totalTriangleWidth*2));
     	
-    	double currentWidth= depth*bottomDegree;
+    	double currentWidth=depth*bottomDegree;
+    	
+    	System.out.println("CURRENT WIDTH: " + currentWidth + "\tAT DEPTH OF: " + depth + ", WITH CONST DEGREE OF: " + bottomDegree);
 
-    	return currentWidth;
+    	return currentWidth*2.0;
     }
     
     // Method to draw line with input color/width
