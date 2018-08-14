@@ -52,7 +52,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		queue.put(greedySoln);
 		
 		Runtime memory = Runtime.getRuntime();
-		long maxMemory = (long) (memory.maxMemory() * 0.8);
+		long maxMemory = (long) (memory.maxMemory() * 0.65);
 		
 		while (!best.isComplete()) {
 			
@@ -72,9 +72,9 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			
 			best = queue.pop();
 			
+			queue.signalMonitor(getMonitor());
 			getMonitor().setSchedulesExplored(explored);
 			
-
 			if(Thread.interrupted()) {
 				throw new InterruptedException();
 			}
@@ -90,10 +90,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			queue.put(best);
 			return best;
 		}
+
+		explored += children.size();
 		
 		for(TreeSchedule child : children) {
-			explored++;
-			
 			if(child.getLowerBound() == best.getLowerBound()) {				
 				TreeSchedule s = explore(child);
 				
@@ -104,6 +104,9 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 				queue.put(child);
 			}
 		}
+		
+		queue.signalMonitor(getMonitor());
+		getMonitor().setSchedulesExplored(explored);
 		
 		return null;
 	}
