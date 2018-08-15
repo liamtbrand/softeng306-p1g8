@@ -29,7 +29,7 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	private class ForkJob extends RecursiveAction {
 
 		private static final long serialVersionUID = 1L;
-		private static final int TASKS_TO_FORK = 5;
+		private static final int TASKS_TO_FORK = 4;
 
 		private TreeSchedule jobSchedule;
 		
@@ -46,19 +46,25 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 			List<TreeSchedule> childSchedules = finder.getChildSchedules(tree);
 			childSchedules.sort(null);
 			
-			//visited += childSchedules.size();
 			TreeSchedule best = bestSoFar.get();
+			
+			boolean doFork = tree.getGraph().getAll().size() - tree.getAllocated().size() >= TASKS_TO_FORK && tree.getAllocated().size() >= 2; //We don't split the top bit so we explore the good parts of the solution space first.
+			
 			List<ForkJob> jobs = new ArrayList<ForkJob>();
+			
+			explored.addAndGet(childSchedules.size());
+			getMonitor().setSchedulesExplored(explored.get());
+			
 			for (TreeSchedule child : childSchedules) {
 				// Only consider the child if its lower bound is better than current best
 				if (best == null || child.getLowerBound() < best.getRuntime()) {
 					if (child.isComplete()) {
 						best = updateBest(child);
-						explored.incrementAndGet();
+						
 					} else {
 						// Check if the child schedule is complete or not
 						
-						if(child.getGraph().getAll().size() - child.getAllocated().size() > TASKS_TO_FORK) {
+						if(doFork && getSurplusQueuedTaskCount() < 10) { //Don't split unless there are fewer than 10 subtasks left in the queue.
 							ForkJob job = new ForkJob(child);
 							job.fork();
 							jobs.add(job);
@@ -70,11 +76,6 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 					break;
 				}
 			}
-
-			invokeAll(jobs);
-			explored.accumulateAndGet(jobs.size(), (int a, int b) -> a+b);
-			getMonitor().setSchedulesExplored(explored.get());
-
 			
 			for(ForkJob job : jobs) {
 				job.join();
