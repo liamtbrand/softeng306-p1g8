@@ -27,7 +27,10 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	private final MinimumHeuristic heuristic;
 	
 	private class ForkJob extends RecursiveAction {
+
 		private static final long serialVersionUID = 1L;
+		private static final int TASKS_TO_FORK = 5;
+
 		private TreeSchedule jobSchedule;
 		
 		public ForkJob(TreeSchedule job) {
@@ -53,15 +56,29 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 						best = updateBest(child);
 						explored.incrementAndGet();
 					} else {
-						jobs.add(new ForkJob(child));
+						// Check if the child schedule is complete or not
+						
+						if(child.getGraph().getAll().size() - child.getAllocated().size() > TASKS_TO_FORK) {
+							ForkJob job = new ForkJob(child);
+							job.fork();
+							jobs.add(job);
+						} else {
+							compute(child);
+						}
 					}
 				} else {
 					break;
 				}
 			}
+
 			invokeAll(jobs);
 			explored.accumulateAndGet(jobs.size(), (int a, int b) -> a+b);
 			getMonitor().setSchedulesExplored(explored.get());
+
+			
+			for(ForkJob job : jobs) {
+				job.join();
+			}
 		}
 		
 		private TreeSchedule updateBest(TreeSchedule candinate) {
