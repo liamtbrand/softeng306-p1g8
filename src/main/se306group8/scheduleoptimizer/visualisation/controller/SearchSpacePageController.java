@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import se306group8.scheduleoptimizer.visualisation.manager.CanvasFillManager;
 
 public class SearchSpacePageController extends Controller {

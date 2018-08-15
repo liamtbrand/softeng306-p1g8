@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.TaskGraphPageController">
+<AnchorPane stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.TaskGraphPageController">
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <left>
@@ -22,11 +22,14 @@
                       <NumberAxis fx:id="runtimeAxis" autoRanging="false" label="Time" side="BOTTOM" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis fx:id="chartHeight" autoRanging="false" forceZeroInRange="false" maxWidth="0.0" minWidth="0.0" minorTickVisible="false" prefWidth="0.0" tickLabelsVisible="false" tickMarkVisible="false" />
+                      <NumberAxis fx:id="chartHeight" autoRanging="false" forceZeroInRange="false" maxWidth="0.0" minWidth="0.0" minorTickVisible="false" prefWidth="0.0" tickLabelsVisible="false" tickMarkVisible="false" upperBound="80.0" />
                     </yAxis>
                      <StackPane.margin>
                         <Insets left="-17.0" right="-13.0" />
                      </StackPane.margin>
+                     <padding>
+                        <Insets top="40.0" />
+                     </padding>
                   </LineChart>
                   <VBox fx:id="tasks" alignment="CENTER" spacing="10">
             </VBox>

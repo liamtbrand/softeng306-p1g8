@@ -1,0 +1,69 @@
+.title {  }
+.stat-name-label {  }
+.stat-value-label {  }
+.axis-label {  }
+.axis-tick-label {  }
+.key-label {  }
+.task-chart-label-incomplete {  }
+.task-chart-rectangle-complete {  }
+.task-name-label {  }
+.console-text {  }
+
+* {
+   -colour-1: #44608c;
+   -colour-2: #7595c6;
+}
+
+/* CHART STYLING */
+
+.chart-legend {
+	-fx-background-radius: 0;
+	-fx-border-radius: 0;
+	-fx-background-color: white;
+	-fx-effect: dropshadow(gaussian,grey,10,0,0,0);
+}
+
+.default-color0.chart-pie { -fx-background-color: -colour-1; }
+.default-color1.chart-pie { -fx-background-color: -colour-2; }
+.default-color2.chart-pie { -fx-background-color: lightgrey; }
+
+.default-color0.chart-bar { -fx-background-color: -colour-1; }
+.default-color1.chart-bar { -fx-background-color: -colour-2; }
+.default-color2.chart-bar { -fx-background-color: lightgrey; }
+
+/* TAB STYLING */
+
+.tab-pane *.tab-header-background {
+    -fx-background-color: white;
+}
+
+.tab {
+	-fx-background-radius: 0;
+	-fx-background-color: lightgrey;
+}
+
+.tab:hover {
+	-fx-background-color: darkgrey;
+}
+
+.tab:hover .tab-label {
+	-fx-text-fill: white;
+}
+
+.tab:selected {
+    -fx-background-color: grey;
+}
+
+.tab:selected .focus-indicator {
+     -fx-border-width: 0;
+}
+
+.tab .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-text-fill: grey;
+    -fx-font-size: 12px;
+}
+
+.tab:selected .tab-label { 
+    -fx-text-fill: white;
+}

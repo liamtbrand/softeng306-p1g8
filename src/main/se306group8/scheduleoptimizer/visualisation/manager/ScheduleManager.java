@@ -23,7 +23,7 @@ public class ScheduleManager extends ManagerThread {
 	private final NumberAxis runtimeAxis;
 	
 	private final int GRAPH_WIDTH = 550;
-	private final int TASK_HEIGHT = 30;
+	private final int GRAPH_HEIGHT = 200;
 
 	private final Paint GREEN = Color.web("#55B655");
 	private final Paint ORANGE = Color.web("#FBA51C");
@@ -44,6 +44,9 @@ public class ScheduleManager extends ManagerThread {
 			return;
 		}
 		
+		int p = bestSchedule.getNumberOfUsedProcessors();
+		int taskHeight = GRAPH_HEIGHT/p;
+		
 		int runtime = bestSchedule.getRuntime();
 		
 		List<AnchorPane> taskPanes = new ArrayList<AnchorPane>();
@@ -53,7 +56,7 @@ public class ScheduleManager extends ManagerThread {
 			
 			Label label = new Label("P"+currentProcessor);
 			label.setMinWidth(50);
-			label.setMinHeight(30);
+			label.setMinHeight(taskHeight);
 			label.setAlignment(Pos.CENTER);
 			processorLabels.add(label);
 			
@@ -69,7 +72,7 @@ public class ScheduleManager extends ManagerThread {
 				int graphStartTime = startTime*GRAPH_WIDTH/runtime;
 				int graphCost = task.getCost()*GRAPH_WIDTH/runtime;
 				
-				Rectangle rectangle = new Rectangle(graphStartTime, 0, graphCost, TASK_HEIGHT);
+				Rectangle rectangle = new Rectangle(graphStartTime, 0, graphCost, taskHeight);
 				rectangle.setStroke(Color.WHITE);
 				if (bestSchedule.isComplete()) {
 					rectangle.setFill(GREEN);
@@ -82,7 +85,7 @@ public class ScheduleManager extends ManagerThread {
 				name.setAlignment(Pos.CENTER);
 				name.setLayoutX(graphStartTime);
 				name.setMinWidth(graphCost);
-				name.setMinHeight(TASK_HEIGHT);
+				name.setMinHeight(taskHeight);
 				name.setFont(new Font(8));
 				
 				rectangles.add(rectangle);
