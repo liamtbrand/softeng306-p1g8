@@ -142,7 +142,7 @@ public class PerformanceTest {
 		}
 
 		names.sort(null);
-		Pattern numberExtraction = Pattern.compile("^(\\d+)");
+		Pattern numberExtraction = Pattern.compile("(\\d+)p.*");
 
 		//Create the file
 		Files.createDirectories(Paths.get("performance"));
