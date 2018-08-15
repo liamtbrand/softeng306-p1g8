@@ -85,6 +85,9 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			} else {
 				queue.put(child);
 			}
+			
+			getMonitor().setSchedulesExplored(explored);
+			queue.signalMonitor(getMonitor());
 		}
 		
 		return null;
