@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveAction;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
+import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
@@ -19,11 +21,13 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	private ForkJoinPool pool;
 	private final int parallelism;
 	private AtomicReference<TreeSchedule> bestSoFar;
+	private AtomicInteger explored;
 	
 	private final ChildScheduleFinder finder;
 	private final MinimumHeuristic heuristic;
 	
 	private class ForkJob extends RecursiveAction {
+		private static final long serialVersionUID = 1L;
 		private TreeSchedule jobSchedule;
 		
 		public ForkJob(TreeSchedule job) {
@@ -47,21 +51,17 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 				if (best == null || child.getLowerBound() < best.getRuntime()) {
 					if (child.isComplete()) {
 						best = updateBest(child);
+						explored.incrementAndGet();
 					} else {
 						jobs.add(new ForkJob(child));
-						// Check if the child schedule is complete or not
-						
-//						if(child.getAllocated().size() < child.getGraph().getAll().size() * 0.8) {
-//							invokeAll(new ForkJob(child));
-//						} else {
-//							compute(child);
-//						}
 					}
 				} else {
 					break;
 				}
 			}
 			invokeAll(jobs);
+			explored.accumulateAndGet(jobs.size(), (int a, int b) -> a+b);
+			getMonitor().setSchedulesExplored(explored.get());
 		}
 		
 		private TreeSchedule updateBest(TreeSchedule candinate) {
@@ -74,18 +74,20 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 		
 	}
 	
-	public ParallelBranchBoundSchedulingAlgorithm(ChildScheduleFinder finder, MinimumHeuristic heuristic, int parallelism) {
+	public ParallelBranchBoundSchedulingAlgorithm(ChildScheduleFinder finder, MinimumHeuristic heuristic,RuntimeMonitor monitor, int parallelism) {
+		super(monitor);
 		this.parallelism=parallelism;
-		pool = new ForkJoinPool(parallelism);
 		this.finder = finder;
 		this.heuristic = heuristic;
 	}
 
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
+		pool = new ForkJoinPool(parallelism);
 		bestSoFar = new AtomicReference<TreeSchedule>();
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic, numberOfProcessors);
 		ForkJob rootJob = new ForkJob(emptySchedule);
+		explored = new AtomicInteger();
 		pool.invoke(rootJob);
 		
 		return bestSoFar.get().getFullSchedule();
