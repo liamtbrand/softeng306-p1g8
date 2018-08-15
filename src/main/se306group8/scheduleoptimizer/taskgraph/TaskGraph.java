@@ -46,6 +46,10 @@ public final class TaskGraph {
 		
 		bottomTime = new int[topologicalOrder.size()];
 		
+		for(int i = 0; i < topologicalOrder.size(); i++) {
+			topologicalOrder.get(i).setId(i); //Ensure that the Ids are in topological order.
+		}
+		
 		//Iterate backwards calculating the bottom times
 		for(int i = topologicalOrder.size() - 1; i >= 0; i--) {
 			Task task = topologicalOrder.get(i);

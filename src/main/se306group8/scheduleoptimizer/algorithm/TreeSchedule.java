@@ -51,6 +51,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	private final int[] numberOfTasksOnProcessor;
 	/** Tasks that can be removed from the children without invalidating the ordering. */
 	private final boolean[] removableTasks;
+	private final boolean[] fixed;
 	
 	//Sets
 	private final List<Task> allocatable;
@@ -113,6 +114,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		
 		hasId = true;
 		id = -1;
+		fixed = new boolean[graph.getAll().size()];
 		
 //		dataReadyTime = new int[graph.getAll().size()];
 		
@@ -152,6 +154,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			allocations = parent.allocations;
 //			dataReadyTime = parent.dataReadyTime;
 			requiredBy = parent.requiredBy;
+			fixed = parent.fixed;
 		} else {
 			numberOfParentsUncheduled = parent.numberOfParentsUncheduled.clone();
 			lastAllocationOnProcessor = parent.lastAllocationOnProcessor.clone();
@@ -162,6 +165,11 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			allocations = parent.allocations.clone();
 //			dataReadyTime = parent.dataReadyTime.clone();
 			requiredBy = parent.requiredBy.clone();
+			fixed = parent.fixed.clone();
+		}
+		
+		if(parent.isFixed && !parent.isEmpty()) {
+			fixed[parent.allocation.task.getId()] = true; //We fix the task placed by the parent if this is a fixed ordering
 		}
 		
 		numberOfTasksOnProcessor[processor - 1]++;
@@ -489,5 +497,9 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	/** Returns the time by which a task must have started for the outgoing costs to be valid. */
 	public int getRequiredBy(Task task) {
 		return requiredBy[task.getId()];
+	}
+
+	public boolean wasFixed(Task task) {
+		return fixed[task.getId()];
 	}
 }

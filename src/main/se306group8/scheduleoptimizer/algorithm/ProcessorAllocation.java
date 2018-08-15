@@ -21,6 +21,10 @@ public final class ProcessorAllocation {
 		this.previousAlloc = previous;
 	}
 
+	public ProcessorAllocation(Task task, int startTime, int processor) {
+		this(task, startTime, processor, null);
+	}
+
 	@Override
 	public String toString() {
 		return "P[" + processor + "](" + startTime + ", " + endTime + ")";
