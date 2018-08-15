@@ -1,6 +1,8 @@
 package se306group8.scheduleoptimizer.algorithm;
 
 import se306group8.scheduleoptimizer.algorithm.astar.AStarSchedulingAlgorithm;
+import se306group8.scheduleoptimizer.algorithm.branchbound.ParallelBranchBoundSchedulingAlgorithm;
+import se306group8.scheduleoptimizer.algorithm.childfinder.DuplicateRemovingChildFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
@@ -20,7 +22,11 @@ public class AlgorithmFactory {
 		NoIdleTimeHeuristic idle = new NoIdleTimeHeuristic(config.P());
 		
 		MinimumHeuristic heuristic = s -> Math.max(critical.estimate(s), idle.estimate(s));
+		if (config.N() == 1) {
+			return new AStarSchedulingAlgorithm(new DuplicateRemovingChildFinder(config.P()), heuristic, monitor, new BlockScheduleStorage());
+		}else {
+			return new ParallelBranchBoundSchedulingAlgorithm(new DuplicateRemovingChildFinder(config.P()), heuristic, monitor,config.N());
+		}
 		
-		return new AStarSchedulingAlgorithm(new GreedyChildScheduleFinder(config.P()), heuristic, monitor, new BlockScheduleStorage());
 	}
 }
