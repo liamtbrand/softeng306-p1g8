@@ -38,7 +38,7 @@ public class ScheduleStatisticsManager extends ManagerThread {
 		// Setup schedules per second data.
 		lastScheduleCount = 0;
 		schedulesPerSecond = 0;
-		lastScheduleCountSampleTime = System.currentTimeMillis();
+		lastScheduleCountSampleTime = System.nanoTime();
 
 	}
 
@@ -53,11 +53,12 @@ public class ScheduleStatisticsManager extends ManagerThread {
 		int schedulesInQueue = monitor.getSchedulesInQueue();
 		int schedulesOnDisk = monitor.getSchedulesOnDisk();
 
-		long currentSampleTime = System.currentTimeMillis();
+		long currentSampleTime = System.nanoTime();
 		int newScheduleCount = schedulesExplored - lastScheduleCount;
 		long timeSinceLastSampleTime = currentSampleTime - lastScheduleCountSampleTime;
 
-		double sampleSchedulesPerSecond = 1_000.0 * newScheduleCount / timeSinceLastSampleTime;
+		//If there is a stupidly small value just duplicate the previous value
+		double sampleSchedulesPerSecond = timeSinceLastSampleTime < 10 ? schedulesPerSecond : 1.0e9 * newScheduleCount / timeSinceLastSampleTime;
 
 		schedulesPerSecond = (1-schedulesPerSecondAdjustmentFactor)*schedulesPerSecond
 				+ schedulesPerSecondAdjustmentFactor*sampleSchedulesPerSecond;

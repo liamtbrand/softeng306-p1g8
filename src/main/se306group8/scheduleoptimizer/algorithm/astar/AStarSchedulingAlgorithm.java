@@ -83,7 +83,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		return best.getFullSchedule();
 	}
 
-	TreeSchedule explore(TreeSchedule best) {
+	TreeSchedule explore(TreeSchedule best) throws InterruptedException {
 		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
 		
 		if(best.isComplete()) {
@@ -110,6 +110,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		
 		queue.signalMonitor(getMonitor());
 		getMonitor().setSchedulesExplored(explored);
+		
+		if(Thread.interrupted()) {
+			throw new InterruptedException();
+		}
 		
 		return null;
 	}
