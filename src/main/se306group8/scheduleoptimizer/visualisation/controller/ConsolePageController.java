@@ -16,7 +16,7 @@ public class ConsolePageController extends Controller {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		startManager(new ConsoleManager(consoleTextArea));
+		startManager(new ConsoleManager(consoleTextArea),0l,1000l);
 
 		FXApplication.getMonitor().logMessage("[Console]: Console Manager has been started.");
 

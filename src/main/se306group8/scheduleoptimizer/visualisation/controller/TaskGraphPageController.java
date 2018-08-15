@@ -22,7 +22,7 @@ public class TaskGraphPageController extends Controller {
 		
 		startManager(new ScheduleManager(
 				tasks, processors, runtimeAxis
-		));
+		),0l,1000l);
 
 	}
 

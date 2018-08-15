@@ -16,7 +16,7 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 
-public class ScheduleManager extends ManagerThread {
+public class ScheduleManager extends Manager {
 
 	private final VBox tasks;
 	private final VBox processors;

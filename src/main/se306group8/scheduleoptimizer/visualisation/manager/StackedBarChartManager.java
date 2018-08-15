@@ -6,7 +6,7 @@ import javafx.scene.chart.XYChart;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
-public class StackedBarChartManager extends ManagerThread {
+public class StackedBarChartManager extends Manager {
 
 	private StackedBarChart stackedBarChart;
 

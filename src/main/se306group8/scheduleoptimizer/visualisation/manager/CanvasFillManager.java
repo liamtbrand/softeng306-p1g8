@@ -19,7 +19,7 @@ import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
-public class CanvasFillManager extends ManagerThread {
+public class CanvasFillManager extends Manager {
 	
 	private Canvas canvas;
 	private GraphicsContext gc;

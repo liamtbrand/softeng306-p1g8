@@ -35,21 +35,21 @@ public class DashboardPageController extends Controller {
 				schedulesOnDiskLabel,
 				schedulesPerSecondLabel,
 				1
-		));
+		),0l,1000l);
 
 		startManager(new PieChartManager(
 				storageBreakdown
-		));
+		), 0l, 1000l);
 
 		startManager(new MemoryStatisticsManager(
 				maxMemoryLabel,
 				usedMemoryLabel,
 				freeMemoryLabel
-		));
+		),0l,1000l);
 
 		startManager(new ProcessorStatisticsManager(
 				availableProcessorsLabel
-		));
+		),0l,1000l);
 
 	}
 

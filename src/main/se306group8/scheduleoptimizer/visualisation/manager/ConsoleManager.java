@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 
-public class ConsoleManager extends ManagerThread {
+public class ConsoleManager extends Manager {
 
 	private TextArea textArea;
 
