@@ -94,4 +94,9 @@ public class BlockScheduleStorage implements ScheduleStorage {
 		monitor.setSchedulesInArray(array.size() - queue.size());
 		monitor.setSchedulesInQueue(queue.size());
 	}
+
+	@Override
+	public TreeSchedule getBestSchedule() {
+		return bestComplete;
+	}
 }
