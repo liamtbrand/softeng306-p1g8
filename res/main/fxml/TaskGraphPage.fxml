@@ -3,21 +3,25 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.TaskGraphPageController">
+<AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.TaskGraphPageController">
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <left>
-      			<VBox fx:id="processors" alignment="CENTER" spacing="10" BorderPane.alignment="CENTER" />
+      			<VBox fx:id="processors" alignment="CENTER" maxHeight="320.0" minHeight="320.0" prefHeight="320.0" spacing="10" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets left="30.0" top="40.0" />
+               </BorderPane.margin></VBox>
          </left>
          <center>
-            <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <StackPane alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
                <children>
-                  <LineChart fx:id="chart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" nodeOrientation="LEFT_TO_RIGHT" verticalGridLinesVisible="true">
+                  <LineChart fx:id="chart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" maxHeight="20.0" maxWidth="610.0" minHeight="320.0" minWidth="610.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="320.0" prefWidth="610.0" verticalGridLinesVisible="true">
                     <xAxis>
                       <NumberAxis autoRanging="false" label="Time" side="BOTTOM" />
                     </xAxis>
@@ -25,10 +29,10 @@
                       <NumberAxis autoRanging="false" forceZeroInRange="false" maxWidth="0.0" minWidth="0.0" minorTickVisible="false" prefWidth="0.0" tickLabelsVisible="false" tickMarkVisible="false" upperBound="80.0" />
                     </yAxis>
                      <StackPane.margin>
-                        <Insets left="-10.0" />
+                        <Insets left="-10.0" top="40.0" />
                      </StackPane.margin>
                      <padding>
-                        <Insets bottom="20.0" top="40.0" />
+                        <Insets right="20.0" top="20.0" />
                      </padding>
                   </LineChart>
                   <VBox fx:id="tasks" alignment="CENTER" spacing="10">
@@ -36,6 +40,13 @@
                </children>
             </StackPane>
          </center>
+         <top>
+            <Label fx:id="scheduleTitle" styleClass="page-title" text="Best schedule found!" BorderPane.alignment="TOP_LEFT">
+               <BorderPane.margin>
+                  <Insets bottom="-40.0" left="40.0" top="15.0" />
+               </BorderPane.margin>
+            </Label>
+         </top>
       </BorderPane>
    </children>
 </AnchorPane>

@@ -6,9 +6,10 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ValueAxis;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -23,17 +24,18 @@ public class ScheduleManager extends Manager {
 	private final VBox tasks;
 	private final VBox processors;
 	private final LineChart chart;
+	private final Label title;
 	
-	private final double GRAPH_WIDTH = 550;
-	private final double CHART_WIDTH = GRAPH_WIDTH + 18;
-	private final int GRAPH_HEIGHT = 200;
+	private final double GRAPH_WIDTH = 570;
+	private final int GRAPH_HEIGHT = 180;
 
 	private final Paint BLUE = Color.web("#7595c6");
 	
-	public ScheduleManager(VBox tasks, VBox processors, LineChart chart) {
+	public ScheduleManager(VBox tasks, VBox processors, LineChart chart, Label title) {
 		this.tasks = tasks;
 		this.processors = processors;
 		this.chart = chart;
+		this.title = title;
 	}
 
 	@Override
@@ -105,8 +107,8 @@ public class ScheduleManager extends Manager {
 		
 		Platform.runLater(() -> {
 			processors.getChildren().setAll(processorLabels);
+			processors.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 			tasks.getChildren().setAll(taskPanes);
-			chart.setMaxWidth(CHART_WIDTH);
 			NumberAxis runtimeAxis = (NumberAxis) chart.getXAxis();
 			runtimeAxis.setUpperBound(runtime);
 		});
