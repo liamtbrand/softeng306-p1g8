@@ -39,8 +39,13 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
+		getMonitor().logMessage("Starting A*.");
+
 		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
+
 		queue.signalStorageSizes(getMonitor());
+		
+		getMonitor().setNumberOfProcessors(numberOfProcessors);
 		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
@@ -50,6 +55,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		}
 
 		queue.put(greedySoln);
+		getMonitor().updateBestSchedule(greedySoln);
 		
 		Runtime memory = Runtime.getRuntime();
 		long maxMemory = (long) (memory.maxMemory() * 0.65);
@@ -71,8 +77,12 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			}
 			
 			best = queue.pop();
-			
+
+			// MERGE CONFLICTS - COMMENTED OUT TO CHECK
+			//explored += children.size();
+
 			queue.signalMonitor(getMonitor());
+			getMonitor().updateBestSchedule(best);
 			getMonitor().setSchedulesExplored(explored);
 			
 			if(Thread.interrupted()) {
@@ -103,12 +113,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			} else {
 				queue.put(child);
 			}
-			
-			getMonitor().setSchedulesExplored(explored);
-			queue.signalMonitor(getMonitor());
 		}
 		
 		queue.signalMonitor(getMonitor());
+		getMonitor().updateBestSchedule(best);
 		getMonitor().setSchedulesExplored(explored);
 		
 		if(Thread.interrupted()) {

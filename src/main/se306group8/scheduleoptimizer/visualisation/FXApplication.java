@@ -54,6 +54,7 @@ public class FXApplication extends Application {
 		
 		primaryStage.setTitle("Visualisation");
 		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 
 		// Start the algorithm on its own thread.

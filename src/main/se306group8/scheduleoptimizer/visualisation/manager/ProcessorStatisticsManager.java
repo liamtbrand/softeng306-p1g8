@@ -3,7 +3,7 @@ package se306group8.scheduleoptimizer.visualisation.manager;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 
-public class ProcessorStatisticsManager extends ManagerThread {
+public class ProcessorStatisticsManager extends Manager {
 
 	private Label availableProcessorsLabel;
 

@@ -1,0 +1,28 @@
+digraph "outputStencil_Nodes_10_CCR_1.97_WeightType_Random" {
+	1	[Weight=8,Start=0,Processor=1];
+	2	[Weight=5,Start=0,Processor=2];
+	3	[Weight=10,Start=9,Processor=1];
+	4	[Weight=3,Start=19,Processor=1];
+	5	[Weight=5,Start=32,Processor=1];
+	6	[Weight=10,Start=22,Processor=1];
+	7	[Weight=9,Start=41,Processor=1];
+	8	[Weight=4,Start=37,Processor=1];
+	9	[Weight=5,Start=50,Processor=1];
+	10	[Weight=3,Start=54,Processor=2];
+	1 -> 3	[Weight=8];
+	1 -> 4	[Weight=14];
+	2 -> 3	[Weight=4];
+	2 -> 4	[Weight=4];
+	3 -> 5	[Weight=8];
+	3 -> 6	[Weight=4];
+	4 -> 5	[Weight=6];
+	4 -> 6	[Weight=4];
+	5 -> 7	[Weight=10];
+	5 -> 8	[Weight=14];
+	6 -> 7	[Weight=8];
+	6 -> 8	[Weight=10];
+	7 -> 9	[Weight=8];
+	7 -> 10	[Weight=4];
+	8 -> 9	[Weight=3];
+	8 -> 10	[Weight=13];
+}

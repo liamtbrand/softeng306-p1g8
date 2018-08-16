@@ -1,6 +1,9 @@
 package se306group8.scheduleoptimizer.visualisation;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -27,6 +30,8 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int schedulesOnDisk;
 	private volatile int scheduleOnDiskStorageSize;
 	
+	private volatile int numberOfProcessors;
+	
 	private final List<InvalidationListener> listeners;
 	
 	public ObservableRuntimeMonitor() {
@@ -43,6 +48,8 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		scheduleInQueueStorageSize = 0;
 		schedulesOnDisk = 0;
 		scheduleOnDiskStorageSize = 0;
+		
+		numberOfProcessors = 0;
 
 		listeners = new ArrayList<>();
 	}
@@ -74,7 +81,8 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 
 	@Override
 	public void logMessage(String message) {
-		messages.add(message);
+		LocalDateTime now = LocalDateTime.now();
+		messages.add("["+new SimpleDateFormat("HH:mm:ss").format(new Date())+"]: "+message);
 		invalidateListeners();
 	}
 
@@ -155,6 +163,14 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 
 	public TreeSchedule getBestSchedule() {
 		return bestSchedule;
+	}
+	
+	public int getNumberOfProcessors() {
+		return numberOfProcessors;
+	}
+	
+	public void setNumberOfProcessors(int processors) {
+		numberOfProcessors = processors;
 	}
 
 	@Override

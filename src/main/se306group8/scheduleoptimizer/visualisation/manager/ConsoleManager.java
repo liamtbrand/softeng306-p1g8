@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 
-public class ConsoleManager extends ManagerThread {
+public class ConsoleManager extends Manager {
 
 	private TextArea textArea;
 
@@ -18,7 +18,7 @@ public class ConsoleManager extends ManagerThread {
 		while((message = FXApplication.getMonitor().nextMessage()) != null) {
 			String msg = message;
 			Platform.runLater(() -> {
-				textArea.appendText(msg);
+				textArea.appendText(msg+"\n");
 			});
 		}
 	}

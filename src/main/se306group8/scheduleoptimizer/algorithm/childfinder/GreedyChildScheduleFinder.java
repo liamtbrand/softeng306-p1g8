@@ -59,7 +59,7 @@ public class GreedyChildScheduleFinder implements ChildScheduleFinder {
 		}
 
 		// sort by start times
-		childrenSchedules.sort((t1, t2) -> t1.getAlloctionFor(task).startTime - t2.getAlloctionFor(task).startTime);
+		childrenSchedules.sort((t1, t2) -> t1.getAllocationFor(task).startTime - t2.getAllocationFor(task).startTime);
 
 		return childrenSchedules;
 	}

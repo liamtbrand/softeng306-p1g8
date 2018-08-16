@@ -199,4 +199,11 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	public void setScheduleOnDiskStorageSize(int bytes) {
 		// TODO
 	}
+
+	@Override
+	public void setNumberOfProcessors(int processors) {
+		// TODO 
+		
+	}
+	
 }

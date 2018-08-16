@@ -5,7 +5,7 @@ import javafx.scene.chart.PieChart;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
-public class PieChartManager extends ManagerThread {
+public class PieChartManager extends Manager {
 
 	private PieChart pieChart;
 

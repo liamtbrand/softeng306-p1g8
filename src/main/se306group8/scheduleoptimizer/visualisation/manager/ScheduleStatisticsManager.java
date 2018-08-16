@@ -3,9 +3,10 @@ package se306group8.scheduleoptimizer.visualisation.manager;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
+import se306group8.scheduleoptimizer.visualisation.HumanReadableFormatter;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
-public class ScheduleStatisticsManager extends ManagerThread {
+public class ScheduleStatisticsManager extends Manager {
 
 	private Label schedulesExploredLabel;
 	private Label schedulesInArrayLabel;
@@ -16,7 +17,7 @@ public class ScheduleStatisticsManager extends ManagerThread {
 	private double schedulesPerSecond;
 	private int lastScheduleCount;
 	private long lastScheduleCountSampleTime;
-	private final double schedulesPerSecondAdjustmentFactor; // Applied for smoothing.
+	private double schedulesPerSecondAdjustmentFactor; // Applied for smoothing.
 
 	public ScheduleStatisticsManager(
 			Label schedulesExploredLabel,
@@ -67,6 +68,7 @@ public class ScheduleStatisticsManager extends ManagerThread {
 		lastScheduleCount = schedulesExplored;
 
 		Platform.runLater(() -> {
+
 			schedulesExploredLabel.textProperty().setValue(""+schedulesExplored);
 			schedulesInArrayLabel.textProperty().setValue(""+schedulesInArray);
 			schedulesInQueueLabel.textProperty().setValue(""+schedulesInQueue);
