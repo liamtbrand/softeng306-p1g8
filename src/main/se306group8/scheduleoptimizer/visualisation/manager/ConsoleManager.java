@@ -18,7 +18,7 @@ public class ConsoleManager extends Manager {
 		while((message = FXApplication.getMonitor().nextMessage()) != null) {
 			String msg = message;
 			Platform.runLater(() -> {
-				textArea.appendText(msg);
+				textArea.appendText(msg+"\n");
 			});
 		}
 	}

@@ -37,6 +37,9 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
+
+		getMonitor().logMessage("Starting A*.");
+
 		TreeSchedule best = new TreeSchedule(graph, heuristic);
 		queue.signalStorageSizes(getMonitor());
 		
