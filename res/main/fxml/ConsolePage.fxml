@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.ConsolePageController">
+<AnchorPane stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.ConsolePageController">
    <children>
       <TextArea fx:id="consoleTextArea" editable="false" scrollTop="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <font>

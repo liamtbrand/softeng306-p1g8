@@ -45,15 +45,6 @@ public class CanvasFillManager extends Manager {
 		this.totalTriangleHeight = 6.0*canvas.getHeight()/8.0;
 	}
 	
-	public Color getRandomColor() {
-		//to get rainbow, pastel colors
-		Random random = new Random();
-		final float hue = random.nextFloat();
-		final float saturation = 0.9f;//1.0 for brilliant, 0.0 for dull
-		final float luminance = 1.0f; //1.0 for brighter, 0.0 for black
-		return Color.hsb(hue, saturation, luminance);
-	}
-	
 	
 	@Override
 	protected void updateHook() {
@@ -74,10 +65,10 @@ public class CanvasFillManager extends Manager {
 			// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
 			if (keepDrawing) {
 				if (monitor.getBestSchedule().isComplete()) {
-					drawPixels(this.canvas, Color.GREEN, (int [])coordinates[0], (int [])coordinates[1], 3);
+					drawPixels(this.canvas, Color.DARKBLUE, (int [])coordinates[0], (int [])coordinates[1], 3);
 					this.keepDrawing = false;
 				} else {
-					drawPixels(this.canvas, getRandomColor(), (int [])coordinates[0], (int [])coordinates[1], 1);
+					drawPixels(this.canvas, Color.GREY, (int [])coordinates[0], (int [])coordinates[1], 1);
 				}
 			} else {
 				// Stop drawing
