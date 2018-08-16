@@ -13,8 +13,8 @@ public class ConfigTest {
 		Config config = builder.build();
 		
 		assertEquals("INPUT.dot",config.inputFile());
-		assertEquals(1,config.P());
-		assertEquals(1,config.N());
+		assertEquals(1,config.processorsToScheduleOn());
+		assertEquals(1,config.coresToUseForExecution());
 		assertEquals(false,config.visualize());
 		assertEquals("INPUT-output.dot",config.outputFile());
 		

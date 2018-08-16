@@ -1,6 +1,8 @@
 package se306group8.scheduleoptimizer.taskgraph;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -8,12 +10,13 @@ import java.util.Objects;
  */
 public final class Task implements GraphEquality<Task> {
 	private final String name;
-	private Collection<Dependency> children;
-	private Collection<Dependency> parents;
+	private List<Dependency> children;
+	private List<Dependency> parents;
 	private final int cost;
 	private final int id;
 	private boolean[] isParent;
 	private boolean[] isChild;
+	private boolean isIndependant = true;
 	
 	Task(String name, int cost, int id){
 		this.name = name;
@@ -22,7 +25,11 @@ public final class Task implements GraphEquality<Task> {
 	}
 	
 	void setChildDependencies(Collection<Dependency> children){
-		this.children = children;
+		if(children.size() != 0) {
+			isIndependant = false;
+		}
+		
+		this.children = new ArrayList<>(children);
 		
 		int largestChild = 0;
 		for(Dependency dep : children) {
@@ -37,7 +44,11 @@ public final class Task implements GraphEquality<Task> {
 	}
 	
 	void setParentDependencies(Collection<Dependency> parents){
-		this.parents = parents;
+		if(parents.size() != 0) {
+			isIndependant = false;
+		}
+		
+		this.parents = new ArrayList<>(parents);
 		
 		int largestParent = 0;
 		for(Dependency dep : parents) {
@@ -70,14 +81,14 @@ public final class Task implements GraphEquality<Task> {
 	/** 
 	 * Returns all of the tasks that depend on this task. 
 	 */
-	public Collection<Dependency> getChildren() {
+	public List<Dependency> getChildren() {
 		return children;
 	}
 	
 	/** 
 	 * Returns all of the tasks that this task depends on. 
 	 */
-	public Collection<Dependency> getParents() {
+	public List<Dependency> getParents() {
 		return parents;
 	}
 	
@@ -102,6 +113,10 @@ public final class Task implements GraphEquality<Task> {
 			return true;
 		
 		return other.name.equals(name) && other.cost == cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, other.parents);
+	}
+	
+	public boolean isIndependant() {
+		return isIndependant;
 	}
 	
 	@Override
