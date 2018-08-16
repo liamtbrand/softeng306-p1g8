@@ -1,6 +1,7 @@
 package se306group8.scheduleoptimizer.visualisation.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.layout.VBox;
 import se306group8.scheduleoptimizer.visualisation.manager.ScheduleManager;
@@ -15,13 +16,13 @@ public class TaskGraphPageController extends Controller {
 	@FXML
 	private VBox processors;
 	@FXML
-	private NumberAxis runtimeAxis;
+	private LineChart chart;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
 		startManager(new ScheduleManager(
-				tasks, processors, runtimeAxis
+				tasks, processors, chart
 		),0l,1000l);
 
 	}

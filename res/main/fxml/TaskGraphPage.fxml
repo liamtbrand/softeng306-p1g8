@@ -17,18 +17,18 @@
          <center>
             <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <LineChart alternativeRowFillVisible="false" horizontalGridLinesVisible="false" maxWidth="580.0" nodeOrientation="LEFT_TO_RIGHT" verticalGridLinesVisible="true">
+                  <LineChart fx:id="chart" alternativeRowFillVisible="false" horizontalGridLinesVisible="false" nodeOrientation="LEFT_TO_RIGHT" verticalGridLinesVisible="true">
                     <xAxis>
-                      <NumberAxis fx:id="runtimeAxis" autoRanging="false" label="Time" side="BOTTOM" />
+                      <NumberAxis autoRanging="false" label="Time" side="BOTTOM" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis fx:id="chartHeight" autoRanging="false" forceZeroInRange="false" maxWidth="0.0" minWidth="0.0" minorTickVisible="false" prefWidth="0.0" tickLabelsVisible="false" tickMarkVisible="false" upperBound="80.0" />
+                      <NumberAxis autoRanging="false" forceZeroInRange="false" maxWidth="0.0" minWidth="0.0" minorTickVisible="false" prefWidth="0.0" tickLabelsVisible="false" tickMarkVisible="false" upperBound="80.0" />
                     </yAxis>
                      <StackPane.margin>
-                        <Insets left="-17.0" right="-13.0" />
+                        <Insets left="-10.0" />
                      </StackPane.margin>
                      <padding>
-                        <Insets top="40.0" />
+                        <Insets bottom="20.0" top="40.0" />
                      </padding>
                   </LineChart>
                   <VBox fx:id="tasks" alignment="CENTER" spacing="10">
