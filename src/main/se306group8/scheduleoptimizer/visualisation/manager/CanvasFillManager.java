@@ -53,9 +53,6 @@ public class CanvasFillManager extends Manager {
 		// Called and run once every second
 		Platform.runLater(() -> {
 			
-			// Currently a debug line
-			//System.out.println("RUNTIME: " + monitor.getBestSchedule().getRuntime() + ", IS COMPLETE: " + monitor.getBestSchedule().isComplete());
-			
 			Object[] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
 			
 			// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
@@ -76,6 +73,8 @@ public class CanvasFillManager extends Manager {
 	// Method that translates an input partial schedule, into a series of x/y coordinates
 	// representing task allocations at given points
     private Object[] scheduleToPixels(TreeSchedule schedule, int numberOfProcessors) {
+    	
+    	
     	
     	// Number to aid in space partitioning
     	int totalNumberOfTasks = schedule.getGraph().getAll().size();
@@ -123,7 +122,7 @@ public class CanvasFillManager extends Manager {
     		
     		double partitionLength = horizontalLength(depth);
     		
-    		//xCoord = nextXCoord((double)tasks.indexOf(t), schedule.getAllocationFor(t), xCoord, (depth + 1.0), tasks.size(), numberOfProcessors);
+    		xCoord = nextXCoord((double)tasks.indexOf(t), schedule.getAllocationFor(t), xCoord, (depth + 1.0), tasks.size(), numberOfProcessors);
     		
     		range = ((canvas.getWidth()/2.0) + partitionLength) - ((canvas.getWidth()/2.0 - partitionLength)) + 1.0;
     		xCoord = (int)(Math.random()*range) + (canvas.getWidth()/2.0 - partitionLength);
@@ -135,13 +134,7 @@ public class CanvasFillManager extends Manager {
 
     		yCoord+=heightIncrement;
     		depth+=heightIncrement;
-    	}
-     	
-    	
-//		for (int j = 0; j < 1000; j++) {
-//			xValues[j] = (int) Math.floor(Math.random() * 641);
-//			yValues[j] = (int) Math.floor(Math.random() * 368);
-//		}
+    	} 
 		
     	return new Object[]{xValues, yValues};
     }
@@ -151,7 +144,7 @@ public class CanvasFillManager extends Manager {
     	
     	// Calculate total horizontal width of triangle at a given point
     	double horLength = horizontalLength(depth);
-    	double partitionedRange = horLength/(numberOfProcessors*numberOfTasks);//(Math.pow((numberOfProcessors*numberOfTasks), depth));
+    	double partitionedRange = horLength/(Math.pow((numberOfProcessors*numberOfTasks), depth));
     	double sumToAdd = partitionedRange*((allocation.processor/numberOfProcessors)*((taskIndex + 1.0)/numberOfTasks));
     	double nextX = (currentXCoord - partitionedRange/2.0) + sumToAdd;
     	
@@ -181,11 +174,9 @@ public class CanvasFillManager extends Manager {
 			pixelWriter.setColor(x[i], y[i], color);
 			
 			if ((i + 1) == x.length) {
-				
 			} else {
 				drawLine(x[i], y[i], x[i+1], y[i+1], color, width);
 			}
-			
 		}
 	}
     

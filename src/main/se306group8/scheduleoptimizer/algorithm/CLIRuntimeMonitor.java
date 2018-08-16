@@ -56,7 +56,6 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 
 	}
 	
-	
 	// Method that prints out final schedule to stdout
 	public void printSchedule(Schedule schedule, int maxLength) {
 		BitSet importantTimes = new BitSet();
@@ -157,6 +156,7 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	public void logMessage(String message) {
 		// Print messages to stdout.
 		System.out.println(message);
+		
 	}
 
 	@Override
