@@ -13,7 +13,7 @@ public interface Config {
 	public String inputFile();
 	
 	/**
-	 * Number of processors.
+	 * Number of processors to schedule on.
 	 */
 	public int P();
 	
