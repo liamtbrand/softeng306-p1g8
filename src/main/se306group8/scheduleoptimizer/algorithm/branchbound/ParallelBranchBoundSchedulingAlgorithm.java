@@ -64,9 +64,10 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 						
 					} else {
 						// Check if the child schedule is complete or not
-						
+						getMonitor().updateBestSchedule(child);
 						if(doFork && getSurplusQueuedTaskCount() < 10) { //Don't split unless there are fewer than 10 subtasks left in the queue.
 							ForkJob job = new ForkJob(child);
+							
 							job.fork();
 							jobs.add(job);
 						} else {
@@ -137,6 +138,7 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 		
 		
 		pool.invoke(rootJob);
+		getMonitor().updateBestSchedule(bestSoFar.get());
 		
 		return bestSoFar.get().getFullSchedule();
 	}
