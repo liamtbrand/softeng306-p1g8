@@ -69,8 +69,8 @@ public class ScheduleManager extends Manager {
 			for (Task task : list) {
 
 				int startTime = bestSchedule.getAllocationFor(task).startTime;
-				int graphStartTime = startTime*GRAPH_WIDTH/runtime;
-				int graphCost = task.getCost()*GRAPH_WIDTH/runtime;
+				double graphStartTime = startTime*GRAPH_WIDTH/runtime;
+				double graphCost = task.getCost()*GRAPH_WIDTH/runtime;
 				
 				Rectangle rectangle = new Rectangle(graphStartTime, 0, graphCost, taskHeight);
 				rectangle.setStroke(Color.WHITE);
