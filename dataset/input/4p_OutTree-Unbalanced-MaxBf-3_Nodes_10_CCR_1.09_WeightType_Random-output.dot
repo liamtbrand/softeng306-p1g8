@@ -3,12 +3,12 @@ digraph "outputOutTree-Unbalanced-MaxBf-3_Nodes_10_CCR_1.09_WeightType_Random" {
 	2	[Weight=6,Start=12,Processor=1];
 	3	[Weight=4,Start=8,Processor=1];
 	4	[Weight=7,Start=18,Processor=1];
-	5	[Weight=7,Start=25,Processor=1];
-	6	[Weight=9,Start=22,Processor=3];
+	5	[Weight=7,Start=27,Processor=3];
+	6	[Weight=9,Start=18,Processor=2];
 	7	[Weight=5,Start=17,Processor=3];
-	8	[Weight=7,Start=19,Processor=2];
-	9	[Weight=2,Start=29,Processor=2];
-	10	[Weight=3,Start=31,Processor=3];
+	8	[Weight=7,Start=25,Processor=1];
+	9	[Weight=2,Start=32,Processor=1];
+	10	[Weight=3,Start=31,Processor=2];
 	1 -> 2	[Weight=10];
 	1 -> 3	[Weight=10];
 	2 -> 4	[Weight=6];

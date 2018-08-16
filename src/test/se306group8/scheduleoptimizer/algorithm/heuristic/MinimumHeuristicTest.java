@@ -30,7 +30,7 @@ public class MinimumHeuristicTest {
 	public void testEstimate(MinimumHeuristic heuristic) {
 		TaskGraph graph = TestGraphUtils.buildTestGraphA();
 		
-		TreeSchedule root = new TreeSchedule(graph, heuristic);
+		TreeSchedule root = new TreeSchedule(graph, heuristic, 2);
 		getCompleteList(root, heuristic);
 	}
 

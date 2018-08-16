@@ -15,7 +15,7 @@ public class ScheduleStatisticsManager extends Manager {
 	private Label schedulesPerSecondLabel;
 
 	private double schedulesPerSecond;
-	private long lastScheduleCount;
+	private int lastScheduleCount;
 	private long lastScheduleCountSampleTime;
 	private double schedulesPerSecondAdjustmentFactor; // Applied for smoothing.
 
@@ -39,7 +39,7 @@ public class ScheduleStatisticsManager extends Manager {
 		// Setup schedules per second data.
 		lastScheduleCount = 0;
 		schedulesPerSecond = 0;
-		lastScheduleCountSampleTime = System.currentTimeMillis();
+		lastScheduleCountSampleTime = System.nanoTime();
 
 	}
 
@@ -54,11 +54,12 @@ public class ScheduleStatisticsManager extends Manager {
 		int schedulesInQueue = monitor.getSchedulesInQueue();
 		int schedulesOnDisk = monitor.getSchedulesOnDisk();
 
-		long currentSampleTime = System.currentTimeMillis();
-		long newScheduleCount = schedulesExplored - lastScheduleCount;
+		long currentSampleTime = System.nanoTime();
+		int newScheduleCount = schedulesExplored - lastScheduleCount;
 		long timeSinceLastSampleTime = currentSampleTime - lastScheduleCountSampleTime;
 
-		double sampleSchedulesPerSecond = timeSinceLastSampleTime == 0 ? 0 : 1_000.0 * newScheduleCount / timeSinceLastSampleTime;
+		//If there is a stupidly small value just duplicate the previous value
+		double sampleSchedulesPerSecond = timeSinceLastSampleTime < 10 ? schedulesPerSecond : 1.0e9 * newScheduleCount / timeSinceLastSampleTime;
 
 		schedulesPerSecond = (1-schedulesPerSecondAdjustmentFactor)*schedulesPerSecond
 				+ schedulesPerSecondAdjustmentFactor*sampleSchedulesPerSecond;

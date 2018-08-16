@@ -50,6 +50,10 @@ public class CanvasFillManager extends Manager {
 	protected void updateHook() {
 		ObservableRuntimeMonitor monitor = FXApplication.getMonitor();
 		
+		if (monitor.getBestSchedule() == null) {
+			return;
+		}
+		
 		// Called and run once every second
 		Platform.runLater(() -> {
 			

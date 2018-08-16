@@ -5,7 +5,6 @@ import java.util.List;
 
 import se306group8.scheduleoptimizer.algorithm.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Dependency;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 
 public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
@@ -18,7 +17,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 	public List<TreeSchedule> getChildSchedules(TreeSchedule schedule) {
 		//Only add the schedule if it is the earliest schedule that can create it.
 		//Schedule a is smaller than schedule b if 
-		List<TreeSchedule> childrenSchedules = new ArrayList<>();
+		List<TreeSchedule> childrenSchedules = new ArrayList<>(processors * schedule.getAllocatable().size());
 		
 		for (Task task : schedule.getAllocatable()) {
 			int processorsToAllocate;
@@ -29,7 +28,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 			}
 			
 			for (int p = 1; p <= processorsToAllocate; p++) {
-				if(isValid(task, p, schedule)) {
+				if(isCorrectIndependantTaskOrder(task, p, schedule) && isBestParent(task, p, schedule)) {
 					childrenSchedules.add(new TreeSchedule(task, p, schedule));
 				}
 			}
@@ -38,7 +37,15 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 		return childrenSchedules;
 	}
 	
-	private boolean isValid(Task task, int processor, TreeSchedule schedule) {
+	private boolean isCorrectIndependantTaskOrder(Task task, int processor, TreeSchedule schedule) {
+		if(!task.isIndependant())
+			return true;
+		
+		ProcessorAllocation alloc = schedule.getLastAllocationForProcessor(processor);
+		return alloc == null || !alloc.task.isIndependant() || alloc.task.getId() < task.getId();
+	}		
+	
+	private boolean isBestParent(Task task, int processor, TreeSchedule schedule) {
 		//Look at each task on the top of the processor, if it is a later task then the schedule is not valid, provided removing it leaves a valid schedule.
 		for(int p = 1; p <= schedule.getNumberOfUsedProcessors(); p++) {
 			if(p != processor) {

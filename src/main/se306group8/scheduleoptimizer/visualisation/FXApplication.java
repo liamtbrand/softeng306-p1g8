@@ -62,7 +62,7 @@ public class FXApplication extends Application {
 		Thread th = new Thread(() -> {
 			Main.startAlgorithm(
 					new RuntimeMonitorAggregator(
-							new CLIRuntimeMonitor(Main.config.P()), 
+							new CLIRuntimeMonitor(Main.config.processorsToScheduleOn()),
 							monitor));
 		});
 		th.setName("Algorithm-thread");

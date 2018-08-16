@@ -44,7 +44,7 @@ public class ScheduleManager extends Manager {
 		int currentProcessor = 1;
 		TreeSchedule bestSchedule = FXApplication.getMonitor().getBestSchedule();
 		
-		if (bestSchedule == null) {
+		if (bestSchedule == null || bestSchedule.isEmpty()) {
 			return;
 		}
 		
