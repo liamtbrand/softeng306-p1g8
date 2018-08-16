@@ -39,7 +39,7 @@ public class Main {
 		if(config.visualize()) {
 			Application.launch(FXApplication.class);
 		} else {
-			RuntimeMonitor monitor = new CLIRuntimeMonitor(config.P());
+			RuntimeMonitor monitor = new CLIRuntimeMonitor(config.processorsToScheduleOn());
 			startAlgorithm(monitor);
 		}
 	}
@@ -68,7 +68,7 @@ public class Main {
 		Schedule schedule;
 		try {
 
-			schedule = algorithm.produceCompleteSchedule(taskGraph, config.P());
+			schedule = algorithm.produceCompleteSchedule(taskGraph, config.processorsToScheduleOn());
 
 		} catch (InterruptedException e) {
 			System.out.println("Algorithm execution was interrupted.");

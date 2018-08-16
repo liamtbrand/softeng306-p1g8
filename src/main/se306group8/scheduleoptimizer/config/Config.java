@@ -13,14 +13,14 @@ public interface Config {
 	public String inputFile();
 	
 	/**
-	 * Number of processors to schedule on.
+	 * Number of processors to schedule on. P.
 	 */
-	public int P();
+	public int processorsToScheduleOn();
 	
 	/**
-	 * Number of cores for parallel execution.
+	 * Number of cores for parallel execution. N.
 	 */
-	public int N();
+	public int coresToUseForExecution();
 	
 	/**
 	 * Enable visualization.

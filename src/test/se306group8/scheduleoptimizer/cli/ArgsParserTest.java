@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import se306group8.scheduleoptimizer.cli.ArgsParser;
 import se306group8.scheduleoptimizer.config.ArgumentException;
 import se306group8.scheduleoptimizer.config.Config;
 
@@ -50,8 +49,8 @@ public class ArgsParserTest {
 		Config config = parser.parse(args);
 		
 		assertEquals("INPUT.dot",config.inputFile());
-		assertEquals(1,config.P());
-		assertEquals(1,config.N());
+		assertEquals(1,config.processorsToScheduleOn());
+		assertEquals(1,config.coresToUseForExecution());
 		assertEquals(false,config.visualize());
 		assertEquals("INPUT-output.dot",config.outputFile());
 		
@@ -65,8 +64,8 @@ public class ArgsParserTest {
 		Config config = parser.parse(args);
 		
 		assertEquals("myfile.dot",config.inputFile());
-		assertEquals(1,config.P());
-		assertEquals(1,config.N());
+		assertEquals(1,config.processorsToScheduleOn());
+		assertEquals(1,config.coresToUseForExecution());
 		assertEquals(false,config.visualize());
 		assertEquals("myfile-output.dot",config.outputFile());
 		
@@ -182,8 +181,8 @@ public class ArgsParserTest {
 		Config config = parser.parse(args);
 		
 		assertEquals("INPUT.dot",config.inputFile());
-		assertEquals(1,config.P());
-		assertEquals(1,config.N());
+		assertEquals(1,config.processorsToScheduleOn());
+		assertEquals(1,config.coresToUseForExecution());
 		assertEquals(true,config.visualize());
 		assertEquals("INPUT-output.dot",config.outputFile());
 		
@@ -208,8 +207,8 @@ public class ArgsParserTest {
 		config = parser.parse(args1);
 		
 		assertEquals("infile.dot",config.inputFile());
-		assertEquals(1,config.P());
-		assertEquals(1,config.N());
+		assertEquals(1,config.processorsToScheduleOn());
+		assertEquals(1,config.coresToUseForExecution());
 		assertEquals(false,config.visualize());
 		assertEquals("outfile",config.outputFile());
 		
@@ -225,8 +224,8 @@ public class ArgsParserTest {
 		config = parser.parse(args);
 		
 		assertEquals("advanced.dot",config.inputFile());
-		assertEquals(5,config.P());
-		assertEquals(7,config.N());
+		assertEquals(5,config.processorsToScheduleOn());
+		assertEquals(7,config.coresToUseForExecution());
 		assertEquals(true,config.visualize());
 		assertEquals("advanced-output.dot",config.outputFile());
 		
@@ -242,8 +241,8 @@ public class ArgsParserTest {
 		config = parser.parse(args);
 		
 		assertEquals("myadvanced.dot",config.inputFile());
-		assertEquals(4,config.P());
-		assertEquals(12,config.N());
+		assertEquals(4,config.processorsToScheduleOn());
+		assertEquals(12,config.coresToUseForExecution());
 		assertEquals(true,config.visualize());
 		assertEquals("myoutput.dot",config.outputFile());
 		
