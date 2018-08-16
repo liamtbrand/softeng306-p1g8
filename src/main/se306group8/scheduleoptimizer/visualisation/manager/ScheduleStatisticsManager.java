@@ -3,9 +3,10 @@ package se306group8.scheduleoptimizer.visualisation.manager;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
+import se306group8.scheduleoptimizer.visualisation.HumanReadableFormatter;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
-public class ScheduleStatisticsManager extends ManagerThread {
+public class ScheduleStatisticsManager extends Manager {
 
 	private Label schedulesExploredLabel;
 	private Label schedulesInArrayLabel;
@@ -14,9 +15,9 @@ public class ScheduleStatisticsManager extends ManagerThread {
 	private Label schedulesPerSecondLabel;
 
 	private double schedulesPerSecond;
-	private int lastScheduleCount;
+	private long lastScheduleCount;
 	private long lastScheduleCountSampleTime;
-	private final double schedulesPerSecondAdjustmentFactor; // Applied for smoothing.
+	private double schedulesPerSecondAdjustmentFactor; // Applied for smoothing.
 
 	public ScheduleStatisticsManager(
 			Label schedulesExploredLabel,
@@ -54,10 +55,10 @@ public class ScheduleStatisticsManager extends ManagerThread {
 		int schedulesOnDisk = monitor.getSchedulesOnDisk();
 
 		long currentSampleTime = System.currentTimeMillis();
-		int newScheduleCount = schedulesExplored - lastScheduleCount;
+		long newScheduleCount = schedulesExplored - lastScheduleCount;
 		long timeSinceLastSampleTime = currentSampleTime - lastScheduleCountSampleTime;
 
-		double sampleSchedulesPerSecond = 1_000.0 * newScheduleCount / timeSinceLastSampleTime;
+		double sampleSchedulesPerSecond = timeSinceLastSampleTime == 0 ? 0 : 1_000.0 * newScheduleCount / timeSinceLastSampleTime;
 
 		schedulesPerSecond = (1-schedulesPerSecondAdjustmentFactor)*schedulesPerSecond
 				+ schedulesPerSecondAdjustmentFactor*sampleSchedulesPerSecond;
@@ -66,6 +67,7 @@ public class ScheduleStatisticsManager extends ManagerThread {
 		lastScheduleCount = schedulesExplored;
 
 		Platform.runLater(() -> {
+
 			schedulesExploredLabel.textProperty().setValue(""+schedulesExplored);
 			schedulesInArrayLabel.textProperty().setValue(""+schedulesInArray);
 			schedulesInQueueLabel.textProperty().setValue(""+schedulesInQueue);

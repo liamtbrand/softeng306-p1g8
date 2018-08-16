@@ -1,40 +1,27 @@
 package se306group8.scheduleoptimizer.visualisation.controller;
 
 import javafx.fxml.Initializable;
-import se306group8.scheduleoptimizer.visualisation.manager.ManagerThread;
+import se306group8.scheduleoptimizer.visualisation.manager.Manager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public abstract class Controller implements Initializable {
 
-	private List<ManagerThread> managers;
+	private Timer timer;
 
 	public Controller() {
-		managers = new ArrayList<>();
+		timer = new Timer();
 	}
 
-	protected void startManager(ManagerThread th) {
-		managers.add(th);
-		th.start();
-	}
-
-	protected void stopManager(ManagerThread th) {
-		try {
-			th.interrupt();
-			th.join();
-		} catch (InterruptedException e) {
-			// TODO Interrupted while joining?
-		}
+	protected void startManager(Manager manager, long delay, long period) {
+		timer.schedule(manager,delay,period);
 	}
 
 	protected void stopHook() {}
 
 	public final void stop() {
 		stopHook();
-		for(ManagerThread manager : managers) {
-			stopManager(manager);
-		}
+		timer.cancel();
 	}
 
 }

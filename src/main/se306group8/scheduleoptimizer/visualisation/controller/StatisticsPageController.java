@@ -17,7 +17,7 @@ public class StatisticsPageController extends Controller {
 
 		startManager(new StackedBarChartManager(
 				scheduleStorage
-		));
+		),0l,1000l);
 
 	}
 

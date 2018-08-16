@@ -3,7 +3,7 @@ package se306group8.scheduleoptimizer.visualisation.manager;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 
-public class MemoryStatisticsManager extends ManagerThread {
+public class MemoryStatisticsManager extends Manager {
 
 	private Label maxMemoryLabel;
 	private Label usedMemoryLabel;

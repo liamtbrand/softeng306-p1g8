@@ -1,5 +1,6 @@
 package se306group8.scheduleoptimizer.visualisation.controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
@@ -16,9 +17,9 @@ public class ConsolePageController extends Controller {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		startManager(new ConsoleManager(consoleTextArea));
+		startManager(new ConsoleManager(consoleTextArea),0l,1000l);
 
-		FXApplication.getMonitor().logMessage("[Console]: Console Manager has been started.");
+		FXApplication.getMonitor().logMessage("Console Manager has been started.");
 
 	}
 
