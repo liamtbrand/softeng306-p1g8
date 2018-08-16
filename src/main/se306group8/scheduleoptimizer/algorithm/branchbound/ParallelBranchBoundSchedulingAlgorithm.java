@@ -12,6 +12,7 @@ import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
@@ -57,7 +58,7 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 			
 			for (TreeSchedule child : childSchedules) {
 				// Only consider the child if its lower bound is better than current best
-				if (best == null || child.getLowerBound() < best.getRuntime()) {
+				if (child.getLowerBound() < best.getRuntime()) {
 					if (child.isComplete()) {
 						best = updateBest(child);
 						
@@ -82,10 +83,30 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 			}
 		}
 		
+		/**
+		 * Updates the best complete schedule in a thread safe manor
+		 * it also informs the runtime monitor
+		 */
 		private TreeSchedule updateBest(TreeSchedule candinate) {
-			TreeSchedule best = bestSoFar.get();
-			while ((best == null ||candinate.getRuntime()<best.getRuntime()) && !bestSoFar.compareAndSet(best, candinate)) {
+						
+			TreeSchedule best;
+			boolean validSet = false;
+			do {
 				best = bestSoFar.get();
+				if (candinate.getRuntime()<best.getRuntime()) {
+					
+					//CompareAndSet ensures we don't have race conditions on write
+					validSet = bestSoFar.compareAndSet(best, candinate);
+				} else {
+					break;
+				}
+			//If we have to loop it means another thread updated best
+			//we have to check again if we are still better
+			} while (!validSet);
+			
+			//inform the monitor if we updated
+			if (validSet) {
+				getMonitor().updateBestSchedule(bestSoFar.get());
 			}
 			return best;
 		}
@@ -102,10 +123,19 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		pool = new ForkJoinPool(parallelism);
-		bestSoFar = new AtomicReference<TreeSchedule>();
+		
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic, numberOfProcessors);
 		ForkJob rootJob = new ForkJob(emptySchedule);
 		explored = new AtomicInteger();
+		
+		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
+		TreeSchedule greedySoln = emptySchedule;
+		while (!greedySoln.isComplete()) {
+			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
+		}
+		bestSoFar = new AtomicReference<TreeSchedule>(greedySoln);
+		
+		
 		pool.invoke(rootJob);
 		
 		return bestSoFar.get().getFullSchedule();
