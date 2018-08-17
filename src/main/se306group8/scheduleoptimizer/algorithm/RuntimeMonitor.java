@@ -48,4 +48,6 @@ public interface RuntimeMonitor {
 
 	default void setScheduleDistribution(int[] distribution, int limit) {  }
 	default void setBucketSize(int granularity) {  }
+	void setAlgorithmName(String name);
+	void setParallelized(int cores);
 }

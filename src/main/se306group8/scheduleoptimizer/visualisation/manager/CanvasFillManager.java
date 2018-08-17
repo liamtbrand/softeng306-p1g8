@@ -1,6 +1,7 @@
 package se306group8.scheduleoptimizer.visualisation.manager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -56,7 +57,7 @@ public class CanvasFillManager extends Manager {
 		// Currently a debug line
 		//System.out.println("RUNTIME: " + monitor.getBestSchedule().getRuntime() + ", IS COMPLETE: " + monitor.getBestSchedule().isComplete());
 
-		Object[] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
+    double[][] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
 
 		// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
 		if (keepDrawing) {
@@ -73,117 +74,75 @@ public class CanvasFillManager extends Manager {
 	
 	// Method that translates an input partial schedule, into a series of x/y coordinates
 	// representing task allocations at given points
-    private Object[] scheduleToPixels(TreeSchedule schedule, int numberOfProcessors) {
+    private double[][] scheduleToPixels(TreeSchedule schedule, int numberOfProcessors) {
     	
-    	// Number to aid in space partitioning
-    	int totalNumberOfTasks = schedule.getGraph().getAll().size();
+    	// List of Parents, populated in reverse order from the deepest child
+    	List<TreeSchedule> parents = new ArrayList<>();
     	
-    	// Get currently allocated tasks
-    	Collection<Task> allocations = schedule.getAllocated();
+    	TreeSchedule s = schedule;
     	
-    	// List representing ordering of tasks by smallest to largest cost
-    	List<Task> tasks = new ArrayList(allocations);
-    	
-    	Collections.sort(tasks, new Comparator<Task>(){
-		     public int compare(Task t1, Task t2){
-		         if(t1.getCost() == t2.getCost())
-		             return 0;
-		         return t1.getCost() < t2.getCost() ? -1 : 1;
-		     }
-    	});
-    	
-    	double heightIncrement = this.totalTriangleHeight/(double)totalNumberOfTasks;
-    	
-    	// Represents current depth down the graph
-    	double depth = 0.0;
-    	
-    	// Arrays to buffer pixel coordinates into
-    	int[] xValues = new int[allocations.size() + 1];
-		int[] yValues = new int[allocations.size() + 1];
-		
-		double xCoord = this.startPointX;
-		double yCoord = this.startPointY;
-		double range;
-    	
-		int i = 1;
-		
-		xValues[0] = (int)this.startPointX;
-		yValues[0] = (int)this.startPointY;
-		
-		yCoord+=heightIncrement;
-		depth+=heightIncrement;
-		
-		// System.out.println("Number of allocations: " + allocations.size());
-		
-		// Loop through all allocations, setting coordinates for each
-    	for (Task t : allocations) {
-    		ProcessorAllocation allocation = schedule.getAllocationFor(t);
-    		
-    		double partitionLength = horizontalLength(depth);
-    		
-    		//xCoord = nextXCoord((double)tasks.indexOf(t), schedule.getAllocationFor(t), xCoord, (depth + 1.0), tasks.size(), numberOfProcessors);
-    		
-    		range = ((canvas.getWidth()/2.0) + partitionLength) - ((canvas.getWidth()/2.0 - partitionLength)) + 1.0;
-    		xCoord = (int)(Math.random()*range) + (canvas.getWidth()/2.0 - partitionLength);
-    		
-    		xValues[i] = (int)xCoord;
-    		yValues[i] = (int)yCoord;
-    		
-    		i++;
-
-    		yCoord+=heightIncrement;
-    		depth+=heightIncrement;
+    	while (!s.isEmpty()) {
+    		parents.add(s);
+    		s = s.getParent();
     	}
-     	
     	
-//		for (int j = 0; j < 1000; j++) {
-//			xValues[j] = (int) Math.floor(Math.random() * 641);
-//			yValues[j] = (int) Math.floor(Math.random() * 368);
-//		}
-		
-    	return new Object[]{xValues, yValues};
-    }
+    	// Add empty parent to end of List
+    	parents.add(s);
+    	
+    	// Arrays to populate coordinates with
+    	double[] xValues = new double[parents.size()];
+    	double[] yValues = new double[parents.size()];
+    	
+    	// Represents the point of the first parent (the tip of the triangle)
+    	yValues[parents.size() - 1] = 0;
+    	xValues[parents.size() - 1] = 0;		
+   
+    	double scalingFactor = 1;
+    	
+    	for (int i = parents.size() - 2; i >= 0; i--) {
+    		xValues[i] = xValues[i + 1] + convertToNumber(parents.get(i).getMostRecentAllocation(), schedule.getGraph().getAll().size()) * scalingFactor;
+    		scalingFactor /= (numberOfProcessors * schedule.getGraph().getAll().size()/4);
+    		yValues[i] = (1.0 / schedule.getGraph().getAll().size()) * (parents.size() - 1 - i);
+    	}
     
-    // The meat of the entire functionality; partitioning space via choice of Task and Allocation
-    private double nextXCoord(double taskIndex, ProcessorAllocation allocation, double currentXCoord, double depth, int numberOfTasks, int numberOfProcessors) {
-    	
-    	// Calculate total horizontal width of triangle at a given point
-    	double horLength = horizontalLength(depth);
-    	double partitionedRange = horLength/(numberOfProcessors*numberOfTasks);//(Math.pow((numberOfProcessors*numberOfTasks), depth));
-    	double sumToAdd = partitionedRange*((allocation.processor/numberOfProcessors)*((taskIndex + 1.0)/numberOfTasks));
-    	double nextX = (currentXCoord - partitionedRange/2.0) + sumToAdd;
-    	
-    	// System.out.println("horLength: " + horLength + ", partitionedRange: " + partitionedRange + ", sumToAdd: " + sumToAdd + ", nextX: " + nextX);
-    	
-    	return nextX;
+    	return new double[][]{xValues, yValues};
+    }
+
+    
+    // Convert allocation to number (as per James' pseudocode)
+    private double convertToNumber(ProcessorAllocation allocation, int totalNumberOfTasks) {
+    	return (double)(allocation.processor - 1)/(double)FXApplication.getMonitor().getNumberOfProcessors()*totalNumberOfTasks 
+    			+ (double)allocation.task.getId()/(FXApplication.getMonitor().getNumberOfProcessors());
     }
     
     // Calculates the horizontal length by which to section up, at any given depth in the triangle
     private double horizontalLength(double depth) {
-    	double bottomDegree = Math.tan(this.totalTriangleHeight/(this.totalTriangleWidth*2));
-    	double currentWidth=depth*bottomDegree;
-    	//System.out.println("CURRENT WIDTH: " + currentWidth + "\tAT DEPTH OF: " + depth + ", WITH CONST DEGREE OF: " + bottomDegree);
-    	return currentWidth*2.0;
+    	double ratio = this.totalTriangleWidth/this.totalTriangleHeight;	
+    	return depth*ratio;
     }
     
 	// Method to draw a set of dots, and interconnected lines, from arrays passed to it (representing a schedule)
-	private void drawPixels(Canvas canvas, Color color, int[] x, int[] y, int width) {
+	private void drawPixels(Canvas canvas, Color color, double[] x, double[] y, int width) {
 		PixelWriter pixelWriter = canvas.getGraphicsContext2D().getPixelWriter();
 		
+		double max = Arrays.stream(x).max().orElse(1.0);
+		
+		for (int j = 0; j < x.length; j++) {
+			x[j] /= max + 0.01;
+			y[j] = this.startPointY + y[j]*this.totalTriangleHeight;
+			x[j] = this.startPointX - horizontalLength(y[j] - this.startPointY)/2.0 + x[j]*horizontalLength(y[j] - this.startPointY);
+			
+		}
+	
 		// Loop through all points
 		for (int i = 0; i < x.length; i++) {
-			
-			//System.out.println("X: " + x[i] + "\tY: " + y[i]);
-			
+
 			// Both draw a point, then a line to the next point, as you traverse coordinates
-			pixelWriter.setColor(x[i], y[i], color);
-			
+			pixelWriter.setColor((int)x[i], (int)y[i], color);
 			if ((i + 1) == x.length) {
-				
 			} else {
-				drawLine(x[i], y[i], x[i+1], y[i+1], color, width);
+				drawLine(x[i], y[i], x[i + 1], y[i + 1], color, width);
 			}
-			
 		}
 	}
     

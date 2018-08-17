@@ -8,7 +8,7 @@ public class PieChartManager extends Manager {
 
 	private PieChart pieChart;
 
-	private PieChart.Data diskData;
+	//private PieChart.Data diskData;
 	private PieChart.Data arrayData;
 	private PieChart.Data queueData;
 
@@ -16,11 +16,11 @@ public class PieChartManager extends Manager {
 
 		this.pieChart = pieChart;
 
-		diskData = new PieChart.Data("Disk",0);
+		//diskData = new PieChart.Data("Disk",0);
 		arrayData = new PieChart.Data("Array",0);
 		queueData = new PieChart.Data("Queue",0);
 
-		pieChart.getData().setAll(diskData,arrayData,queueData);
+		pieChart.getData().setAll(arrayData,queueData);
 		pieChart.labelsVisibleProperty().setValue(true);
 		pieChart.legendVisibleProperty().setValue(true);
 	}
@@ -41,7 +41,7 @@ public class PieChartManager extends Manager {
 		double percentInArray = 100.0 * schedulesInArray / totalSchedules;
 		double percentInQueue = 100.0 * schedulesInQueue / totalSchedules;
 
-		diskData.setPieValue(percentOnDisk);
+		//diskData.setPieValue(percentOnDisk);
 		arrayData.setPieValue(percentInArray);
 		queueData.setPieValue(percentInQueue);
 	}
