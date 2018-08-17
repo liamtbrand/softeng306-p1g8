@@ -3,14 +3,19 @@ package se306group8.scheduleoptimizer.visualisation;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.scene.chart.XYChart.Data;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
@@ -31,6 +36,11 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int scheduleOnDiskStorageSize;
 	
 	private volatile int numberOfProcessors;
+	
+	//Used for the histogram
+	private volatile int[] histogramData = new int[0];
+	private volatile int slots = 0;
+	private volatile int granularity = 0;
 	
 	private final List<InvalidationListener> listeners;
 	
@@ -139,7 +149,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	public int getSchedulesOnDisk() {
 		return schedulesOnDisk;
 	}
-
+	
 	@Override
 	public void setScheduleOnDiskStorageSize(int bytes) {
 		scheduleOnDiskStorageSize = bytes;
@@ -179,8 +189,40 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
+	public void setScheduleDistribution(int[] histogramData, int limit) {
+		this.histogramData = histogramData;
+		slots = limit;
+	}
+	
+	@Override
 	public void removeListener(InvalidationListener listener) {
 		listeners.remove(listener);
 	}
 
+	public Collection<Data<String, Number>> getHistogramData() {
+		Collection<Data<String, Number>> col = new ArrayList<>();
+		
+		boolean added = false;
+		for(int i = 0; i < slots; i++) {
+			if(added || histogramData[i] != 0) {
+				added = true;
+				col.add(new Data<>(getName(i), histogramData[i]));
+			}
+		}
+		
+		return col;
+	}
+
+	@Override
+	public void setBucketSize(int granularity) {
+		this.granularity = granularity;
+	}
+	
+	private String getName(int i) {
+		if(granularity == 1) {
+			return Integer.toString(i);
+		} else {
+			return Integer.toString(i * granularity) + " - " + Integer.toString((i + 1) * granularity - 1);
+		}
+	}
 }

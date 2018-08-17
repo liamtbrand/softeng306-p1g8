@@ -22,6 +22,8 @@ public class MainController implements Initializable {
 	SearchSpacePageController searchSpacePageController;
 	@FXML
 	ConsolePageController consolePageController;
+	@FXML
+	HistogramController histogramPageController;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
