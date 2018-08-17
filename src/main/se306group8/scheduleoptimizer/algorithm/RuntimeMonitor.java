@@ -46,7 +46,12 @@ public interface RuntimeMonitor {
 	
 	public void setNumberOfProcessors(int processors);
 
+
 	public default void interuptAlgorithm() {throw new UnsupportedOperationException();};
 	public default boolean isInterupted() {return false;};
 	
+	default void setScheduleDistribution(int[] distribution, int limit) {  }
+	default void setBucketSize(int granularity) {  }
+	void setAlgorithmName(String name);
+	void setParallelized(int cores);
 }

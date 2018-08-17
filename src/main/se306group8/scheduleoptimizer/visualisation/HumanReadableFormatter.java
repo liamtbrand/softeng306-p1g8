@@ -2,7 +2,7 @@ package se306group8.scheduleoptimizer.visualisation;
 
 public class HumanReadableFormatter {
 
-	private static final String[] orderOfMagnitude = {"","k","M","G","T","P","Y"};
+	private static final String[] orderOfMagnitude = {" ","k","M","G","T","P","Y"};
 
 	/**
 	 * Format a given integer to three places,

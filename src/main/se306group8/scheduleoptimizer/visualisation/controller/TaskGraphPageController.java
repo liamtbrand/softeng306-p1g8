@@ -17,11 +17,11 @@ public class TaskGraphPageController extends Controller {
 	@FXML private Label title;
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void setup() {
 		
 		startManager(new ScheduleManager(
 				tasks, processors, chart, title
-		),0l,1000l);
+		));
 
 	}
 

@@ -12,10 +12,17 @@
 * {
    -colour-1: #44608c;
    -colour-2: #7595c6;
+   -sidebar-colour: #eee;
 }
 
 .rectangle {
 	-fx-fill: white;
+}
+
+/* SIDEBAR STYLING */
+
+.sidebar {
+    -fx-background-color: -sidebar-colour;
 }
 
 /* CHART STYLING */
@@ -23,11 +30,12 @@
 .chart-legend {
 	-fx-background-radius: 0;
 	-fx-border-radius: 0;
-	-fx-background-color: white;
+	-fx-background-color: -sidebar-colour;
 }
 
 .chart {
-	-fx-background-color: white;
+	-fx-background-color: -sidebar-colour;
+	-fx-font-family: 'Menlo';
 }
 
 .chart-plot-background {
@@ -79,8 +87,13 @@
     -fx-alignment: CENTER;
     -fx-text-fill: grey;
     -fx-font-size: 12px;
+    -fx-font-family: 'Menlo';
 }
 
 .tab:selected .tab-label { 
     -fx-text-fill: white;
+}
+
+.label {
+    -fx-font-family: 'Menlo';
 }

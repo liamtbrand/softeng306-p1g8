@@ -1,6 +1,7 @@
 package se306group8.scheduleoptimizer.algorithm.storage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
@@ -13,6 +14,9 @@ final class BlockScheduleArray extends ScheduleArray {
 	
 	/** The first width of lower bounds that has not been added to the queue. */
 	private int widthAfterQueue = 0;
+	
+	/** Width sizes */
+	private int[] widthSize = new int[1024];
 	
 	/** Any schedule with a lower bound greater than this can be purged. */
 	private int maximumBound = Integer.MAX_VALUE;
@@ -71,6 +75,7 @@ final class BlockScheduleArray extends ScheduleArray {
 		for(int i = newLargestWidth + 1; i < widths.size() && i <= oldLargestWidth; i++) {
 			for(ScheduleBlock block : widths.get(i)) {
 				block.remove();
+				widthSize[i] -= block.size;
 			}
 			
 			widths.get(i).clear();
@@ -79,6 +84,19 @@ final class BlockScheduleArray extends ScheduleArray {
 	
 	int getPruneMaximum() {
 		return maximumBound;
+	}
+	
+	@Override
+	int add(TreeSchedule schedule, boolean addToQueue) throws OutOfMemoryError {
+		int width = getWidth(schedule.getLowerBound());
+		
+		while(widthSize.length <= width) {
+			widthSize = Arrays.copyOf(widthSize, widthSize.length * 2);
+		}
+		
+		widthSize[width]++;
+		
+		return super.add(schedule, addToQueue);
 	}
 	
 	/** Returns false if there are no more widths to add */
@@ -102,5 +120,17 @@ final class BlockScheduleArray extends ScheduleArray {
 
 	int getEndOfQueue() {
 		return widthAfterQueue * granularity;
+	}
+
+	public int[] getDistribution() {
+		return widthSize;
+	}
+
+	public int getNumberOfSlots() {
+		return widths.size();
+	}
+
+	public int getGranularity() {
+		return granularity;
 	}
 }

@@ -15,11 +15,11 @@ public class SearchSpacePageController extends Controller {
 	private Canvas canvas;
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void setup() {
 	    GraphicsContext gc = canvas.getGraphicsContext2D();
 	    draw(gc, canvas.getWidth(), canvas.getHeight());
-	    
-		startManager(new CanvasFillManager(canvas),0l,1000l);
+    
+		startManager(new CanvasFillManager(canvas), UpdateFrequency.FAST);
 	}
 
 	/**
@@ -32,7 +32,7 @@ public class SearchSpacePageController extends Controller {
     private void draw(GraphicsContext gc, double width, double height) {
  
       gc.setStroke(Color.BLACK);
-      gc.setLineWidth(5);
+      gc.setLineWidth(0.5);
       
       double[] x = {width/6.0, width/2.0, 5*width/6.0};
       double[] y = {7.0*height/8.0, height/8.0, 7.0*height/8.0};

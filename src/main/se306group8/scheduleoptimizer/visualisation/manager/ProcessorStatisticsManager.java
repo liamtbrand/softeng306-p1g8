@@ -1,7 +1,7 @@
 package se306group8.scheduleoptimizer.visualisation.manager;
 
-import javafx.application.Platform;
 import javafx.scene.control.Label;
+import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
 public class ProcessorStatisticsManager extends Manager {
 
@@ -14,11 +14,9 @@ public class ProcessorStatisticsManager extends Manager {
 		runtime = Runtime.getRuntime();
 	}
 
-	protected void updateHook() {
+	protected void updateHook(ObservableRuntimeMonitor monitor) {
 		int availableProcessors = runtime.availableProcessors();
-		Platform.runLater(() -> {
-			availableProcessorsLabel.textProperty().setValue(""+availableProcessors);
-		});
+		availableProcessorsLabel.textProperty().setValue(availableProcessors+"   ");
 	}
 
 }
