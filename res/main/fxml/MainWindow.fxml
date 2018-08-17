@@ -33,7 +33,7 @@
                   </TabPane>
                   <AnchorPane minWidth="300.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="33.0">
                      <children>
-                        <fx:include fx:id="dashboardPage" source="DashboardPage.fxml" />
+                        <fx:include fx:id="dashboardPage" source="DashboardPage.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </children>
