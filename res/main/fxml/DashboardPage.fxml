@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -10,8 +11,46 @@
 
 <AnchorPane maxWidth="300.0" minWidth="300.0" styleClass="sidebar" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.DashboardPageController">
    <children>
-      <VBox spacing="20.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+      <VBox spacing="10.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
          <children>
+            <HBox alignment="TOP_CENTER">
+               <children>
+                  <Label text="Runtime Statistics">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <AnchorPane>
+               <children>
+                  <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label style="-fx-font-family: menlo;" text="Algorithm Runtime:" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="algorithmRuntimeLabel" />
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label style="-fx-font-family: menlo;" text="Algorithm:" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="algorithmLabel" />
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label style="-fx-font-family: menlo;" text="Parallelized:" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <CheckBox fx:id="parallelizedCheckbox" disable="true" mnemonicParsing="false" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
             <AnchorPane>
                <children>
                   <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -137,7 +176,7 @@
                                  </font>
                               </Label>
                               <Region HBox.hgrow="ALWAYS" />
-                              <Label fx:id="schedulesPerSecondLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="50.0" prefHeight="16.0">
+                              <Label fx:id="schedulesOnDiskLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="50.0" prefHeight="16.0">
                                  <font>
                                     <Font name="Menlo Regular" size="13.0" />
                                  </font>
@@ -146,13 +185,13 @@
                         </HBox>
                         <HBox>
                            <children>
-                              <Label text="Schedules per second:">
+                              <Label text="Schedules per Second:">
                                  <font>
                                     <Font name="Menlo Regular" size="13.0" />
                                  </font>
                               </Label>
                               <Region HBox.hgrow="ALWAYS" />
-                              <Label fx:id="schedulesOnDiskLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="50.0" prefHeight="16.0">
+                              <Label fx:id="schedulesPerSecondLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="50.0" prefHeight="16.0">
                                  <font>
                                     <Font name="Menlo Regular" size="13.0" />
                                  </font>
@@ -163,8 +202,7 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <PieChart fx:id="storageBreakdown" prefHeight="250.0" prefWidth="250.0" title="Storage Breakdown" />
-            <Region VBox.vgrow="ALWAYS" />
+            <PieChart fx:id="storageBreakdown" labelLineLength="10.0" minHeight="225.0" minWidth="250.0" prefHeight="225.0" prefWidth="250.0" title="Storage Breakdown" />
          </children>
       </VBox>
    </children>

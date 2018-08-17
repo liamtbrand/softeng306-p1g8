@@ -35,6 +35,7 @@
 
 .chart {
 	-fx-background-color: -sidebar-colour;
+	-fx-font-family: 'Menlo';
 }
 
 .chart-plot-background {
@@ -86,8 +87,13 @@
     -fx-alignment: CENTER;
     -fx-text-fill: grey;
     -fx-font-size: 12px;
+    -fx-font-family: 'Menlo';
 }
 
 .tab:selected .tab-label { 
     -fx-text-fill: white;
+}
+
+.label {
+    -fx-font-family: 'Menlo';
 }
