@@ -142,7 +142,13 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 		pool.invoke(rootJob);
 		getMonitor().updateBestSchedule(bestSoFar.get());
 		
+		if (getMonitor().isInterupted()) {
+			throw new InterruptedException();
+		}
+		
 		return bestSoFar.get().getFullSchedule();
+		
+		
 	}
 
 }
