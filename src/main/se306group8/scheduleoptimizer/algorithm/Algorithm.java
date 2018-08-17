@@ -63,4 +63,11 @@ public abstract class Algorithm {
 	protected final RuntimeMonitor getMonitor() {
 		return runtimeMonitor;
 	}
+
+	/**
+	 * Algorithms should implement this to return their human readable name.
+	 * @return Human readable algorithm name.
+	 */
+	public abstract String toString();
+
 }

@@ -141,4 +141,9 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 		return bestSoFar.get().getFullSchedule();
 	}
 
+	@Override
+	public String toString() {
+		return "DFS Branch & Bound";
+	}
+
 }

@@ -43,6 +43,11 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 		return schedule;
 	}
 
+	@Override
+	public String toString() {
+		return "DFS Branch & Bound";
+	}
+
 	private TreeSchedule branchAndBound(TreeSchedule schedule, TreeSchedule best, int numberOfProcessors) throws InterruptedException {
 		// Get all children in order from best lower bound to worst
 		// TODO add processor number to GCSF

@@ -60,7 +60,7 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setNumberOfProcessors(int processors) {
+	public void setProcessorsToScheduleOn(int processors) {
 		// Do Nothing
 	}
 
@@ -70,7 +70,7 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setParallelized(int cores) {
+	public void setCoresToUseForExecution(int cores) {
 		// Do Nothing
 	}
 }

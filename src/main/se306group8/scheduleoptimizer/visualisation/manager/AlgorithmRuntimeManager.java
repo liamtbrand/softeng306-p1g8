@@ -9,16 +9,20 @@ public class AlgorithmRuntimeManager extends Manager {
 
 	private Label algorithmRuntimeLabel;
 	private Label algorithmLabel;
-	private CheckBox parallelizedCheckbox;
+	private Label parallelizedLabel;
 
-	public AlgorithmRuntimeManager(Label algorithmRuntimeLabel, Label algorithmLabel, CheckBox parallelizedCheckbox) {
+	public AlgorithmRuntimeManager(Label algorithmRuntimeLabel, Label algorithmLabel, Label parallelizedLabel) {
 		this.algorithmRuntimeLabel = algorithmRuntimeLabel;
 		this.algorithmLabel = algorithmLabel;
-		this.parallelizedCheckbox = parallelizedCheckbox;
+		this.parallelizedLabel = parallelizedLabel;
 	}
 
 	@Override
 	protected void updateHook() {
-
+		Platform.runLater(() -> {
+			algorithmLabel.textProperty().setValue(FXApplication.getMonitor().getAlgorithmName());
+			int cores = FXApplication.getMonitor().getCoresToUseForExecution();
+			parallelizedLabel.textProperty().setValue(cores + (cores > 1 ? " Cores" : " Core"));
+		});
 	}
 }

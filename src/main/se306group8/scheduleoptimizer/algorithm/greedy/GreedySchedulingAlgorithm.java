@@ -41,4 +41,9 @@ public class GreedySchedulingAlgorithm extends Algorithm {
 		return schedule.getFullSchedule();
 	}
 
+	@Override
+	public String toString() {
+		return "List Scheduling";
+	}
+
 }

@@ -252,7 +252,7 @@ public class PerformanceTest {
 					}
 
 					@Override
-					public void setNumberOfProcessors(int processors) {
+					public void setProcessorsToScheduleOn(int processors) {
 						// TODO Auto-generated method stub
 						
 					}
@@ -263,7 +263,7 @@ public class PerformanceTest {
 					}
 
 					@Override
-					public void setParallelized(int cores) {
+					public void setCoresToUseForExecution(int cores) {
 
 					}
 				};

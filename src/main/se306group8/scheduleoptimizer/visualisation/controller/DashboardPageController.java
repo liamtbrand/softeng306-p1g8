@@ -14,7 +14,7 @@ public class DashboardPageController extends Controller {
 
 	@FXML private Label algorithmRuntimeLabel;
 	@FXML private Label algorithmLabel;
-	@FXML private CheckBox parallelizedCheckbox;
+	@FXML private Label parallelizedLabel;
 
 	@FXML private Label schedulesExploredLabel;
 	@FXML private Label schedulesInArrayLabel;
@@ -37,7 +37,7 @@ public class DashboardPageController extends Controller {
 		startManager(new AlgorithmRuntimeManager(
 				algorithmRuntimeLabel,
 				algorithmLabel,
-				parallelizedCheckbox
+				parallelizedLabel
 		), 0l, 1000l);
 
 		startManager(new ScheduleStatisticsManager(

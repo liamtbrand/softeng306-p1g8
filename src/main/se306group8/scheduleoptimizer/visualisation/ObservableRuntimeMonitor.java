@@ -38,6 +38,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile String algorithmName;
 	
 	private volatile int numberOfProcessors;
+	private volatile int coresToUseForExecution;
 	
 	//Used for the histogram
 	private volatile int[] histogramData = new int[0];
@@ -60,6 +61,9 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		scheduleInQueueStorageSize = 0;
 		schedulesOnDisk = 0;
 		scheduleOnDiskStorageSize = 0;
+
+		algorithmName = "Unnamed";
+		coresToUseForExecution = 1;
 		
 		numberOfProcessors = 0;
 
@@ -181,7 +185,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		return numberOfProcessors;
 	}
 	
-	public void setNumberOfProcessors(int processors) {
+	public void setProcessorsToScheduleOn(int processors) {
 		numberOfProcessors = processors;
 	}
 
@@ -191,8 +195,12 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void setParallelized(int cores) {
+	public void setCoresToUseForExecution(int cores) {
+		this.coresToUseForExecution = cores;
+	}
 
+	public int getCoresToUseForExecution() {
+		return coresToUseForExecution;
 	}
 
 	@Override
@@ -231,10 +239,16 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 	
 	private String getName(int i) {
+
 		if(granularity == 1) {
 			return Integer.toString(i);
 		} else {
 			return Integer.toString(i * granularity) + " - " + Integer.toString((i + 1) * granularity - 1);
 		}
 	}
+
+	public String getAlgorithmName() {
+		return algorithmName;
+	}
+
 }

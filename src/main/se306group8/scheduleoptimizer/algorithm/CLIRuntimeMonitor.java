@@ -201,7 +201,7 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setNumberOfProcessors(int processors) {
+	public void setProcessorsToScheduleOn(int processors) {
 		// TODO 
 		
 	}
@@ -212,7 +212,7 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setParallelized(int cores) {
+	public void setCoresToUseForExecution(int cores) {
 		// TODO
 	}
 

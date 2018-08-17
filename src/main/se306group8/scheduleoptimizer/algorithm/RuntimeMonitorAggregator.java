@@ -69,8 +69,8 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 	
 	@Override
-	public void setNumberOfProcessors(int processors) {
-		runtimeMonitors.forEach(m -> m.setNumberOfProcessors(processors));
+	public void setProcessorsToScheduleOn(int processors) {
+		runtimeMonitors.forEach(m -> m.setProcessorsToScheduleOn(processors));
 	}
 
 	@Override
@@ -89,8 +89,8 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setParallelized(int cores) {
-		runtimeMonitors.forEach(m -> m.setParallelized(cores));
+	public void setCoresToUseForExecution(int cores) {
+		runtimeMonitors.forEach(m -> m.setCoresToUseForExecution(cores));
 	}
 
 }
