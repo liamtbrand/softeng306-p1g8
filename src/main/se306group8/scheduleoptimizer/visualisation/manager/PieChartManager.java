@@ -1,6 +1,5 @@
 package se306group8.scheduleoptimizer.visualisation.manager;
 
-import javafx.application.Platform;
 import javafx.scene.chart.PieChart;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
@@ -27,9 +26,7 @@ public class PieChartManager extends Manager {
 	}
 
 	@Override
-	protected void updateHook() {
-		ObservableRuntimeMonitor monitor = FXApplication.getMonitor();
-
+	protected void updateHook(ObservableRuntimeMonitor monitor) {
 		int schedulesInArray = monitor.getSchedulesInArray();
 		int schedulesInQueue = monitor.getSchedulesInQueue();
 		int schedulesOnDisk = monitor.getSchedulesOnDisk();
@@ -44,10 +41,8 @@ public class PieChartManager extends Manager {
 		double percentInArray = 100.0 * schedulesInArray / totalSchedules;
 		double percentInQueue = 100.0 * schedulesInQueue / totalSchedules;
 
-		Platform.runLater(() -> {
-			diskData.setPieValue(percentOnDisk);
-			arrayData.setPieValue(percentInArray);
-			queueData.setPieValue(percentInQueue);
-		});
+		diskData.setPieValue(percentOnDisk);
+		arrayData.setPieValue(percentInArray);
+		queueData.setPieValue(percentInQueue);
 	}
 }

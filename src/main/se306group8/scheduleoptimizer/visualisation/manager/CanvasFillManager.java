@@ -47,34 +47,28 @@ public class CanvasFillManager extends Manager {
 	
 	
 	@Override
-	protected void updateHook() {
-		ObservableRuntimeMonitor monitor = FXApplication.getMonitor();
+	protected void updateHook(ObservableRuntimeMonitor monitor) {
 		
 		if (monitor.getBestSchedule() == null) {
 			return;
 		}
 		
-		// Called and run once every second
-		Platform.runLater(() -> {
-			
-			// Currently a debug line
-			//System.out.println("RUNTIME: " + monitor.getBestSchedule().getRuntime() + ", IS COMPLETE: " + monitor.getBestSchedule().isComplete());
-			
-			Object[] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
-			
-			// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
-			if (keepDrawing) {
-				if (monitor.getBestSchedule().isComplete()) {
-					drawPixels(this.canvas, Color.DARKBLUE, (int [])coordinates[0], (int [])coordinates[1], 3);
-					this.keepDrawing = false;
-				} else {
-					drawPixels(this.canvas, Color.GREY, (int [])coordinates[0], (int [])coordinates[1], 1);
-				}
+		// Currently a debug line
+		//System.out.println("RUNTIME: " + monitor.getBestSchedule().getRuntime() + ", IS COMPLETE: " + monitor.getBestSchedule().isComplete());
+
+		Object[] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
+
+		// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
+		if (keepDrawing) {
+			if (monitor.getBestSchedule().isComplete()) {
+				drawPixels(this.canvas, Color.DARKBLUE, (int [])coordinates[0], (int [])coordinates[1], 3);
+				this.keepDrawing = false;
 			} else {
-				// Stop drawing
+				drawPixels(this.canvas, Color.GREY, (int [])coordinates[0], (int [])coordinates[1], 1);
 			}
-			
-		});
+		} else {
+			// Stop drawing
+		}
 	}
 	
 	// Method that translates an input partial schedule, into a series of x/y coordinates

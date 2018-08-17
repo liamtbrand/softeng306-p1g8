@@ -3,10 +3,10 @@ package se306group8.scheduleoptimizer.visualisation.controller;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
-import se306group8.scheduleoptimizer.visualisation.manager.*;
-
-import java.net.URL;
-import java.util.*;
+import se306group8.scheduleoptimizer.visualisation.manager.MemoryStatisticsManager;
+import se306group8.scheduleoptimizer.visualisation.manager.PieChartManager;
+import se306group8.scheduleoptimizer.visualisation.manager.ProcessorStatisticsManager;
+import se306group8.scheduleoptimizer.visualisation.manager.ScheduleStatisticsManager;
 
 public class DashboardPageController extends Controller {
 
@@ -24,7 +24,7 @@ public class DashboardPageController extends Controller {
 	@FXML private PieChart storageBreakdown;
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void setup() {
 
 		// Create our managers for the dashboard components
 
@@ -35,21 +35,21 @@ public class DashboardPageController extends Controller {
 				schedulesOnDiskLabel,
 				schedulesPerSecondLabel,
 				1
-		),0l,1000l);
+		));
 
 		startManager(new PieChartManager(
 				storageBreakdown
-		), 0l, 1000l);
+		));
 
 		startManager(new MemoryStatisticsManager(
 				maxMemoryLabel,
 				usedMemoryLabel,
 				freeMemoryLabel
-		),0l,1000l);
+		));
 
 		startManager(new ProcessorStatisticsManager(
 				availableProcessorsLabel
-		),0l,1000l);
+		));
 
 	}
 
