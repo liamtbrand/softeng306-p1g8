@@ -34,6 +34,8 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 
+		getMonitor().setNumberOfProcessors(numberOfProcessors);
+		
 		visited = 1;
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic, numberOfProcessors);
 		
