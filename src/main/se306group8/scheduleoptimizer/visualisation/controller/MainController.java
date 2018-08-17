@@ -42,6 +42,7 @@ public class MainController implements Initializable {
 		taskGraphPageController.stop();
 		searchSpacePageController.stop();
 		consolePageController.stop();
+		histogramPageController.stop();
 	}
 
 }
