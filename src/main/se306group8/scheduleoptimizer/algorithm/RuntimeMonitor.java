@@ -46,6 +46,7 @@ public interface RuntimeMonitor {
 	
 	public void setNumberOfProcessors(int processors);
 
-
+	public default void interuptAlgorithm() {throw new UnsupportedOperationException();};
+	public default boolean isInterupted() {return false;};
 	
 }

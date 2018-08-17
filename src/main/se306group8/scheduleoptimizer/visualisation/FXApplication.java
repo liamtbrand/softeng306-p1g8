@@ -78,7 +78,7 @@ public class FXApplication extends Application {
 		mainController.stop();
 
 		// Stop the algorithm.
-		algorithmThread.interrupt();
+		monitor.interuptAlgorithm();
 		try {
 			algorithmThread.join();
 		} catch (InterruptedException e) {

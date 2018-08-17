@@ -72,5 +72,15 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	public void setNumberOfProcessors(int processors) {
 		runtimeMonitors.forEach(m -> m.setNumberOfProcessors(processors));
 	}
+	
+	
+	@Override
+	public boolean isInterupted() {
+		boolean interupted = false;
+		for (RuntimeMonitor m:runtimeMonitors) {
+			interupted = interupted || m.isInterupted();
+		}
+		return interupted;
+	}
 
 }

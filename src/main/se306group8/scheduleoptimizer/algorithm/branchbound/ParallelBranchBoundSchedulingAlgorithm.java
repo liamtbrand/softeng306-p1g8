@@ -44,6 +44,9 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 		}
 		
 		private void compute(TreeSchedule tree) {
+			if (getMonitor().isInterupted()) {
+				return;
+			}
 			List<TreeSchedule> childSchedules = finder.getChildSchedules(tree);
 			childSchedules.sort(null);
 			
@@ -124,7 +127,6 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		pool = new ForkJoinPool(parallelism);
-		
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic, numberOfProcessors);
 		ForkJob rootJob = new ForkJob(emptySchedule);
 		explored = new AtomicInteger();

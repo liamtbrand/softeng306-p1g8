@@ -33,6 +33,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int numberOfProcessors;
 	
 	private final List<InvalidationListener> listeners;
+	private volatile boolean interupted = false;
 	
 	public ObservableRuntimeMonitor() {
 
@@ -183,4 +184,13 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		listeners.remove(listener);
 	}
 
+	@Override
+	public void interuptAlgorithm() {
+		interupted  = true;
+	}
+	
+	@Override
+	public boolean isInterupted() {
+		return interupted;
+	}
 }

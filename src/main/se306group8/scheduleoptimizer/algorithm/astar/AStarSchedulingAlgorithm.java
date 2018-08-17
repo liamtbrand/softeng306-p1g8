@@ -65,7 +65,11 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			queue.signalMonitor(getMonitor());
 			
 			long queuememory = queue.size() * 10L;
-						
+			
+			if (getMonitor().isInterupted()) {
+				throw new InterruptedException();
+			}
+			
 			if ( queuememory < maxMemory) {
 				explore(best);
 			} else {
@@ -94,6 +98,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	}
 
 	TreeSchedule explore(TreeSchedule best) throws InterruptedException {
+		if (getMonitor().isInterupted()) {
+			throw new InterruptedException();
+		}
+		
 		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
 		
 		if(best.isComplete()) {
