@@ -15,11 +15,11 @@ public class SearchSpacePageController extends Controller {
 	private Canvas canvas;
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void setup() {
 	    GraphicsContext gc = canvas.getGraphicsContext2D();
 	    draw(gc, canvas.getWidth(), canvas.getHeight());
-	    
-		startManager(new CanvasFillManager(canvas),0l,16l);
+    
+		startManager(new CanvasFillManager(canvas), UpdateFrequency.FAST);
 	}
 
 	/**

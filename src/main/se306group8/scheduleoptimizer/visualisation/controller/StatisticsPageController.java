@@ -10,14 +10,14 @@ import java.util.*;
 public class StatisticsPageController extends Controller {
 
 	@FXML
-	private StackedBarChart scheduleStorage;
-
+	private StackedBarChart<String, Number> scheduleStorage;
+	
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void setup() {
 
 		startManager(new StackedBarChartManager(
 				scheduleStorage
-		),0l,1000l);
+		));
 
 	}
 
