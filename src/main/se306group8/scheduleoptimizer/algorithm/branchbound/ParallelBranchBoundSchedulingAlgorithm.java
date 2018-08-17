@@ -121,6 +121,11 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	}
 
 	@Override
+	protected int getNumberOfCores() {
+		return parallelism;
+	}
+	
+	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		pool = new ForkJoinPool(parallelism);
 		
@@ -139,6 +144,11 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 		pool.invoke(rootJob);
 		
 		return bestSoFar.get().getFullSchedule();
+	}
+
+	@Override
+	public String toString() {
+		return "DFS Branch & Bound";
 	}
 
 }

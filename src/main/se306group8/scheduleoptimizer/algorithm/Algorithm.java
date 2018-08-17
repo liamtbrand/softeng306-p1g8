@@ -1,5 +1,6 @@
 package se306group8.scheduleoptimizer.algorithm;
 
+import se306group8.scheduleoptimizer.Main;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
@@ -44,7 +45,7 @@ public abstract class Algorithm {
 	public final Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		
 		if(runtimeMonitor != null) {
-			runtimeMonitor.start();
+			runtimeMonitor.start(toString(), numberOfProcessors, getNumberOfCores());
 		}
 		
 		Schedule solution = produceCompleteScheduleHook(graph, numberOfProcessors);
@@ -56,6 +57,10 @@ public abstract class Algorithm {
 		return solution;
 	}
 	
+	protected int getNumberOfCores() {
+		return 1;
+	}
+	
 	/**
 	 * For use by an algorithm implementing the hook method to get the current monitor.
 	 * @return
@@ -63,4 +68,11 @@ public abstract class Algorithm {
 	protected final RuntimeMonitor getMonitor() {
 		return runtimeMonitor;
 	}
+
+	/**
+	 * Algorithms should implement this to return their human readable name.
+	 * @return Human readable algorithm name.
+	 */
+	public abstract String toString();
+
 }
