@@ -26,10 +26,11 @@ public class ScheduleManager extends Manager {
 	private final LineChart chart;
 	private final Label title;
 	
-	private final double GRAPH_WIDTH = 570;
+	private final double GRAPH_WIDTH = 521;
 	private final int GRAPH_HEIGHT = 180;
 
 	private final Paint BLUE = Color.web("#7595c6");
+	private final Paint GREEN = Color.web("#00a676");
 	
 	public ScheduleManager(VBox tasks, VBox processors, LineChart chart, Label title) {
 		this.tasks = tasks;
@@ -52,6 +53,7 @@ public class ScheduleManager extends Manager {
 		int taskHeight = GRAPH_HEIGHT/p;
 		
 		int runtime = bestSchedule.getRuntime();
+		String tempTitle = "";
 		
 		List<AnchorPane> taskPanes = new ArrayList<AnchorPane>();
 		List<Label> processorLabels = new ArrayList<Label>();
@@ -61,7 +63,7 @@ public class ScheduleManager extends Manager {
 			Label label = new Label("P"+currentProcessor);
 			label.setMinWidth(50);
 			label.setMinHeight(taskHeight);
-			label.setAlignment(Pos.CENTER);
+			label.setAlignment(Pos.TOP_CENTER);
 			processorLabels.add(label);
 			
 			currentProcessor++;
@@ -80,7 +82,12 @@ public class ScheduleManager extends Manager {
 				rectangle.setStroke(Color.WHITE);
 				
 				if (bestSchedule.isComplete()) {
-					rectangle.setFill(BLUE);
+					if (FXApplication.getMonitor().hasFinished()) {
+						tempTitle = "Best schedule found";
+						rectangle.setFill(GREEN);
+					} else {
+						rectangle.setFill(BLUE);
+					}
 				} else {
 					rectangle.setFill(Color.DARKGREY);
 				}
