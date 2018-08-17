@@ -57,126 +57,108 @@ public class CanvasFillManager extends Manager {
 		// Called and run once every second
 		Platform.runLater(() -> {
 			
-			Object[] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
-			
+			/*
+			double[][] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
+		
 			// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
 			if (keepDrawing) {
-				if (monitor.getBestSchedule().isComplete()) {
-					drawPixels(this.canvas, Color.DARKBLUE, (int [])coordinates[0], (int [])coordinates[1], 3);
+				if (FXApplication.getMonitor().hasFinished()) {
+					drawPixels(this.canvas, Color.DARKBLUE, coordinates[0], coordinates[1], 3);
 					this.keepDrawing = false;
 				} else {
-					drawPixels(this.canvas, Color.GREY, (int [])coordinates[0], (int [])coordinates[1], 1);
+					drawPixels(this.canvas, Color.GREY, coordinates[0], coordinates[1], 1);
 				}
 			} else {
 				// Stop drawing
 			}
+			
+			*/
 			
 		});
 	}
 	
 	// Method that translates an input partial schedule, into a series of x/y coordinates
 	// representing task allocations at given points
-    private Object[] scheduleToPixels(TreeSchedule schedule, int numberOfProcessors) {
+    private double[][] scheduleToPixels(TreeSchedule schedule, int numberOfProcessors) {
     	
+    	int i = schedule.getGraph().getAll().size();
     	
-    	
-    	// Number to aid in space partitioning
-    	int totalNumberOfTasks = schedule.getGraph().getAll().size();
-    	
-    	// Get currently allocated tasks
-    	Collection<Task> allocations = schedule.getAllocated();
-    	
-    	// List representing ordering of tasks by smallest to largest cost
-    	List<Task> tasks = new ArrayList(allocations);
-    	
-    	Collections.sort(tasks, new Comparator<Task>(){
-		     public int compare(Task t1, Task t2){
-		         if(t1.getCost() == t2.getCost())
-		             return 0;
-		         return t1.getCost() < t2.getCost() ? -1 : 1;
-		     }
-    	});
-    	
-    	double heightIncrement = this.totalTriangleHeight/(double)totalNumberOfTasks;
-    	
-    	// Represents current depth down the graph
-    	double depth = 0.0;
-    	
-    	// Arrays to buffer pixel coordinates into
-    	int[] xValues = new int[allocations.size() + 1];
-		int[] yValues = new int[allocations.size() + 1];
+    	// Arrays to buffer pixel coordinates into (xValues are 0 - 1, yValues are 1 - numberOfTasks)
+    	double[] xValues = new double[i + 1];
+		double[] yValues = new double[i + 1];
 		
+		// Setting first points
 		double xCoord = this.startPointX;
 		double yCoord = this.startPointY;
-		double range;
+		
+		xValues[0] = 0;
+		yValues[0] = 0;
+	
+		// COULD BE BUGGY (BY 1)
+		double heightIncrement = this.totalTriangleHeight/(i + 1);
+		
+		TreeSchedule s = schedule;
+		
+		// Recursively go back up schedule via parents, plotting points at each stage
+    	while (!s.getParent().isEmpty()) {
+    		
+    		xValues[i] = scheduleToPoint(s);
+    		yValues[i] = schedule.getAllocated().size()*heightIncrement;
+    		
+    		// Move up schedule (to parent)
+    		s = s.getParent();
+    		i--;
+    	}
     	
-		int i = 1;
-		
-		xValues[0] = (int)this.startPointX;
-		yValues[0] = (int)this.startPointY;
-		
-		yCoord+=heightIncrement;
-		depth+=heightIncrement;
-		
-		// System.out.println("Number of allocations: " + allocations.size());
-		
-		// Loop through all allocations, setting coordinates for each
-    	for (Task t : allocations) {
-    		ProcessorAllocation allocation = schedule.getAllocationFor(t);
-    		
-    		double partitionLength = horizontalLength(depth);
-    		
-    		xCoord = nextXCoord((double)tasks.indexOf(t), schedule.getAllocationFor(t), xCoord, (depth + 1.0), tasks.size(), numberOfProcessors);
-    		
-    		range = ((canvas.getWidth()/2.0) + partitionLength) - ((canvas.getWidth()/2.0 - partitionLength)) + 1.0;
-    		xCoord = (int)(Math.random()*range) + (canvas.getWidth()/2.0 - partitionLength);
-    		
-    		xValues[i] = (int)xCoord;
-    		yValues[i] = (int)yCoord;
-    		
-    		i++;
-
-    		yCoord+=heightIncrement;
-    		depth+=heightIncrement;
-    	} 
-		
-    	return new Object[]{xValues, yValues};
+    	return new double[][]{xValues, yValues};
     }
     
-    // The meat of the entire functionality; partitioning space via choice of Task and Allocation
-    private double nextXCoord(double taskIndex, ProcessorAllocation allocation, double currentXCoord, double depth, int numberOfTasks, int numberOfProcessors) {
+    // Convert a given schedule (with a certain number of tasks), to a
+    // point between zero and one.
+    private double scheduleToPoint(TreeSchedule schedule) {
     	
-    	// Calculate total horizontal width of triangle at a given point
-    	double horLength = horizontalLength(depth);
-    	double partitionedRange = horLength/(Math.pow((numberOfProcessors*numberOfTasks), depth));
-    	double sumToAdd = partitionedRange*((allocation.processor/numberOfProcessors)*((taskIndex + 1.0)/numberOfTasks));
-    	double nextX = (currentXCoord - partitionedRange/2.0) + sumToAdd;
+    	int numberOfOptions = schedule.getAllocated().size()*FXApplication.getMonitor().getNumberOfProcessors();
     	
-    	// System.out.println("horLength: " + horLength + ", partitionedRange: " + partitionedRange + ", sumToAdd: " + sumToAdd + ", nextX: " + nextX);
+    	double value = 0.0;
+    	double horizontalLength = horizontalLength(schedule.getAllocated().size()*(this.totalTriangleHeight/schedule.getGraph().getAll().size()));
     	
-    	return nextX;
+    	for (Task t : schedule.getAllocated()) {
+    		ProcessorAllocation allocation = schedule.getAllocationFor(t);
+    		
+    		
+    	}
+    	
+    	return 0.0;
+    }
+    
+    // Convert allocation to number (as per James' pseudocode)
+    private double convertToNumber(ProcessorAllocation allocation, int totalNumberOfTasks) {
+    	return (allocation.processor - 1)/FXApplication.getMonitor().getNumberOfProcessors() + allocation.task.getId()/(FXApplication.getMonitor().getNumberOfProcessors()*totalNumberOfTasks);
+    }
+    
+    // Converts taskNumber to a given y-coordinate, (with respect to the top tip of the triangle) 
+    private double taskNumberToDepth(int taskNumber, int totalTasks) {
+    	return (this.totalTriangleHeight/totalTasks)*taskNumber;
     }
     
     // Calculates the horizontal length by which to section up, at any given depth in the triangle
     private double horizontalLength(double depth) {
-    	double bottomDegree = Math.tan(this.totalTriangleHeight/(this.totalTriangleWidth*2));
-    	double currentWidth=depth*bottomDegree;
-    	//System.out.println("CURRENT WIDTH: " + currentWidth + "\tAT DEPTH OF: " + depth + ", WITH CONST DEGREE OF: " + bottomDegree);
-    	return currentWidth*2.0;
+    	double ratio = this.totalTriangleWidth/this.totalTriangleHeight;	
+    	return depth*ratio;
     }
     
 	// Method to draw a set of dots, and interconnected lines, from arrays passed to it (representing a schedule)
-	private void drawPixels(Canvas canvas, Color color, int[] x, int[] y, int width) {
+	private void drawPixels(Canvas canvas, TreeSchedule schedule, Color color, double[] x, double[] y, int width) {
 		PixelWriter pixelWriter = canvas.getGraphicsContext2D().getPixelWriter();
+		
+		int xCoord;
+		int yCoord;
 		
 		// Loop through all points
 		for (int i = 0; i < x.length; i++) {
 			
-			//System.out.println("X: " + x[i] + "\tY: " + y[i]);
-			
 			// Both draw a point, then a line to the next point, as you traverse coordinates
-			pixelWriter.setColor(x[i], y[i], color);
-			
+			pixelWriter.setColor((int)x[i], (int)y[i], color);
 			if ((i + 1) == x.length) {
 			} else {
 				drawLine(x[i], y[i], x[i+1], y[i+1], color, width);

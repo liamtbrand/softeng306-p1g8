@@ -17,7 +17,7 @@ public class ProcessorStatisticsManager extends Manager {
 	protected void updateHook() {
 		int availableProcessors = runtime.availableProcessors();
 		Platform.runLater(() -> {
-			availableProcessorsLabel.textProperty().setValue(""+availableProcessors);
+			availableProcessorsLabel.textProperty().setValue(availableProcessors+"   ");
 		});
 	}
 
