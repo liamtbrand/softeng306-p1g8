@@ -186,7 +186,7 @@ public class PerformanceTest {
 					public void updateBestSchedule(TreeSchedule optimalSchedule) {}
 
 					@Override
-					public void start() {
+					public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
 						millionSolutions = 0;
 						startTime = System.nanoTime();
 					}
@@ -248,22 +248,6 @@ public class PerformanceTest {
 					@Override
 					public void setScheduleOnDiskStorageSize(int bytes) {
 						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void setProcessorsToScheduleOn(int processors) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void setAlgorithmName(String name) {
-
-					}
-
-					@Override
-					public void setCoresToUseForExecution(int cores) {
 
 					}
 				};

@@ -3,14 +3,11 @@ package se306group8.scheduleoptimizer.visualisation;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -22,7 +19,7 @@ import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
 public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 
-	private volatile boolean started;
+	
 	private volatile boolean finished;
 	private volatile TreeSchedule bestSchedule;
 	private volatile Queue<String> messages;
@@ -35,8 +32,9 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int schedulesOnDisk;
 	private volatile int scheduleOnDiskStorageSize;
 
+	//Set in the start method
+	private volatile boolean started;
 	private volatile String algorithmName;
-	
 	private volatile int numberOfProcessors;
 	private volatile int coresToUseForExecution;
 	
@@ -84,8 +82,12 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void start() {
+	public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
 		started = true;
+		algorithmName = name;
+		this.numberOfProcessors = numberOfProcessors;
+		this.coresToUseForExecution = coresToUseForExecution;
+		
 		invalidateListeners();
 	}
 
@@ -187,16 +189,6 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	
 	public void setProcessorsToScheduleOn(int processors) {
 		numberOfProcessors = processors;
-	}
-
-	@Override
-	public void setAlgorithmName(String name) {
-		algorithmName = name;
-	}
-
-	@Override
-	public void setCoresToUseForExecution(int cores) {
-		this.coresToUseForExecution = cores;
 	}
 
 	public int getCoresToUseForExecution() {

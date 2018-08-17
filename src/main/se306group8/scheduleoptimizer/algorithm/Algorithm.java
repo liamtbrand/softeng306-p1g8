@@ -1,5 +1,6 @@
 package se306group8.scheduleoptimizer.algorithm;
 
+import se306group8.scheduleoptimizer.Main;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
@@ -44,7 +45,7 @@ public abstract class Algorithm {
 	public final Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		
 		if(runtimeMonitor != null) {
-			runtimeMonitor.start();
+			runtimeMonitor.start(toString(), numberOfProcessors, Main.config.coresToUseForExecution());
 		}
 		
 		Schedule solution = produceCompleteScheduleHook(graph, numberOfProcessors);

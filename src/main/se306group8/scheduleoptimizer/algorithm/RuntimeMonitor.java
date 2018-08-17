@@ -16,7 +16,7 @@ public interface RuntimeMonitor {
 	/**
 	 * Method to be called upon algorithm-start
 	 */
-	public void start();
+	public void start(String name, int numberOfProcessors, int coresToUseForExecution);
 	
 	/**
 	 * Method to be called upon algorithm-finish
@@ -43,22 +43,8 @@ public interface RuntimeMonitor {
 
 	public void setSchedulesOnDisk(int number);
 	public void setScheduleOnDiskStorageSize(int bytes);
-	
-	public void setProcessorsToScheduleOn(int processors);
 
 	default void setScheduleDistribution(int[] distribution, int limit) {  }
 	default void setBucketSize(int granularity) {  }
-
-	/**
-	 * Set the name of the algorithm that is being executed.
-	 * @param name
-	 */
-	void setAlgorithmName(String name);
-
-	/**
-	 * Set the number of cores this algorithm is using.
-	 * @param cores
-	 */
-	void setCoresToUseForExecution(int cores);
 
 }

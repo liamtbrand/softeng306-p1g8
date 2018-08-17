@@ -19,8 +19,8 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void start() {
-		runtimeMonitors.forEach(m -> m.start());
+	public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
+		runtimeMonitors.forEach(m -> m.start(name, numberOfProcessors, coresToUseForExecution));
 	}
 
 	@Override
@@ -67,11 +67,6 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	public void setScheduleOnDiskStorageSize(int bytes) {
 		runtimeMonitors.forEach(m -> m.setScheduleOnDiskStorageSize(bytes));
 	}
-	
-	@Override
-	public void setProcessorsToScheduleOn(int processors) {
-		runtimeMonitors.forEach(m -> m.setProcessorsToScheduleOn(processors));
-	}
 
 	@Override
 	public void setBucketSize(int size) {
@@ -82,15 +77,4 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	public void setScheduleDistribution(int[] distribution, int limit) {
 		runtimeMonitors.forEach(m -> m.setScheduleDistribution(distribution, limit));
 	}
-	
-	@Override
-	public void setAlgorithmName(String name) {
-		runtimeMonitors.forEach(m -> m.setAlgorithmName(name));
-	}
-
-	@Override
-	public void setCoresToUseForExecution(int cores) {
-		runtimeMonitors.forEach(m -> m.setCoresToUseForExecution(cores));
-	}
-
 }
