@@ -40,6 +40,9 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		getMonitor().logMessage("Starting A*.");
+		
+		//used for the console output
+		boolean contingency = false;
 
 		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
 
@@ -71,10 +74,19 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			}
 			
 			if ( queuememory < maxMemory) {
+				if (contingency) {
+					contingency = false;
+					getMonitor().logMessage("Switching back to A*");
+				}
 				explore(best);
 			} else {
+				
+				if (!contingency) {
+					contingency = true;
+					getMonitor().logMessage("Using contingency plan Branch and Bound");
+				}
 				//System.out.println("Using contingency plan");
-				//getMonitor().logMessage("Using contingency plan");
+				
 				dfsBest = queue.getBestSchedule();
 				queue.put(branchAndBound(best));		
 				
