@@ -24,6 +24,11 @@
                                <fx:include fx:id="taskGraphPage" source="TaskGraphPage.fxml" />
                            </content>
                         </Tab>
+                        <Tab text="Schedule Distribution">
+                           <content>
+                               <fx:include fx:id="histogramPage" source="HistogramPage.fxml" />
+                           </content>
+                        </Tab>
                         <Tab text="Statistics">
                           <content>
                               <fx:include fx:id="statisticsPage" source="StatisticsPage.fxml" />
