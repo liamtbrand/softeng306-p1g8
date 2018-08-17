@@ -69,11 +69,11 @@ public class ScheduleStatisticsManager extends Manager {
 
 		Platform.runLater(() -> {
 
-			schedulesExploredLabel.textProperty().setValue(""+schedulesExplored);
-			schedulesInArrayLabel.textProperty().setValue(""+schedulesInArray);
-			schedulesInQueueLabel.textProperty().setValue(""+schedulesInQueue);
-			schedulesOnDiskLabel.textProperty().setValue(""+schedulesOnDisk);
-			schedulesPerSecondLabel.textProperty().setValue(""+(int)schedulesPerSecond);
+			schedulesExploredLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesExplored," ", 1));
+			schedulesInArrayLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInArray," ", 1));
+			schedulesInQueueLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInQueue," ", 1));
+			schedulesOnDiskLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesOnDisk," ",1));
+			schedulesPerSecondLabel.textProperty().setValue(HumanReadableFormatter.format((int)schedulesPerSecond," ", 1));
 		});
 	}
 }

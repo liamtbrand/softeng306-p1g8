@@ -12,10 +12,17 @@
 * {
    -colour-1: #44608c;
    -colour-2: #7595c6;
+   -sidebar-colour: #eee;
 }
 
 .rectangle {
 	-fx-fill: white;
+}
+
+/* SIDEBAR STYLING */
+
+.sidebar {
+    -fx-background-color: -sidebar-colour;
 }
 
 /* CHART STYLING */
@@ -23,11 +30,11 @@
 .chart-legend {
 	-fx-background-radius: 0;
 	-fx-border-radius: 0;
-	-fx-background-color: white;
+	-fx-background-color: -sidebar-colour;
 }
 
 .chart {
-	-fx-background-color: white;
+	-fx-background-color: -sidebar-colour;
 }
 
 .chart-plot-background {
