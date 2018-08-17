@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
+import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
 public class AlgorithmRuntimeManager extends Manager {
 
@@ -18,11 +19,9 @@ public class AlgorithmRuntimeManager extends Manager {
 	}
 
 	@Override
-	protected void updateHook() {
-		Platform.runLater(() -> {
-			algorithmLabel.textProperty().setValue(FXApplication.getMonitor().getAlgorithmName());
-			int cores = FXApplication.getMonitor().getCoresToUseForExecution();
-			parallelizedLabel.textProperty().setValue(cores + (cores > 1 ? " Cores" : " Core"));
-		});
+	protected void updateHook(ObservableRuntimeMonitor monitor) {
+    algorithmLabel.textProperty().setValue(FXApplication.getMonitor().getAlgorithmName());
+	  int cores = FXApplication.getMonitor().getCoresToUseForExecution();
+	  parallelizedLabel.textProperty().setValue(cores + (cores > 1 ? " Cores" : " Core"));
 	}
 }

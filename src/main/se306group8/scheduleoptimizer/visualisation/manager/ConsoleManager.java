@@ -1,8 +1,7 @@
 package se306group8.scheduleoptimizer.visualisation.manager;
 
-import javafx.application.Platform;
 import javafx.scene.control.TextArea;
-import se306group8.scheduleoptimizer.visualisation.FXApplication;
+import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
 public class ConsoleManager extends Manager {
 
@@ -13,13 +12,11 @@ public class ConsoleManager extends Manager {
 	}
 
 	@Override
-	protected void updateHook() {
+	protected void updateHook(ObservableRuntimeMonitor monitor) {
 		String message;
-		while((message = FXApplication.getMonitor().nextMessage()) != null) {
+		while((message = monitor.nextMessage()) != null) {
 			String msg = message;
-			Platform.runLater(() -> {
-				textArea.appendText(msg+"\n");
-			});
+			textArea.appendText(msg+"\n");
 		}
 	}
 
