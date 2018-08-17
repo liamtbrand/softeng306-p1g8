@@ -46,6 +46,6 @@ public interface RuntimeMonitor {
 	
 	public void setNumberOfProcessors(int processors);
 
-
-	
+	default void setScheduleDistribution(int[] distribution, int limit) {  }
+	default void setBucketSize(int granularity) {  }
 }
