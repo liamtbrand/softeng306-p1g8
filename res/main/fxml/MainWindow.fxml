@@ -24,11 +24,6 @@
                                <fx:include fx:id="taskGraphPage" source="TaskGraphPage.fxml" />
                            </content>
                         </Tab>
-                        <Tab text="Statistics">
-                          <content>
-                              <fx:include fx:id="statisticsPage" source="StatisticsPage.fxml" />
-                          </content>
-                        </Tab>
                     </tabs>
                   </TabPane>
                   <AnchorPane minWidth="300.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="33.0">

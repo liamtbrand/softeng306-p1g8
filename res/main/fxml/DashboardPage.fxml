@@ -18,6 +18,22 @@
                      <children>
                         <HBox>
                            <children>
+                              <Label style="-fx-font-family: menlo;" text="Algorithm Runtime:" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="runtimeLabel" />
+                           </children>
+                        </HBox>
+                        <HBox />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <HBox>
+                           <children>
                               <Label text="Available Processors:">
                                  <font>
                                     <Font name="Menlo Regular" size="13.0" />
@@ -164,7 +180,6 @@
                </children>
             </AnchorPane>
             <PieChart fx:id="storageBreakdown" prefHeight="250.0" prefWidth="250.0" title="Storage Breakdown" />
-            <Region VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
    </children>

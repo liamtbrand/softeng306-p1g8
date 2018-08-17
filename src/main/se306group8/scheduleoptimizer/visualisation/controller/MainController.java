@@ -15,8 +15,6 @@ public class MainController implements Initializable {
 	@FXML
 	DashboardPageController dashboardPageController;
 	@FXML
-	StatisticsPageController statisticsPageController;
-	@FXML
 	TaskGraphPageController taskGraphPageController;
 	@FXML
 	SearchSpacePageController searchSpacePageController;
@@ -36,7 +34,6 @@ public class MainController implements Initializable {
 	 */
 	public void stop() {
 		dashboardPageController.stop();
-		statisticsPageController.stop();
 		taskGraphPageController.stop();
 		searchSpacePageController.stop();
 		consolePageController.stop();
