@@ -61,7 +61,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 				}
 
 				for (int p = 1; p <= processorsToAllocate; p++) {
-					if(checkFixedOrder(task, p, schedule)/* && isBestParent(task, p, schedule)*/) {
+					if(checkFixedOrder(task, p, schedule) && isBestParent(task, p, schedule)) {
 						childrenSchedules.add(new TreeSchedule(task, p, schedule));
 					}
 				}
@@ -116,8 +116,8 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 		ForkJoinOrderResult parentOrder = ForkJoinOrderResult.UNSURE;
 		
 		if(bParent != null && aParent != null) {
-			ProcessorAllocation aParentAlloc = schedule.getAlloctionFor(aParent.getSource());
-			ProcessorAllocation bParentAlloc = schedule.getAlloctionFor(bParent.getSource());
+			ProcessorAllocation aParentAlloc = schedule.getAllocationFor(aParent.getSource());
+			ProcessorAllocation bParentAlloc = schedule.getAllocationFor(bParent.getSource());
 
 			if(aParentAlloc.processor != bParentAlloc.processor) {
 				return ForkJoinOrderResult.UNSURE; //Cannot say anything about the order.
@@ -152,7 +152,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 		return ForkJoinOrderResult.UNSURE; //The orders conflicted, we cannot be definitive
 	}
 	
-	private boolean checkHorizon(Task task, int processor, TreeSchedule schedule) {
+	/*private boolean checkHorizon(Task task, int processor, TreeSchedule schedule) {
 		//If these two tasks can be swapped
 		int positionOfNewTask = schedule.getNumberOfTasksOnProcessor(processor); //The 0 indexed position of the new task
 		
@@ -206,7 +206,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 				}
 			}
 		}
-	}
+	}*/
 	
 	//Ensures that the parent schedule is the earliest schedule that can produce this child.
 	private boolean isBestParent(Task task, int processor, TreeSchedule schedule) {
@@ -269,6 +269,6 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 		if(dep == null)
 			return -1;
 		
-		return dep.getCommunicationCost() + schedule.getAlloctionFor(dep.getSource()).endTime;
+		return dep.getCommunicationCost() + schedule.getAllocationFor(dep.getSource()).endTime;
 	}
 }

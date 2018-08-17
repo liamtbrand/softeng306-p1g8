@@ -30,7 +30,6 @@ public final class TaskGraph {
 		
 		int sum = 0;
 		for(Task task : tasks) {
-			taskMap[task.getId()]=task;
 			addTask(task);
 			if(task.getParents().isEmpty()) {
 				roots.add(task);
@@ -48,6 +47,7 @@ public final class TaskGraph {
 		
 		for(int i = 0; i < topologicalOrder.size(); i++) {
 			topologicalOrder.get(i).setId(i); //Ensure that the Ids are in topological order.
+			taskMap[i] = topologicalOrder.get(i);
 		}
 		
 		//Iterate backwards calculating the bottom times

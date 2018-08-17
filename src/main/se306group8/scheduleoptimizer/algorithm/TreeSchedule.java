@@ -200,7 +200,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			Task parentTask = dep.getSource();
 			removableTasks[parentTask.getId()] = false; //None of the parents can be removed.
 			
-			ProcessorAllocation alloc = parent.getAlloctionFor(parentTask);
+			ProcessorAllocation alloc = parent.getAllocationFor(parentTask);
 			int dataReadyTime;
 
 			if (alloc.processor == processor) {
@@ -217,7 +217,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		for (int i = 0; i < task.getParents().size(); i++) {
 			Dependency dep = task.getParents().get(i);
 			Task parentTask = dep.getSource();
-			ProcessorAllocation alloc = parent.getAlloctionFor(parentTask);
+			ProcessorAllocation alloc = parent.getAllocationFor(parentTask);
 			
 			if(alloc.processor != processor) {
 				requiredBy[parentTask.getId()] = startTime - parentTask.getCost() - dep.getCommunicationCost();
@@ -278,9 +278,9 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 				break;
 			case 1:
 				Dependency dep = task.getParents().get(0);
-				dataReadyTime[task.getId()] = dep.getCommunicationCost() + getAlloctionFor(dep.getSource()).endTime;
+				dataReadyTime[task.getId()] = dep.getCommunicationCost() + getAllocationFor(dep.getSource()).endTime;
 				
-				ProcessorAllocation alloc = getAlloctionFor(dep.getSource());
+				ProcessorAllocation alloc = getAllocationFor(dep.getSource());
 				
 				//Check if this parent processor is different, if it is cry.
 				if(parentProcessor != 0 && alloc.processor != parentProcessor) {
@@ -367,7 +367,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	 * Returns the ProcessorAllocation instance that this task was scheduled on.
 	 * This returns null if the task has not been scheduled.
 	 */
-	public ProcessorAllocation getAlloctionFor(Task t) {
+	public ProcessorAllocation getAllocationFor(Task t) {
 		return allocations[t.getId()];
 	}
 	
@@ -376,7 +376,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 	}
 
 	/**
-	 * Returns the last processor allocation on a processor null if no allocation
+	 * Returns the last processor allocation on a processor, null if no allocation
 	 * 
 	 * @param processor
 	 * @return

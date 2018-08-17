@@ -1,11 +1,11 @@
 package se306group8.scheduleoptimizer.visualisation.manager;
 
-import javafx.application.Platform;
 import javafx.scene.control.Label;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
+import se306group8.scheduleoptimizer.visualisation.HumanReadableFormatter;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
-public class ScheduleStatisticsManager extends ManagerThread {
+public class ScheduleStatisticsManager extends Manager {
 
 	private Label schedulesExploredLabel;
 	private Label schedulesInArrayLabel;
@@ -14,9 +14,9 @@ public class ScheduleStatisticsManager extends ManagerThread {
 	private Label schedulesPerSecondLabel;
 
 	private double schedulesPerSecond;
-	private int lastScheduleCount;
+	private long lastScheduleCount;
 	private long lastScheduleCountSampleTime;
-	private final double schedulesPerSecondAdjustmentFactor; // Applied for smoothing.
+	private double schedulesPerSecondAdjustmentFactor; // Applied for smoothing.
 
 	public ScheduleStatisticsManager(
 			Label schedulesExploredLabel,
@@ -38,26 +38,25 @@ public class ScheduleStatisticsManager extends ManagerThread {
 		// Setup schedules per second data.
 		lastScheduleCount = 0;
 		schedulesPerSecond = 0;
-		lastScheduleCountSampleTime = System.currentTimeMillis();
+		lastScheduleCountSampleTime = System.nanoTime();
 
 	}
 
 	@Override
-	protected void updateHook() {
-
-		ObservableRuntimeMonitor monitor = FXApplication.getMonitor();
-
+	protected void updateHook(ObservableRuntimeMonitor monitor) {
 		int schedulesExplored = monitor.getSchedulesExplored();
 
 		int schedulesInArray = monitor.getSchedulesInArray();
 		int schedulesInQueue = monitor.getSchedulesInQueue();
 		int schedulesOnDisk = monitor.getSchedulesOnDisk();
 
-		long currentSampleTime = System.currentTimeMillis();
-		int newScheduleCount = schedulesExplored - lastScheduleCount;
+		long currentSampleTime = System.nanoTime();
+		long newScheduleCount = schedulesExplored - lastScheduleCount;
 		long timeSinceLastSampleTime = currentSampleTime - lastScheduleCountSampleTime;
 
-		double sampleSchedulesPerSecond = 1_000.0 * newScheduleCount / timeSinceLastSampleTime;
+		//If there is a stupidly small value just duplicate the previous value
+		double sampleSchedulesPerSecond = timeSinceLastSampleTime < 10 ? schedulesPerSecond : 1.0e9 * newScheduleCount / timeSinceLastSampleTime;
+		//double sampleSchedulesPerSecond = (double)newScheduleCount / (double)timeSinceLastSampleTime;
 
 		schedulesPerSecond = (1-schedulesPerSecondAdjustmentFactor)*schedulesPerSecond
 				+ schedulesPerSecondAdjustmentFactor*sampleSchedulesPerSecond;
@@ -65,12 +64,10 @@ public class ScheduleStatisticsManager extends ManagerThread {
 		lastScheduleCountSampleTime = currentSampleTime;
 		lastScheduleCount = schedulesExplored;
 
-		Platform.runLater(() -> {
-			schedulesExploredLabel.textProperty().setValue(""+schedulesExplored);
-			schedulesInArrayLabel.textProperty().setValue(""+schedulesInArray);
-			schedulesInQueueLabel.textProperty().setValue(""+schedulesInQueue);
-			schedulesOnDiskLabel.textProperty().setValue(""+schedulesOnDisk);
-			schedulesPerSecondLabel.textProperty().setValue(""+(int)schedulesPerSecond);
-		});
+		schedulesExploredLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesExplored," ", 1));
+		schedulesInArrayLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInArray," ", 1));
+		schedulesInQueueLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInQueue," ", 1));
+		schedulesOnDiskLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesOnDisk," ",1));
+		schedulesPerSecondLabel.textProperty().setValue(HumanReadableFormatter.format((int)schedulesPerSecond," ", 1));
 	}
 }

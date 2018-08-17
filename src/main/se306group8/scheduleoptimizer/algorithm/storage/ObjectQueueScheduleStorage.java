@@ -10,6 +10,7 @@ public class ObjectQueueScheduleStorage implements ScheduleStorage {
 	private final PriorityQueue<TreeSchedule> queue;
 	
 	private int maximumBound = Integer.MAX_VALUE;
+	private TreeSchedule bestComplete = null;
 	
 	public ObjectQueueScheduleStorage() {
 		queue = new PriorityQueue<>();
@@ -33,6 +34,7 @@ public class ObjectQueueScheduleStorage implements ScheduleStorage {
 		
 		if(schedule.isComplete() && schedule.getRuntime() < maximumBound) {
 			maximumBound = schedule.getRuntime();
+			bestComplete = schedule;
 		}
 		
 		queue.add(schedule);
@@ -59,5 +61,10 @@ public class ObjectQueueScheduleStorage implements ScheduleStorage {
 	public void signalStorageSizes(RuntimeMonitor monitor) {
 		//I'm not sure about the size of TreeSchedule in memory. But it is big.
 		monitor.setScheduleInQueueStorageSize(4 + 210);
+	}
+
+	@Override
+	public TreeSchedule getBestSchedule() {
+		return bestComplete;
 	}
 }

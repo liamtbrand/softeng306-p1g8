@@ -10,7 +10,7 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void start() {
+	public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
 		// Do Nothing
 	}
 
@@ -58,5 +58,4 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	public void setScheduleOnDiskStorageSize(int bytes) {
 		// Do Nothing
 	}
-
 }

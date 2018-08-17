@@ -44,16 +44,16 @@ public class ConfigBuilderTest {
 		Config config = builder.build();
 		
 		assertEquals("myinput.dot", config.inputFile());
-		assertEquals(6, config.N());
-		assertEquals(5, config.P());
+		assertEquals(6, config.coresToUseForExecution());
+		assertEquals(5, config.processorsToScheduleOn());
 		assertEquals(true, config.visualize());
 		assertEquals("myoutput", config.outputFile());
 		
 		config = builder.build();
 		
 		assertEquals("INPUT.dot", config.inputFile());
-		assertEquals(1, config.N());
-		assertEquals(1, config.P());
+		assertEquals(1, config.coresToUseForExecution());
+		assertEquals(1, config.processorsToScheduleOn());
 		assertEquals(false, config.visualize());
 		assertEquals("INPUT-output.dot", config.outputFile());
 		

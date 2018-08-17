@@ -30,6 +30,7 @@ import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.astar.AStarSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.branchbound.BranchBoundSchedulingAlgorithm;
+import se306group8.scheduleoptimizer.algorithm.branchbound.ParallelBranchBoundSchedulingAlgorithm;
 import se306group8.scheduleoptimizer.algorithm.childfinder.BasicChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.DuplicateRemovingChildFinder;
@@ -62,12 +63,13 @@ public class PerformanceTest {
 
 	//Set up the various testing options.
 	static {
-		DIFFICULTIES.put("EASY", s -> s.contains("Nodes_1") && s.startsWith("2p"));
+		DIFFICULTIES.put("EASY", s -> s.contains("Nodes_1"));
 		DIFFICULTIES.put("MEDIUM", s -> !s.contains("Nodes_3") && !s.matches(".*(Fork_Join_Nodes_21|Fork_Nodes_21|Join_Nodes_21).*"));
 		DIFFICULTIES.put("HARD", s -> true);
 
 		ALGORITHMS.put("A_STAR", (h, f, m, s) -> new AStarSchedulingAlgorithm(f, h, m, s));
 		ALGORITHMS.put("BRANCH_BOUND", (h, f, m, s) -> new BranchBoundSchedulingAlgorithm(f, h, m));
+		ALGORITHMS.put("PARALLEL_BRANCH_BOUND", (h, f, m, s) -> new ParallelBranchBoundSchedulingAlgorithm(f, h, m, 20));
 
 		HEURISTICS.put("ZERO", processors -> schedule -> 0);
 		HEURISTICS.put("NO_IDLE", NoIdleTimeHeuristic::new);
@@ -142,7 +144,7 @@ public class PerformanceTest {
 		}
 
 		names.sort(null);
-		Pattern numberExtraction = Pattern.compile("^(\\d+)");
+		Pattern numberExtraction = Pattern.compile("(\\d+)p.*");
 
 		//Create the file
 		Files.createDirectories(Paths.get("performance"));
@@ -184,7 +186,7 @@ public class PerformanceTest {
 					public void updateBestSchedule(TreeSchedule optimalSchedule) {}
 
 					@Override
-					public void start() {
+					public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
 						millionSolutions = 0;
 						startTime = System.nanoTime();
 					}

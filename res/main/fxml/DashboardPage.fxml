@@ -4,154 +4,205 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="300.0" minWidth="400.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.DashboardPageController">
+<AnchorPane maxWidth="300.0" minWidth="300.0" styleClass="sidebar" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.DashboardPageController">
    <children>
-      <HBox AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="24.0">
+      <VBox spacing="10.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
          <children>
-            <VBox spacing="8.0">
+            <HBox alignment="TOP_CENTER">
                <children>
-                  <AnchorPane>
+                  <Label text="Runtime Statistics">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <AnchorPane>
+               <children>
+                  <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <HBox layoutX="25.0" layoutY="84.0" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox>
                            <children>
-                              <VBox>
-                                 <children>
-                                    <Label text="Available Processors:">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </VBox>
-                              <VBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label fx:id="availableProcessorsLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="20.0">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </VBox>
+                              <Label style="-fx-font-family: menlo;" text="Algorithm Runtime:" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="algorithmRuntimeLabel" />
                            </children>
                         </HBox>
-                        <HBox layoutY="33.0" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0">
+                        <HBox>
                            <children>
-                              <VBox>
-                                 <children>
-                                    <Label text="Max Memory:">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Used Memory:">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Free Memory:">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </VBox>
-                              <VBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label fx:id="maxMemoryLabel" alignment="CENTER_RIGHT" minWidth="60.0" prefHeight="16.0" textAlignment="RIGHT">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="usedMemoryLabel" alignment="CENTER_RIGHT" minWidth="60.0" prefHeight="16.0" textAlignment="RIGHT">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="freeMemoryLabel" alignment="CENTER_RIGHT" minWidth="60.0" prefHeight="16.0" textAlignment="RIGHT">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </VBox>
+                              <Label style="-fx-font-family: menlo;" text="Algorithm:" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="algorithmLabel" />
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label style="-fx-font-family: menlo;" text="Cores for Execution:" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="parallelizedLabel" />
                            </children>
                         </HBox>
                      </children>
-                  </AnchorPane>
-                  <AnchorPane>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
+                        <HBox>
+                           <children>
+                              <Label text="Available Processors:">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="availableProcessorsLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="20.0" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label text="Max Memory:">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="maxMemoryLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="60.0" prefHeight="16.0" textAlignment="RIGHT" HBox.hgrow="ALWAYS">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label text="Used Memory:">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="usedMemoryLabel" alignment="CENTER_RIGHT" minWidth="60.0" prefHeight="16.0" textAlignment="RIGHT">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
                         <HBox spacing="5.0">
                            <children>
-                              <VBox>
-                                 <children>
-                                    <Label text="Schedules Explored:">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Schedules in Queue:">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Schedules in Array:">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Schedules on Disk:">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Schedules per second:">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </VBox>
-                              <VBox alignment="TOP_RIGHT">
-                                 <children>
-                                    <Label fx:id="schedulesExploredLabel" alignment="CENTER_RIGHT" minWidth="50.0" prefHeight="16.0" textAlignment="RIGHT">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="schedulesInQueueLabel" alignment="CENTER_RIGHT" minWidth="50.0" prefHeight="16.0" textAlignment="RIGHT">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="schedulesInArrayLabel" alignment="CENTER_RIGHT" minWidth="50.0" prefHeight="16.0" textAlignment="RIGHT">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="schedulesOnDiskLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="50.0" prefHeight="16.0">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="schedulesPerSecondLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="50.0" prefHeight="16.0">
-                                       <font>
-                                          <Font name="Menlo Regular" size="13.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </VBox>
+                              <Label text="Free Memory:">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="freeMemoryLabel" alignment="CENTER_RIGHT" minWidth="60.0" prefHeight="16.0" textAlignment="RIGHT">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </HBox>
                      </children>
-                  </AnchorPane>
+                  </VBox>
                </children>
-            </VBox>
-            <VBox HBox.hgrow="ALWAYS" />
-            <PieChart fx:id="storageBreakdown" prefHeight="330.0" prefWidth="400.0" title="Storage Breakdown" />
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label text="Schedules Explored:">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="schedulesExploredLabel" alignment="CENTER_RIGHT" minWidth="50.0" prefHeight="16.0" textAlignment="RIGHT">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label text="Schedules in Queue:">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="schedulesInQueueLabel" alignment="CENTER_RIGHT" minWidth="50.0" prefHeight="16.0" textAlignment="RIGHT">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label text="Schedules in Array:">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="schedulesInArrayLabel" alignment="CENTER_RIGHT" minWidth="50.0" prefHeight="16.0" textAlignment="RIGHT">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label text="Schedules on Disk:">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="schedulesOnDiskLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="50.0" prefHeight="16.0">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label text="Schedules per Second:">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="schedulesPerSecondLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="50.0" prefHeight="16.0">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <PieChart fx:id="storageBreakdown" labelLineLength="10.0" minHeight="225.0" minWidth="250.0" prefHeight="225.0" prefWidth="250.0" title="Storage Breakdown" />
          </children>
-      </HBox>
+      </VBox>
    </children>
 </AnchorPane>

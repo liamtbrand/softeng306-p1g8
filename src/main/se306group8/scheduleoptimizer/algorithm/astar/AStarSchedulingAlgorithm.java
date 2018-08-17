@@ -19,6 +19,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	private final MinimumHeuristic heuristic;
 	private final ScheduleStorage queue;
 	private int explored = 0;
+	private TreeSchedule dfsBest;
 	
 	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor, ScheduleStorage storage) {
 		super(monitor);
@@ -38,7 +39,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
+		getMonitor().logMessage("Starting A*.");
+
 		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
+
 		queue.signalStorageSizes(getMonitor());
 		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
@@ -49,14 +53,36 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		}
 
 		queue.put(greedySoln);
+		getMonitor().updateBestSchedule(greedySoln);
+		
+		Runtime memory = Runtime.getRuntime();
+		long maxMemory = (long) (memory.maxMemory() * 0.65);
 		
 		while (!best.isComplete()) {
-			explore(best);
-			best = queue.pop();
 			
-			getMonitor().setSchedulesExplored(explored);
 			queue.signalMonitor(getMonitor());
+			
+			long queuememory = queue.size() * 10L;
+						
+			if ( queuememory < maxMemory) {
+				explore(best);
+			} else {
+				//System.out.println("Using contingency plan");
+				//getMonitor().logMessage("Using contingency plan");
+				dfsBest = queue.getBestSchedule();
+				queue.put(branchAndBound(best));		
+				
+			}
+			
+			best = queue.pop();
 
+			// MERGE CONFLICTS - COMMENTED OUT TO CHECK
+			//explored += children.size();
+
+			queue.signalMonitor(getMonitor());
+			getMonitor().updateBestSchedule(best);
+			getMonitor().setSchedulesExplored(explored);
+			
 			if(Thread.interrupted()) {
 				throw new InterruptedException();
 			}
@@ -65,17 +91,22 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		return best.getFullSchedule();
 	}
 
-	TreeSchedule explore(TreeSchedule best) {
+	@Override
+	public String toString() {
+		return "A*";
+	}
+
+	TreeSchedule explore(TreeSchedule best) throws InterruptedException {
 		if(best.isComplete()) {
 			queue.put(best);
 			return best;
 		}
 		
 		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
+
+		explored += children.size();
 		
 		for(TreeSchedule child : children) {
-			explored++;
-			
 			if(child.getLowerBound() == best.getLowerBound()) {				
 				TreeSchedule s = explore(child);
 				
@@ -87,6 +118,45 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			}
 		}
 		
+		queue.signalMonitor(getMonitor());
+		getMonitor().updateBestSchedule(best);
+		getMonitor().setSchedulesExplored(explored);
+		
+		if(Thread.interrupted()) {
+			throw new InterruptedException();
+		}
+		
 		return null;
+	}
+	
+	
+	private TreeSchedule branchAndBound(TreeSchedule schedule) throws InterruptedException {
+		// Get all children in order from best lower bound to worst
+		List<TreeSchedule> childSchedules = childGenerator.getChildSchedules(schedule);
+		childSchedules.sort(null);
+		
+		explored += childSchedules.size();
+		
+		for (TreeSchedule child : childSchedules) {
+			// Only consider the child if its lower bound is better than current best
+			if (child.getLowerBound() < dfsBest.getRuntime()) {
+				if (child.isComplete()) {
+					dfsBest=child;
+				} else {
+					// Check if the child schedule is complete or not
+					dfsBest = branchAndBound(child);
+				}
+			} else {
+				break;
+			}
+		}
+
+		if(Thread.interrupted()) {
+			throw new InterruptedException();
+		}
+		
+		getMonitor().setSchedulesExplored(explored);
+		
+		return dfsBest;
 	}
 }

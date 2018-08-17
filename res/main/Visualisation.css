@@ -1,0 +1,99 @@
+.title {  }
+.stat-name-label {  }
+.stat-value-label {  }
+.axis-label {  }
+.axis-tick-label {  }
+.key-label {  }
+.task-chart-label-incomplete {  }
+.task-chart-rectangle-complete {  }
+.task-name-label {  }
+.console-text {  }
+
+* {
+   -colour-1: #44608c;
+   -colour-2: #7595c6;
+   -sidebar-colour: #eee;
+}
+
+.rectangle {
+	-fx-fill: white;
+}
+
+/* SIDEBAR STYLING */
+
+.sidebar {
+    -fx-background-color: -sidebar-colour;
+}
+
+/* CHART STYLING */
+
+.chart-legend {
+	-fx-background-radius: 0;
+	-fx-border-radius: 0;
+	-fx-background-color: -sidebar-colour;
+}
+
+.chart {
+	-fx-background-color: -sidebar-colour;
+	-fx-font-family: 'Menlo';
+}
+
+.chart-plot-background {
+	-fx-background-color: white;
+}
+
+
+.default-color0.chart-pie { -fx-background-color: -colour-1; }
+.default-color1.chart-pie { -fx-background-color: -colour-2; }
+.default-color2.chart-pie { -fx-background-color: lightgrey; }
+
+.default-color0.chart-bar { -fx-background-color: -colour-1; }
+.default-color1.chart-bar { -fx-background-color: -colour-2; }
+.default-color2.chart-bar { -fx-background-color: lightgrey; }
+
+/* TAB STYLING */
+
+.tab-pane *.tab-header-background {
+    -fx-background-color: white;
+}
+
+.tab {
+	-fx-background-radius: 0;
+	-fx-background-color: lightgrey;
+}
+
+.tab:hover {
+	-fx-background-color: darkgrey;
+}
+
+.page-title {
+	-fx-font-size: 30;
+	-fx-text-fill: darkgrey;
+}
+
+.tab:hover .tab-label {
+	-fx-text-fill: white;
+}
+
+.tab:selected {
+    -fx-background-color: grey;
+}
+
+.tab:selected .focus-indicator {
+     -fx-border-width: 0;
+}
+
+.tab .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-text-fill: grey;
+    -fx-font-size: 12px;
+    -fx-font-family: 'Menlo';
+}
+
+.tab:selected .tab-label { 
+    -fx-text-fill: white;
+}
+
+.label {
+    -fx-font-family: 'Menlo';
+}

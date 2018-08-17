@@ -1,5 +1,7 @@
 package se306group8.scheduleoptimizer.algorithm.storage;
 
+import java.util.Arrays;
+
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
@@ -21,7 +23,7 @@ public class BlockScheduleStorage implements ScheduleStorage {
 	}
 	
 	public BlockScheduleStorage() {
-		this(20, 100_000);
+		this(1, 100_000);
 	}
 	
 	@Override
@@ -93,5 +95,19 @@ public class BlockScheduleStorage implements ScheduleStorage {
 	public void signalMonitor(RuntimeMonitor monitor) {
 		monitor.setSchedulesInArray(array.size() - queue.size());
 		monitor.setSchedulesInQueue(queue.size());
+		monitor.setScheduleDistribution(array.getDistribution(), array.getNumberOfSlots());
+	}
+
+	@Override
+	public void signalStorageSizes(RuntimeMonitor monitor) {
+		
+		
+		monitor.setBucketSize(array.getGranularity());
+		ScheduleStorage.super.signalStorageSizes(monitor);
+	}
+	
+	@Override
+	public TreeSchedule getBestSchedule() {
+		return bestComplete;
 	}
 }

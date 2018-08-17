@@ -6,7 +6,7 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 public class NonPruningScheduleStorage implements ScheduleStorage {
 	private final SchedulePriorityQueue queue;
 	private final ScheduleArray array;
-	
+	private TreeSchedule bestComplete = null;
 	private int maximumBound = Integer.MAX_VALUE;
 	
 	public NonPruningScheduleStorage(int blockSize) {
@@ -36,6 +36,7 @@ public class NonPruningScheduleStorage implements ScheduleStorage {
 		
 		if(schedule.isComplete() && schedule.getRuntime() < maximumBound) {
 			pruneStorage(schedule.getRuntime());
+			bestComplete = schedule;
 		}
 		
 		int id = array.add(schedule);
@@ -57,5 +58,10 @@ public class NonPruningScheduleStorage implements ScheduleStorage {
 	public void signalMonitor(RuntimeMonitor monitor) {
 		monitor.setSchedulesInArray(array.size());
 		monitor.setSchedulesInQueue(queue.size() - array.size());
+	}
+
+	@Override
+	public TreeSchedule getBestSchedule() {
+		return bestComplete;
 	}
 }

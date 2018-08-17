@@ -54,6 +54,7 @@ public class FXApplication extends Application {
 		
 		primaryStage.setTitle("Visualisation");
 		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 
 		// Start the algorithm on its own thread.
@@ -61,7 +62,7 @@ public class FXApplication extends Application {
 		Thread th = new Thread(() -> {
 			Main.startAlgorithm(
 					new RuntimeMonitorAggregator(
-							new CLIRuntimeMonitor(Main.config.P()), 
+							new CLIRuntimeMonitor(Main.config.processorsToScheduleOn()),
 							monitor));
 		});
 		th.setName("Algorithm-thread");
@@ -72,10 +73,6 @@ public class FXApplication extends Application {
 
 	@Override
 	public void stop() {
-
-		// Stop the main controller, this will stop everything in the gui.
-		mainController.stop();
-
 		// Stop the algorithm.
 		algorithmThread.interrupt();
 		try {

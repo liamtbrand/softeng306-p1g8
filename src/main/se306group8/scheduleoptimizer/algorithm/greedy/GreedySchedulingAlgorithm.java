@@ -29,6 +29,7 @@ public class GreedySchedulingAlgorithm extends Algorithm {
 		TreeSchedule schedule = new TreeSchedule(graph, (TreeSchedule s) -> 0, numberOfProcessors);
 		
 		while (!schedule.isComplete()) {
+			getMonitor().updateBestSchedule(schedule);
 			schedule = gcsf.getChildSchedules(schedule).get(0);
 
 			if(Thread.interrupted()) {
@@ -38,6 +39,11 @@ public class GreedySchedulingAlgorithm extends Algorithm {
 		
 		// Final (immutable) object to return
 		return schedule.getFullSchedule();
+	}
+
+	@Override
+	public String toString() {
+		return "List Scheduling";
 	}
 
 }

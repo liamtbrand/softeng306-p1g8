@@ -25,12 +25,12 @@ public class DefaultConfig implements Config {
 	}
 	
 	@Override
-	public int P() {
+	public int processorsToScheduleOn() {
 		return P;
 	}
 	
 	@Override
-	public int N() {
+	public int coresToUseForExecution() {
 		return N;
 	}
 	
