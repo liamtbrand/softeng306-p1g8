@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.manager.*;
 
 import java.net.URL;
@@ -32,6 +33,12 @@ public class DashboardPageController extends Controller {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		// Create our managers for the dashboard components
+
+		startManager(new AlgorithmRuntimeManager(
+				algorithmRuntimeLabel,
+				algorithmLabel,
+				parallelizedCheckbox
+		), 0l, 1000l);
 
 		startManager(new ScheduleStatisticsManager(
 				schedulesExploredLabel,
