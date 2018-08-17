@@ -256,6 +256,16 @@ public class PerformanceTest {
 						// TODO Auto-generated method stub
 						
 					}
+
+					@Override
+					public void setAlgorithmName(String name) {
+
+					}
+
+					@Override
+					public void setParallelized(int cores) {
+
+					}
 				};
 
 				//Create the algorithm objects
