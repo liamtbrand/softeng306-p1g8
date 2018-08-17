@@ -46,6 +46,7 @@ public interface RuntimeMonitor {
 	
 	public void setNumberOfProcessors(int processors);
 
-
+	void setAlgorithmName(String name);
+	void setParallelized(int cores);
 	
 }

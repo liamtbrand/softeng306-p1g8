@@ -63,4 +63,14 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	public void setNumberOfProcessors(int processors) {
 		// Do Nothing
 	}
+
+	@Override
+	public void setAlgorithmName(String name) {
+		// Do Nothing
+	}
+
+	@Override
+	public void setParallelized(int cores) {
+		// Do Nothing
+	}
 }

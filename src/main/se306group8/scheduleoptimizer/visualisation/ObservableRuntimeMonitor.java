@@ -29,6 +29,8 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int scheduleInQueueStorageSize;
 	private volatile int schedulesOnDisk;
 	private volatile int scheduleOnDiskStorageSize;
+
+	private volatile String algorithmName;
 	
 	private volatile int numberOfProcessors;
 	
@@ -171,6 +173,16 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	
 	public void setNumberOfProcessors(int processors) {
 		numberOfProcessors = processors;
+	}
+
+	@Override
+	public void setAlgorithmName(String name) {
+		algorithmName = name;
+	}
+
+	@Override
+	public void setParallelized(int cores) {
+
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -10,7 +11,7 @@
 
 <AnchorPane maxWidth="300.0" minWidth="300.0" styleClass="sidebar" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.DashboardPageController">
    <children>
-      <VBox spacing="20.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
          <children>
             <AnchorPane>
                <children>
@@ -20,10 +21,23 @@
                            <children>
                               <Label style="-fx-font-family: menlo;" text="Algorithm Runtime:" />
                               <Region HBox.hgrow="ALWAYS" />
-                              <Label fx:id="runtimeLabel" />
+                              <Label fx:id="algorithmRuntimeLabel" />
                            </children>
                         </HBox>
-                        <HBox />
+                        <HBox>
+                           <children>
+                              <Label style="-fx-font-family: menlo;" text="Algorithm:" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="algorithmLabel" />
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label style="-fx-font-family: menlo;" text="Parallelized:" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <CheckBox fx:id="parallelizedCheckbox" disable="true" mnemonicParsing="false" />
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>

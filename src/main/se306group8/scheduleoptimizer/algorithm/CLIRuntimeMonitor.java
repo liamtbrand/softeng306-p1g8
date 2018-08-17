@@ -205,5 +205,15 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 		// TODO 
 		
 	}
-	
+
+	@Override
+	public void setAlgorithmName(String name) {
+		// TODO
+	}
+
+	@Override
+	public void setParallelized(int cores) {
+		// TODO
+	}
+
 }

@@ -73,4 +73,14 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 		runtimeMonitors.forEach(m -> m.setNumberOfProcessors(processors));
 	}
 
+	@Override
+	public void setAlgorithmName(String name) {
+		runtimeMonitors.forEach(m -> m.setAlgorithmName(name));
+	}
+
+	@Override
+	public void setParallelized(int cores) {
+		runtimeMonitors.forEach(m -> m.setParallelized(cores));
+	}
+
 }
