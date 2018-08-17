@@ -14,13 +14,13 @@ public class TaskGraphPageController extends Controller {
 	@FXML private VBox tasks;
 	@FXML private VBox processors;
 	@FXML private LineChart chart;
-	@FXML private Label title;
+	@FXML private Label scheduleTitle;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
 		startManager(new ScheduleManager(
-				tasks, processors, chart, title
+				tasks, processors, chart, scheduleTitle
 		),0l,1000l);
 
 	}

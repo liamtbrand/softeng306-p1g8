@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import se306group8.scheduleoptimizer.visualisation.manager.CanvasFillManager;
 
@@ -14,12 +15,17 @@ public class SearchSpacePageController extends Controller {
 	@FXML
 	private Canvas canvas;
 
+	@FXML
+	private Label searchSpaceTitle;
+	
+	@FXML private Label explanation;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 	    GraphicsContext gc = canvas.getGraphicsContext2D();
 	    draw(gc, canvas.getWidth(), canvas.getHeight());
 	    
-		startManager(new CanvasFillManager(canvas),0l,16l);
+		startManager(new CanvasFillManager(canvas, searchSpaceTitle),0l,1l);
 	}
 
 	/**
@@ -32,13 +38,15 @@ public class SearchSpacePageController extends Controller {
     private void draw(GraphicsContext gc, double width, double height) {
  
       gc.setStroke(Color.BLACK);
-      gc.setLineWidth(0.5);
+      gc.setLineWidth(2);
       
-      double[] x = {width/6.0, width/2.0, 5*width/6.0};
-      double[] y = {7.0*height/8.0, height/8.0, 7.0*height/8.0};
+      double[] x = {width/6.0 - 5, width/2.0, 5*width/6.0 + 5};
+      double[] y = {7.0*height/8.0, height/8.0 - 5, 7.0*height/8.0};
       int n = 3;
       
       gc.strokePolygon(x, y, n);
+      
+      
       
     }
 
