@@ -67,7 +67,6 @@ public class CanvasFillManager extends Manager {
 					drawPixels(this.canvas, Color.DARKBLUE, coordinates[0], coordinates[1], 3);
 					this.keepDrawing = false;
 				} else {
-					System.out.println("SCHEDULE: " + monitor.getBestSchedule());
 					drawPixels(this.canvas, Color.GREY, coordinates[0], coordinates[1], 3);
 				}
 			} else {
@@ -141,7 +140,6 @@ public class CanvasFillManager extends Manager {
 		// Loop through all points
 		for (int i = 0; i < x.length; i++) {
 
-			System.out.println("X: " + x[i] + ", Y: " + y[i]);
 			// Both draw a point, then a line to the next point, as you traverse coordinates
 			pixelWriter.setColor((int)x[i], (int)y[i], color);
 			if ((i + 1) == x.length) {
