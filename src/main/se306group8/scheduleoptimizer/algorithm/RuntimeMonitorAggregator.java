@@ -74,6 +74,16 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
+	public void setBucketSize(int size) {
+		runtimeMonitors.forEach(m -> m.setBucketSize(size));
+	}
+	
+	@Override
+	public void setScheduleDistribution(int[] distribution, int limit) {
+		runtimeMonitors.forEach(m -> m.setScheduleDistribution(distribution, limit));
+	}
+	
+	@Override
 	public void setAlgorithmName(String name) {
 		runtimeMonitors.forEach(m -> m.setAlgorithmName(name));
 	}
