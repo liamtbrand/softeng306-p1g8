@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
+import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
 public class AlgorithmRuntimeManager extends Manager {
 
@@ -18,7 +19,7 @@ public class AlgorithmRuntimeManager extends Manager {
 	}
 
 	@Override
-	protected void updateHook() {
+	protected void updateHook(ObservableRuntimeMonitor monitor) {
 
 	}
 }

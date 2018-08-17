@@ -62,10 +62,10 @@ public class CanvasFillManager extends Manager {
 		// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
 		if (keepDrawing) {
 			if (monitor.getBestSchedule().isComplete()) {
-				drawPixels(this.canvas, Color.DARKBLUE, (int [])coordinates[0], (int [])coordinates[1], 3);
+				drawPixels(this.canvas, Color.DARKBLUE, coordinates[0], coordinates[1], 3);
 				this.keepDrawing = false;
 			} else {
-				drawPixels(this.canvas, Color.GREY, (int [])coordinates[0], (int [])coordinates[1], 1);
+				drawPixels(this.canvas, Color.GREY, coordinates[0], coordinates[1], 1);
 			}
 		} else {
 			// Stop drawing

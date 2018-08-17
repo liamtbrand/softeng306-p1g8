@@ -15,8 +15,6 @@ public class MainController {
 	@FXML
 	private DashboardPageController dashboardPageController;
 	@FXML
-	private Controller statisticsPageController;
-	@FXML
 	private TaskGraphPageController taskGraphPageController;
 	@FXML
 	private SearchSpacePageController searchSpacePageController;
@@ -32,7 +30,6 @@ public class MainController {
 	@FXML
 	private void initialize() {
 		dashboardPageController.setMainController(this);
-		statisticsPageController.setMainController(this);
 		taskGraphPageController.setMainController(this);
 		searchSpacePageController.setMainController(this);
 		consolePageController.setMainController(this);
