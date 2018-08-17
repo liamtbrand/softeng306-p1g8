@@ -1,6 +1,5 @@
 package se306group8.scheduleoptimizer.visualisation.manager;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javafx.application.Platform;
@@ -12,7 +11,7 @@ import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 public class HistogramManager extends Manager {
 	private final BarChart<String, Number> chart;
 	
-	public HistogramManager(BarChart chart) {
+	public HistogramManager(BarChart<String, Number> chart) {
 		this.chart = chart;
 	}
 

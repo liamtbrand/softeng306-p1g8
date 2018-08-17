@@ -5,17 +5,13 @@ import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart.Series;
-import javafx.scene.paint.Color;
-import se306group8.scheduleoptimizer.visualisation.manager.CanvasFillManager;
 import se306group8.scheduleoptimizer.visualisation.manager.HistogramManager;
 
 public class HistogramController extends Controller {
 	@FXML
-	private BarChart<Number, Number> chart;
+	private BarChart<String, Number> chart;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
