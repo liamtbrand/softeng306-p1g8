@@ -23,7 +23,7 @@ public class BlockScheduleStorage implements ScheduleStorage {
 	}
 	
 	public BlockScheduleStorage() {
-		this(5, 100_000);
+		this(1, 100_000);
 	}
 	
 	@Override
