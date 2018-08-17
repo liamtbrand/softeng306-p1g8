@@ -45,7 +45,7 @@ public abstract class Algorithm {
 	public final Schedule produceCompleteSchedule(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		
 		if(runtimeMonitor != null) {
-			runtimeMonitor.start(toString(), numberOfProcessors, Main.config.coresToUseForExecution());
+			runtimeMonitor.start(toString(), numberOfProcessors, getNumberOfCores());
 		}
 		
 		Schedule solution = produceCompleteScheduleHook(graph, numberOfProcessors);
@@ -55,6 +55,10 @@ public abstract class Algorithm {
 		}
 		
 		return solution;
+	}
+	
+	protected int getNumberOfCores() {
+		return 1;
 	}
 	
 	/**
