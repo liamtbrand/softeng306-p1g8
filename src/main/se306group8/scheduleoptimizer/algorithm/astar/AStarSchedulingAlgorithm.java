@@ -37,7 +37,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		this.heuristic = heuristic;
 	}
 
-	public AStarSchedulingAlgorithm(DuplicateRemovingChildFinder childGenerator, MinimumHeuristic heuristic) {
+	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic) {
 		super();
 		
 		this.childGenerator = childGenerator;
