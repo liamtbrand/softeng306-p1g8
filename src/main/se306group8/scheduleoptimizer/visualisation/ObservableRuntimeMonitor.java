@@ -3,14 +3,11 @@ package se306group8.scheduleoptimizer.visualisation;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -22,7 +19,7 @@ import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
 public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 
-	private volatile boolean started;
+	
 	private volatile boolean finished;
 	private volatile TreeSchedule bestSchedule;
 	private volatile Queue<String> messages;
@@ -34,10 +31,17 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int scheduleInQueueStorageSize;
 	private volatile int schedulesOnDisk;
 	private volatile int scheduleOnDiskStorageSize;
-
-	private volatile String algorithmName;
 	
+	private volatile long startTime;
+	private volatile long finishTime;
+	
+	private volatile Schedule finishedSolution;
+	
+	//Set in the start method
+	private volatile boolean started;
+	private volatile String algorithmName;
 	private volatile int numberOfProcessors;
+	private volatile int coresToUseForExecution;
 	
 	//Used for the histogram
 	private volatile int[] histogramData = new int[0];
@@ -61,6 +65,9 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		scheduleInQueueStorageSize = 0;
 		schedulesOnDisk = 0;
 		scheduleOnDiskStorageSize = 0;
+
+		algorithmName = "Unnamed";
+		coresToUseForExecution = 1;
 		
 		numberOfProcessors = 0;
 
@@ -81,17 +88,29 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void start() {
+	public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
 		started = true;
+		algorithmName = name;
+		this.numberOfProcessors = numberOfProcessors;
+		this.coresToUseForExecution = coresToUseForExecution;
+		this.startTime = System.currentTimeMillis();
+		
 		invalidateListeners();
 	}
 
 	@Override
 	public void finish(Schedule solution) {
 		finished = true;
+		finishedSolution = solution;
+		finishTime = System.currentTimeMillis();
 		invalidateListeners();
 	}
 
+	/** Returns the time taken in ms */
+	public long timeTaken() {
+		return finishTime - startTime;
+	}
+	
 	@Override
 	public void logMessage(String message) {
 		LocalDateTime now = LocalDateTime.now();
@@ -182,18 +201,12 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		return numberOfProcessors;
 	}
 	
-	public void setNumberOfProcessors(int processors) {
+	public void setProcessorsToScheduleOn(int processors) {
 		numberOfProcessors = processors;
 	}
 
-	@Override
-	public void setAlgorithmName(String name) {
-		algorithmName = name;
-	}
-
-	@Override
-	public void setParallelized(int cores) {
-
+	public int getCoresToUseForExecution() {
+		return coresToUseForExecution;
 	}
 
 	@Override
@@ -242,11 +255,20 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 	
 	private String getName(int i) {
+
 		if(granularity == 1) {
 			return Integer.toString(i);
 		} else {
 			return Integer.toString(i * granularity) + " - " + Integer.toString((i + 1) * granularity - 1);
 		}
 
+	}
+
+	public String getAlgorithmName() {
+		return algorithmName;
+	}
+
+	public Schedule getFinishedSolution() {
+		return finishedSolution;
 	}
 }

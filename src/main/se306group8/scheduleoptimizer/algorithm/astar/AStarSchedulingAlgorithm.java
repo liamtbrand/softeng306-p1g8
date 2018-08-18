@@ -48,8 +48,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 		queue.signalStorageSizes(getMonitor());
 		
-		getMonitor().setNumberOfProcessors(numberOfProcessors);
-		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
 		TreeSchedule greedySoln = best;
@@ -107,6 +105,11 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		}
 		
 		return best.getFullSchedule();
+	}
+
+	@Override
+	public String toString() {
+		return "A*";
 	}
 
 	TreeSchedule explore(TreeSchedule best) throws InterruptedException {
