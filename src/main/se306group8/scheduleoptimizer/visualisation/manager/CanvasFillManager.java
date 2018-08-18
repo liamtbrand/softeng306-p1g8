@@ -135,14 +135,16 @@ public class CanvasFillManager extends Manager {
 		double max = Arrays.stream(x).max().orElse(1.0);
 		
 		for (int j = 0; j < x.length; j++) {
-			x[j] /= max + 0.01;
+			x[j] /= max + 0.0001;
 			y[j] = this.startPointY + y[j]*this.totalTriangleHeight;
 			x[j] = this.startPointX - horizontalLength(y[j] - this.startPointY)/2.0 + x[j]*horizontalLength(y[j] - this.startPointY);
-			
 		}
 	
 		// Loop through all points
 		for (int i = 0; i < x.length; i++) {
+			
+// 			DEBUG LINE
+//			System.out.println("x: " + x[i] + ", y: " + y[i]);
 
 			// Both draw a point, then a line to the next point, as you traverse coordinates
 			pixelWriter.setColor((int)x[i], (int)y[i], color);
