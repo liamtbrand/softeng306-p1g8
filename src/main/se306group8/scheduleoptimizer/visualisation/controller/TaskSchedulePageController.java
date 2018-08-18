@@ -11,13 +11,11 @@ public class TaskSchedulePageController extends Controller {
 	@FXML private VBox tasks;
 	@FXML private VBox processors;
 	@FXML private LineChart chart;
-	@FXML private Label title;
 	@FXML private Label bestRuntimeLabel;
 
 	@Override
 	public void setup() {
-		startManager(new ScheduleManager(tasks, processors, chart, title, bestRuntimeLabel), UpdateFrequency.SLOW);
-
+		startManager(new ScheduleManager(tasks, processors, chart, bestRuntimeLabel), UpdateFrequency.SLOW);
 	}
 
 }

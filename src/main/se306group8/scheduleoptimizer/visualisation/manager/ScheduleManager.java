@@ -26,7 +26,6 @@ public class ScheduleManager extends Manager {
 	private final VBox tasks;
 	private final VBox processors;
 	private final LineChart<?, ?> chart;
-	private final Label title;
 	private final Label bestRuntimeLabel;
 
 	private final double GRAPH_WIDTH = 521;
@@ -35,11 +34,10 @@ public class ScheduleManager extends Manager {
 	private final Paint BLUE = Color.web("#7595c6");
 	private final Paint GREEN = Color.web("#00a676");
 	
-	public ScheduleManager(VBox tasks, VBox processors, LineChart<?, ?> chart, Label title, Label bestRuntimeLabel) {
+	public ScheduleManager(VBox tasks, VBox processors, LineChart<?, ?> chart, Label bestRuntimeLabel) {
 		this.tasks = tasks;
 		this.processors = processors;
 		this.chart = chart;
-		this.title = title;
 		this.bestRuntimeLabel = bestRuntimeLabel;
 	}
 
@@ -127,10 +125,6 @@ public class ScheduleManager extends Manager {
 			NumberAxis runtimeAxis = (NumberAxis) chart.getXAxis();
 			runtimeAxis.setUpperBound(runtime);
 			runtimeAxis.setTickUnit(runtime/10);
-			
-			/*if (FXApplication.getMonitor().hasFinished()) {
-				this.title.setTextFill(Color.rgb(68, 96, 140, 1.0));
-			}*/
 		});
 	}
 
