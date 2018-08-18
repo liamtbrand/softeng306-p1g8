@@ -41,7 +41,7 @@ public class FinishMessageBoxController implements InvalidationListener {
 			hasShown = true;
 			Schedule solution = monitor.getFinishedSolution();
 			
-			introText.setText(String.format("'%s' complete! On %d processors.", solution.getGraph().getName(), monitor.getNumberOfProcessors()));
+			introText.setText("Graph complete!");
 			timeTaken.setText(String.format("%.1fs", monitor.timeTaken() / 1000.0));
 			solutionLength.setText(String.format("%d", solution.getTotalRuntime()));
 			
