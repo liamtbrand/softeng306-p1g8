@@ -130,8 +130,6 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		
-		getMonitor().setNumberOfProcessors(numberOfProcessors);
-		
 		pool = new ForkJoinPool(parallelism);
 		
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic, numberOfProcessors);

@@ -41,8 +41,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		getMonitor().logMessage("Starting A*.");
 		
-		getMonitor().setNumberOfProcessors(numberOfProcessors);
-		
 		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
 
 		queue.signalStorageSizes(getMonitor());

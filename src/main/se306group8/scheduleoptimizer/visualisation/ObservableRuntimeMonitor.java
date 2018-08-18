@@ -243,10 +243,4 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		return algorithmName;
 	}
 
-	@Override
-	public void setNumberOfProcessors(int processors) {
-		this.numberOfProcessors = processors;
-		
-	}
-
 }
