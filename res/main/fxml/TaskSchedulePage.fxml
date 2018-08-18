@@ -43,7 +43,7 @@
             </StackPane>
          </center>
          <top>
-            <Label fx:id="title" styleClass="page-title" text="Best schedule found!" BorderPane.alignment="TOP_LEFT">
+            <Label fx:id="title" styleClass="page-title" text="Task Schedule" BorderPane.alignment="TOP_LEFT">
                <BorderPane.margin>
                   <Insets bottom="-40.0" left="40.0" top="30.0" />
                </BorderPane.margin>
