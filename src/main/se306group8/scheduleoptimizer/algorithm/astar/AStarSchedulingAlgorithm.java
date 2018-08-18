@@ -98,10 +98,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			queue.signalMonitor(getMonitor());
 			getMonitor().updateBestSchedule(best);
 			getMonitor().setSchedulesExplored(explored);
-			
-			if(Thread.interrupted()) {
-				throw new InterruptedException();
-			}
 		}
 		
 		return best.getFullSchedule();
@@ -142,15 +138,15 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		getMonitor().updateBestSchedule(best);
 		getMonitor().setSchedulesExplored(explored);
 		
-		if(Thread.interrupted()) {
-			throw new InterruptedException();
-		}
-		
 		return null;
 	}
 	
 	
 	private TreeSchedule branchAndBound(TreeSchedule schedule) throws InterruptedException {
+		if(getMonitor().isInterupted()) {
+			throw new InterruptedException();
+		}
+		
 		// Get all children in order from best lower bound to worst
 		List<TreeSchedule> childSchedules = childGenerator.getChildSchedules(schedule);
 		childSchedules.sort(null);
@@ -169,10 +165,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			} else {
 				break;
 			}
-		}
-
-		if(Thread.interrupted()) {
-			throw new InterruptedException();
 		}
 		
 		getMonitor().setSchedulesExplored(explored);
