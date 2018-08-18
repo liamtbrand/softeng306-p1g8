@@ -132,9 +132,10 @@ public class CanvasFillManager extends Manager {
     
 	// Method to draw a set of dots, and interconnected lines, from arrays passed to it (representing a schedule)
 	private void drawPixels(Canvas canvas, Color color, double[] x, double[] y, int width) {
-		PixelWriter pixelWriter = this.gc.getPixelWriter();
-		
 		for (int j = 0; j < x.length; j++) {
+			y[j] = Math.max(0.0, Math.min(y[j], 1.0));
+			x[j] = Math.max(0.0, Math.min(x[j], 1.0));
+			
 			y[j] = this.startPointY + y[j] * this.totalTriangleHeight;
 			x[j] = this.startPointX - horizontalLength(y[j] - this.startPointY) / 2.0 + x[j] * horizontalLength(y[j] - this.startPointY);
 		}
