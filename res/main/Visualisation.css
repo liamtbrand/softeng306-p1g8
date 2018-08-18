@@ -2,6 +2,7 @@
 * {
    -blue-1: #44608c;
    -blue-2: #7595c6;
+   -green: #00a676;
    -sidebar-color: #eee;
 }
 
@@ -122,9 +123,19 @@
 }
 
 #complete-label {
-	-fx-text-fill: -blue-1;
+	-fx-text-fill: grey;
 }
 
 #incomplete-label {
 	-fx-text-fill: grey;
+}
+
+#best-runtime-label {
+	-fx-text-fill: grey;
+	-fx-font-size: 15;
+}
+
+#best-runtime-label-complete {
+	-fx-text-fill: -green;
+	-fx-font-size: 15;
 }

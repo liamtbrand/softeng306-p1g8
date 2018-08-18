@@ -27,6 +27,7 @@ public class ScheduleManager extends Manager {
 	private final VBox processors;
 	private final LineChart<?, ?> chart;
 	private final Label title;
+	private final Label bestRuntimeLabel;
 
 	private final double GRAPH_WIDTH = 521;
 	private final int GRAPH_HEIGHT = 200;
@@ -34,11 +35,12 @@ public class ScheduleManager extends Manager {
 	private final Paint BLUE = Color.web("#7595c6");
 	private final Paint GREEN = Color.web("#00a676");
 	
-	public ScheduleManager(VBox tasks, VBox processors, LineChart<?, ?> chart, Label title) {
+	public ScheduleManager(VBox tasks, VBox processors, LineChart<?, ?> chart, Label title, Label bestRuntimeLabel) {
 		this.tasks = tasks;
 		this.processors = processors;
 		this.chart = chart;
 		this.title = title;
+		this.bestRuntimeLabel = bestRuntimeLabel;
 	}
 
 	@Override
@@ -109,6 +111,16 @@ public class ScheduleManager extends Manager {
 		}
 
 		Platform.runLater(() -> {
+			if (bestRuntimeLabel.textProperty().get().equals("Searching ...") ||
+					monitor.getBestSchedule().getRuntime() > Integer.parseInt((bestRuntimeLabel.textProperty().get()))) {
+				
+				if (monitor.getBestSchedule().isComplete()) {
+					bestRuntimeLabel.textProperty().set(Integer.toString(monitor.getBestSchedule().getRuntime()));
+				}
+				if (monitor.hasFinished()) {
+					bestRuntimeLabel.setId("best-runtime-label-complete");
+				}
+			}
 			processors.getChildren().setAll(processorLabels);
 			processors.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 			tasks.getChildren().setAll(taskPanes);

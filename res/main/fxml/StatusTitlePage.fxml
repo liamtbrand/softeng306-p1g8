@@ -6,9 +6,9 @@
 
 <AnchorPane stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.StatusTitleController">
    <children>
-      <HBox alignment="CENTER_RIGHT">
+      <HBox alignment="CENTER_RIGHT" AnchorPane.rightAnchor="10.0">
          <children>
-            <Label id="graph-name-label" fx:id="graphNameLabel" maxHeight="33.0" maxWidth="500.0" minHeight="33.0" prefHeight="33.0" prefWidth="500.0" />
+            <Label id="graph-name-label" fx:id="graphNameLabel" contentDisplay="RIGHT" maxHeight="33.0" maxWidth="500.0" minHeight="33.0" prefHeight="33.0" />
          </children>
       </HBox>
    </children>
