@@ -119,6 +119,7 @@
 
 #explanation {
 	-fx-font-size: 10px;
+	-fx-text-fill: grey;
 }
 
 #complete-label {

@@ -55,7 +55,7 @@ public class CanvasFillManager extends Manager {
 		
 		if (FXApplication.getMonitor().hasFinished()) {
 			drawPixels(this.canvas, Color.rgb(0, 166, 118, 1.0), coordinates[0], coordinates[1], 3);
-			this.label.setTextFill(Color.rgb(68, 96, 140, 1.0));
+			//this.label.setTextFill(Color.rgb(68, 96, 140, 1.0));
 		} else {
 			drawPixels(this.canvas, Color.rgb(117, 149, 198, 1.0), coordinates[0], coordinates[1], 1);
 		}		

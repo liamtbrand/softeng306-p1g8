@@ -115,9 +115,9 @@ public class ScheduleManager extends Manager {
 			runtimeAxis.setUpperBound(runtime);
 			runtimeAxis.setTickUnit(runtime/10);
 			
-			if (FXApplication.getMonitor().hasFinished()) {
+			/*if (FXApplication.getMonitor().hasFinished()) {
 				this.title.setTextFill(Color.rgb(68, 96, 140, 1.0));
-			}
+			}*/
 		});
 	}
 
