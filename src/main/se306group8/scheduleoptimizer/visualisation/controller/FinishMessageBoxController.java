@@ -42,7 +42,10 @@ public class FinishMessageBoxController implements InvalidationListener {
 			Schedule solution = monitor.getFinishedSolution();
 			
 			introText.setText("Graph complete!");
-			timeTaken.setText(String.format("%.1fs", monitor.timeTaken() / 1000.0));
+			
+			int seconds = (int) (monitor.timeTaken() / 1000);
+			
+			timeTaken.setText(String.format("%d%s", seconds < 100 ? seconds : seconds / 60, seconds < 100 ? "s" : "m"));
 			solutionLength.setText(String.format("%d", solution.getTotalRuntime()));
 			
 			Alert alert = new Alert(AlertType.NONE, 
