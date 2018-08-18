@@ -6,6 +6,7 @@ import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.DuplicateRemovingChildFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.algorithm.storage.BlockScheduleStorage;
@@ -17,7 +18,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	
 	private final ChildScheduleFinder childGenerator;
 	private final MinimumHeuristic heuristic;
-	private final ScheduleStorage queue;
+	private ScheduleStorage queue;
 	private int explored = 0;
 	private TreeSchedule dfsBest;
 	
@@ -29,12 +30,18 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		this.queue = storage;
 	}
 
-	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic) {
+	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
+		super(monitor);
+		
+		this.childGenerator = childGenerator;
+		this.heuristic = heuristic;
+	}
+
+	public AStarSchedulingAlgorithm(DuplicateRemovingChildFinder childGenerator, MinimumHeuristic heuristic) {
 		super();
 		
 		this.childGenerator = childGenerator;
 		this.heuristic = heuristic;
-		this.queue = new BlockScheduleStorage();
 	}
 
 	@Override
@@ -46,7 +53,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
 
-		queue.signalStorageSizes(getMonitor());
+		
 		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
@@ -54,7 +61,16 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		while (!greedySoln.isComplete()) {
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
 		}
-
+		
+		if(queue == null) {
+			int range = greedySoln.getRuntime() - best.getLowerBound();
+			int granularity = range / 200 + 1; //This caps our memory losses at 100Mb
+			int blockSize = 100_000;
+			
+			queue = new BlockScheduleStorage(granularity, blockSize);
+		}
+		
+		queue.signalStorageSizes(getMonitor());
 		queue.put(greedySoln);
 		getMonitor().updateBestSchedule(greedySoln);
 		
