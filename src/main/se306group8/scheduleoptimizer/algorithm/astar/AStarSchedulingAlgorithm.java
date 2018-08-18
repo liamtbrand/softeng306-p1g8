@@ -133,7 +133,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		if(queue.getBestSchedule().getRuntime() <= best.getLowerBound()) {
 			return; //We are done, someone has already found the solution
 		}
-		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
 		
 		if(queue.size() >= maxQueueSize) {
 			queue.put(best);
