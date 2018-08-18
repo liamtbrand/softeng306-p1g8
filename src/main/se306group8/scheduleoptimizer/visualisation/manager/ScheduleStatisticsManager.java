@@ -63,11 +63,18 @@ public class ScheduleStatisticsManager extends Manager {
 
 		lastScheduleCountSampleTime = currentSampleTime;
 		lastScheduleCount = schedulesExplored;
-
+		if (monitor.getAlgorithmName().equals("A*")) {
+			
+			schedulesInArrayLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInArray," "));
+			schedulesInQueueLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInQueue," "));
+			schedulesOnDiskLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesOnDisk," "));
+			
+		} else {
+			schedulesInArrayLabel.textProperty().setValue("N/A");
+			schedulesInQueueLabel.textProperty().setValue("N/A");
+			schedulesOnDiskLabel.textProperty().setValue("N/A");
+		}
 		schedulesExploredLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesExplored," "));
-		schedulesInArrayLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInArray," "));
-		schedulesInQueueLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInQueue," "));
-		schedulesOnDiskLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesOnDisk," "));
 		schedulesPerSecondLabel.textProperty().setValue(HumanReadableFormatter.format((int)schedulesPerSecond," "));
 	}
 }
