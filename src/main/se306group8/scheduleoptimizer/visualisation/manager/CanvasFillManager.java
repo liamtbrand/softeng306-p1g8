@@ -50,7 +50,6 @@ public class CanvasFillManager extends Manager {
 		this.totalTriangleHeight = 6.0*canvas.getHeight()/8.0;
 	}
 	
-	
 	@Override
 	protected void updateHook() {
 		ObservableRuntimeMonitor monitor = FXApplication.getMonitor();
@@ -64,18 +63,13 @@ public class CanvasFillManager extends Manager {
 			
 			double[][] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
 		
-			// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
-			//if (keepDrawing) {
+			// Method call to draw out a given partial/full schedule (light blue if incomplete, green if complete)
 				if (FXApplication.getMonitor().hasFinished()) {
-					drawPixels(this.canvas, Color.rgb(68, 96, 140, 1.0), coordinates[0], coordinates[1], 3);
+					drawPixels(this.canvas, Color.rgb(0, 166, 118, 1.0), coordinates[0], coordinates[1], 3);
 					this.label.setTextFill(Color.rgb(68, 96, 140, 1.0));
-					this.keepDrawing = false;
 				} else {
 					drawPixels(this.canvas, Color.rgb(117, 149, 198, 1.0), coordinates[0], coordinates[1], 1);
-				}
-			//} else {
-				// Stop drawing
-			//}			
+				}		
 		});
 	}
 	
@@ -116,7 +110,7 @@ public class CanvasFillManager extends Manager {
     }
 
     
-    // Convert allocation to number (as per James' pseudocode)
+    // Convert allocation to number (as per pseudocode)
     private double convertToNumber(ProcessorAllocation allocation, int totalNumberOfTasks) {
     	return (double)(allocation.processor - 1)/(double)FXApplication.getMonitor().getNumberOfProcessors()*totalNumberOfTasks 
     			+ (double)allocation.task.getId()/(FXApplication.getMonitor().getNumberOfProcessors());

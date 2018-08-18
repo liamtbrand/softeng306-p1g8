@@ -18,8 +18,13 @@ public class SearchSpacePageController extends Controller {
 	@FXML
 	private Label searchSpaceTitle;
 	
-	@FXML private Label explanation;
+	@FXML 
+	private Label explanation;
 
+	/**
+	 * Overridden method that draw's the initial SearchSpace triangle, and starts the
+	 * relevant manager, with a specified period to update.
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 	    GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -45,9 +50,6 @@ public class SearchSpacePageController extends Controller {
       int n = 3;
       
       gc.strokePolygon(x, y, n);
-      
-      
-      
     }
 
 }
