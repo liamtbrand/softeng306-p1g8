@@ -26,8 +26,11 @@ public class GreedySchedulingAlgorithm extends Algorithm {
 		getMonitor().logMessage("Starting Greedy.");
 
 		GreedyChildScheduleFinder gcsf = new GreedyChildScheduleFinder(numberOfProcessors);
+		
+		//we don't need a heuristic so I used a lambda returning 0
 		TreeSchedule schedule = new TreeSchedule(graph, (TreeSchedule s) -> 0, numberOfProcessors);
 		
+		//The greedy child schedule finder will produce the locally optimal child at index 0
 		while (!schedule.isComplete()) {
 			getMonitor().updateBestSchedule(schedule);
 			schedule = gcsf.getChildSchedules(schedule).get(0);

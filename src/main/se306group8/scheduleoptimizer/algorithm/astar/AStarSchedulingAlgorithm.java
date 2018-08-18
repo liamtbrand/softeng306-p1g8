@@ -13,6 +13,12 @@ import se306group8.scheduleoptimizer.algorithm.storage.ScheduleStorage;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
+/**
+ * Produce a optimal schedule using A* algorithm. Requires you to provide your
+ * own heuristics. This algorithm may consume a lot of memory protections are in
+ * place to prevent crashing by switching to a DFS branch and bound algorithm
+ * when memory is too high.
+ */
 public class AStarSchedulingAlgorithm extends Algorithm {
 	
 	private final ChildScheduleFinder childGenerator;
@@ -45,6 +51,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 		queue.signalStorageSizes(getMonitor());
 		
+		//Compute a greedy upper bound for pruning 
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
 		TreeSchedule greedySoln = best;
@@ -56,14 +63,19 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		getMonitor().updateBestSchedule(greedySoln);
 		
 		Runtime memory = Runtime.getRuntime();
+		
+		//A conservative amount of the memory to use
 		long maxMemory = (long) (memory.maxMemory() * 0.65);
 		
+		//In A* once a complete schedule comes out of the queue we are
 		while (!best.isComplete()) {
 			
 			queue.signalMonitor(getMonitor());
 			
+			//A BlockScheduleStorage only need 10 bytes per schedule
 			long queuememory = queue.size() * 10L;
-						
+			
+			//Run A* if we have enough memory overwise DFS
 			if ( queuememory < maxMemory) {
 				explore(best);
 			} else {
@@ -96,6 +108,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		return "A*";
 	}
 
+	/**
+	 * To help the queue we recursively search until the children have a different
+	 * lower bound than the @param schedule
+	 */
 	TreeSchedule explore(TreeSchedule best) throws InterruptedException {
 		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
 		

@@ -3,7 +3,6 @@ package se306group8.scheduleoptimizer.algorithm.branchbound;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -17,23 +16,36 @@ import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
+/**
+ * A parallel algorithm to find optimal schedules. It uses depth first search
+ * branch and bound. Internally it uses the ForkJoin framework.
+ */
 public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	
 	private ForkJoinPool pool;
-	private final int parallelism;
+	private final int parallelism; //Max thread
+	
+	//These variables are updated in the threads so we have them atomic
 	private AtomicReference<TreeSchedule> bestSoFar;
 	private AtomicInteger explored;
 	
 	private final ChildScheduleFinder finder;
 	private final MinimumHeuristic heuristic;
 	
+	/**
+	 * Worker threads that create other workers. These workers will operate when a
+	 * thread becomes available.
+	 */
 	private class ForkJob extends RecursiveAction {
 
 		private static final long serialVersionUID = 1L;
+		
+		//Constant used to control forking rate. 
 		private static final int TASKS_TO_FORK = 4;
 
 		private TreeSchedule jobSchedule;
 		
+		//Constructor takes the schedule to start search one
 		public ForkJob(TreeSchedule job) {
 			jobSchedule=job;
 		}
@@ -49,10 +61,12 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 			
 			TreeSchedule best = bestSoFar.get();
 			
+			//Forking too often reduces performance we want to go deep for pruning
 			boolean doFork = tree.getGraph().getAll().size() - tree.getAllocated().size() >= TASKS_TO_FORK && tree.getAllocated().size() >= 2; //We don't split the top bit so we explore the good parts of the solution space first.
 			
 			List<ForkJob> jobs = new ArrayList<ForkJob>();
 			
+			//Atomically increment the explored counter for the runtimemonitor. 
 			explored.addAndGet(childSchedules.size());
 			getMonitor().setSchedulesExplored(explored.get());
 			
@@ -127,12 +141,15 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
+		
+		//all the ForkJobs must run in these threads
 		pool = new ForkJoinPool(parallelism);
 		
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic, numberOfProcessors);
 		ForkJob rootJob = new ForkJob(emptySchedule);
 		explored = new AtomicInteger();
 		
+		//calc greedy soln for upperbound
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		TreeSchedule greedySoln = emptySchedule;
 		while (!greedySoln.isComplete()) {
@@ -140,7 +157,7 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 		}
 		bestSoFar = new AtomicReference<TreeSchedule>(greedySoln);
 		
-		
+		//this method is blocking until all workers are dead
 		pool.invoke(rootJob);
 		
 		return bestSoFar.get().getFullSchedule();
