@@ -22,7 +22,7 @@
          <center>
             <StackPane alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
                <children>
-                  <BarChart fx:id="chart" maxHeight="20.0" maxWidth="610.0" minHeight="320.0" minWidth="610.0" prefHeight="320.0" prefWidth="610.0">
+                  <BarChart fx:id="chart" maxHeight="20.0" maxWidth="610.0" minHeight="320.0" minWidth="610.0" prefHeight="320.0" prefWidth="610.0" style="-fx-background-color: white;">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
