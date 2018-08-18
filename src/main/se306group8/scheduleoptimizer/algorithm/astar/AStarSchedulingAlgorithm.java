@@ -51,6 +51,8 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		//used for the console output
 		boolean contingency = false;
 
+		getMonitor();
+		
 		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
 
 		

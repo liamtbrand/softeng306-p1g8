@@ -114,8 +114,9 @@ public class ScheduleManager extends Manager {
 		tasks.getChildren().setAll(taskPanes);
 		NumberAxis runtimeAxis = (NumberAxis) chart.getXAxis();
 		runtimeAxis.setUpperBound(runtime);
-		
-		
+		if (monitor.hasFinished()) {
+			this.title.setTextFill(Color.rgb(68, 96, 140, 1.0));
+		}
 	}
 
 }
