@@ -21,7 +21,7 @@
                       </Tab>
                         <Tab text="Task Graph">
                            <content>
-                               <fx:include fx:id="taskGraphPage" source="TaskGraphPage.fxml" />
+                               <fx:include fx:id="taskSchedulePage" source="TaskSchedulePage.fxml" />
                            </content>
                         </Tab>
                         <Tab text="Schedule Distribution">

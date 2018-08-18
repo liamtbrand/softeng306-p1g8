@@ -6,10 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import se306group8.scheduleoptimizer.visualisation.manager.ScheduleManager;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class TaskGraphPageController extends Controller {
+public class TaskSchedulePageController extends Controller {
 
 	@FXML private VBox tasks;
 	@FXML private VBox processors;
