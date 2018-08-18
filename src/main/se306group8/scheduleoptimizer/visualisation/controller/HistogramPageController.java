@@ -19,9 +19,5 @@ public class HistogramPageController extends Controller {
 		startManager(new HistogramManager(chart, scheduleTitle), UpdateFrequency.FAST);
 		
 		chart.getData().add(new Series<>("Lower Bound", FXCollections.observableArrayList()));
-		chart.setCategoryGap(0.0);
-		chart.setBarGap(0.0);
-		chart.setLegendVisible(false);
-		chart.setAnimated(false);
 	}
 }
