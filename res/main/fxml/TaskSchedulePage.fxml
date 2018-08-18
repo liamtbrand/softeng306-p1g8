@@ -63,7 +63,7 @@
             <Label id="explanation" layoutX="23.0" layoutY="44.0" text="Optimal Schedule" />
          </children>
       </Group>
-      <Label id="explanation" contentDisplay="TOP" layoutX="73.0" layoutY="408.0" prefHeight="40.0" prefWidth="300.0" styleClass="page-title" text="This is a graphical representation of the current schedule being examined by the algorithm." wrapText="true" />
+      <Label id="explanation" contentDisplay="TOP" layoutX="52.0" layoutY="408.0" prefHeight="40.0" prefWidth="300.0" styleClass="page-title" text="This is a graphical representation of the current schedule being examined by the algorithm." wrapText="true" />
       <HBox layoutX="360.0" layoutY="40.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="35.0">
          <children>
             <Label id="best-runtime-label" text="Best Runtime: " />
