@@ -8,14 +8,15 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.SearchSpacePageController">
+<AnchorPane stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.SearchSpacePageController">
    <children>
       <BorderPane prefHeight="500.0" prefWidth="660.0">
-         <top>
+		<top>
             <Label fx:id="searchSpaceTitle" styleClass="page-title" text="Search Space" BorderPane.alignment="TOP_LEFT">
                <BorderPane.margin>
-                  <Insets bottom="-40.0" left="40.0" top="15.0" />
-               </BorderPane.margin></Label>
+                  <Insets bottom="-40.0" left="40.0" top="30.0" />
+               </BorderPane.margin>
+          	</Label>
          </top>
          <center>
             <Group BorderPane.alignment="CENTER">

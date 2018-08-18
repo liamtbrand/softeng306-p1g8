@@ -23,9 +23,9 @@ public class HistogramManager extends Manager {
 	protected void updateHook(ObservableRuntimeMonitor monitor) {
 		Collection<Data<String, Number>> col = monitor.getHistogramData();
 		
-		if (FXApplication.getMonitor().hasFinished()) {
+		/*if (FXApplication.getMonitor().hasFinished()) {
 			this.label.setTextFill(Color.rgb(68, 96, 140, 1.0));
-		}
+		}*/
 		
 		chart.getData().get(0).getData().setAll(col);
 	}

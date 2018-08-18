@@ -34,12 +34,12 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSchedulesExplored(int number) {
+	public void setSchedulesExplored(long number) {
 		runtimeMonitors.forEach(m -> m.setSchedulesExplored(number));
 	}
 
 	@Override
-	public void setSchedulesInArray(int number) {
+	public void setSchedulesInArray(long number) {
 		runtimeMonitors.forEach(m -> m.setSchedulesInArray(number));
 	}
 
@@ -49,7 +49,7 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSchedulesInQueue(int number) {
+	public void setSchedulesInQueue(long number) {
 		runtimeMonitors.forEach(m -> m.setSchedulesInQueue(number));
 	}
 
@@ -59,7 +59,7 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSchedulesOnDisk(int number) {
+	public void setSchedulesOnDisk(long number) {
 		runtimeMonitors.forEach(m -> m.setSchedulesOnDisk(number));
 	}
 
@@ -86,4 +86,5 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	public void setScheduleDistribution(int[] distribution, int limit) {
 		runtimeMonitors.forEach(m -> m.setScheduleDistribution(distribution, limit));
 	}
+
 }

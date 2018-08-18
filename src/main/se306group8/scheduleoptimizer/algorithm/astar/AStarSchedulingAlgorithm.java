@@ -54,7 +54,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		boolean contingency = false;
 
 		getMonitor();
-		
+
 		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
 
 		

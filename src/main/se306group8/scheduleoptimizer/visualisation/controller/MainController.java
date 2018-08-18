@@ -17,13 +17,15 @@ public class MainController {
 	@FXML
 	private DashboardPageController dashboardPageController;
 	@FXML
-	private TaskGraphPageController taskGraphPageController;
+	private TaskSchedulePageController taskSchedulePageController;
 	@FXML
 	private SearchSpacePageController searchSpacePageController;
 	@FXML
 	private ConsolePageController consolePageController;
 	@FXML
 	private HistogramPageController histogramPageController;
+	@FXML
+	private StatusTitleController statusTitleController;
 
 	public MainController() {
 		updateTimer = new Timer("Display Polling Timer", true);
@@ -32,10 +34,11 @@ public class MainController {
 	@FXML
 	private void initialize() {
 		dashboardPageController.setMainController(this);
-		taskGraphPageController.setMainController(this);
+		taskSchedulePageController.setMainController(this);
 		searchSpacePageController.setMainController(this);
 		consolePageController.setMainController(this);
 		histogramPageController.setMainController(this);
+		statusTitleController.setMainController(this);
 		
 		FXApplication.getMonitor().addListener(new FinishMessageBoxController());
 	}

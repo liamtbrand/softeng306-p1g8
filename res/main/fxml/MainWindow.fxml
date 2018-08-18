@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="600.0" maxWidth="960.0" minHeight="600.0" minWidth="960.0" prefHeight="600.0" prefWidth="960.0" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.MainController">
+<VBox maxHeight="600.0" maxWidth="960.0" minHeight="600.0" minWidth="960.0" prefHeight="600.0" prefWidth="960.0" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.MainController">
   <children>
       <SplitPane dividerPositions="0.9" orientation="VERTICAL" VBox.vgrow="ALWAYS">
         <items>
@@ -19,9 +19,9 @@
                             <fx:include fx:id="searchSpacePage" source="SearchSpacePage.fxml" />
                         </content>
                       </Tab>
-                        <Tab text="Task Graph">
+                        <Tab text="Task Schedule">
                            <content>
-                               <fx:include fx:id="taskGraphPage" source="TaskGraphPage.fxml" />
+                               <fx:include fx:id="taskSchedulePage" source="TaskSchedulePage.fxml" />
                            </content>
                         </Tab>
                         <Tab text="Schedule Distribution">
@@ -35,6 +35,11 @@
                      <children>
                         <fx:include fx:id="dashboardPage" source="DashboardPage.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
+                  </AnchorPane>
+                  <AnchorPane AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  	<children>
+                   		<fx:include fx:id="statusTitle" source="StatusTitlePage.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+             		</children>
                   </AnchorPane>
                </children>
             </AnchorPane>

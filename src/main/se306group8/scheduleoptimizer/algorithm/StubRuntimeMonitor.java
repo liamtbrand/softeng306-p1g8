@@ -25,12 +25,12 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSchedulesExplored(int number) {
+	public void setSchedulesExplored(long number) {
 		// Do Nothing
 	}
 
 	@Override
-	public void setSchedulesInArray(int number) {
+	public void setSchedulesInArray(long number) {
 		// Do Nothing
 	}
 
@@ -40,7 +40,7 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSchedulesInQueue(int number) {
+	public void setSchedulesInQueue(long number) {
 		// Do Nothing
 	}
 
@@ -50,7 +50,7 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSchedulesOnDisk(int number) {
+	public void setSchedulesOnDisk(long number) {
 		// Do Nothing
 	}
 
@@ -58,4 +58,5 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	public void setScheduleOnDiskStorageSize(int bytes) {
 		// Do Nothing
 	}
+
 }

@@ -161,11 +161,12 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override public void updateBestSchedule(TreeSchedule optimalSchedule) {  }
-	@Override public void setSchedulesExplored(int number) {  }
-	@Override public void setSchedulesInArray(int number) {  }
+	@Override public void setSchedulesExplored(long number) {  }
+	@Override public void setSchedulesInArray(long number) {  }
 	@Override public void setScheduleInArrayStorageSize(int bytes) {  }
-	@Override public void setSchedulesInQueue(int number) {  }
+	@Override public void setSchedulesInQueue(long number) {  }
 	@Override public void setScheduleInQueueStorageSize(int bytes) {  }
-	@Override public void setSchedulesOnDisk(int number) {  }
+	@Override public void setSchedulesOnDisk(long number) {  }
 	@Override public void setScheduleOnDiskStorageSize(int bytes) {  }
+
 }

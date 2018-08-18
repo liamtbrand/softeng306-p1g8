@@ -130,7 +130,8 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	}
 	
 	@Override
-	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {		
+	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
+
 		pool = new ForkJoinPool(parallelism);
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic, numberOfProcessors);
 		ForkJob rootJob = new ForkJob(emptySchedule);

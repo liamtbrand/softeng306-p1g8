@@ -31,7 +31,7 @@ public class SearchSpacePageController extends Controller {
 	public void setup() {
 	    GraphicsContext gc = canvas.getGraphicsContext2D();
 	    draw(gc, canvas.getWidth(), canvas.getHeight());
-    
+
 		startManager(new CanvasFillManager(canvas, searchSpaceTitle), UpdateFrequency.FAST);
 	}
 

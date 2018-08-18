@@ -6,19 +6,16 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import se306group8.scheduleoptimizer.visualisation.manager.ScheduleManager;
 
-public class TaskGraphPageController extends Controller {
+public class TaskSchedulePageController extends Controller {
 
 	@FXML private VBox tasks;
 	@FXML private VBox processors;
 	@FXML private LineChart chart;
-	@FXML private Label scheduleTitle;
+	@FXML private Label title;
 
 	@Override
 	public void setup() {
-		
-		startManager(new ScheduleManager(
-				tasks, processors, chart, scheduleTitle
-		));
+		startManager(new ScheduleManager(tasks, processors, chart, title), UpdateFrequency.SLOW);
 
 	}
 
