@@ -123,9 +123,9 @@
 }
 
 #complete-label {
-	-fx-text-fill: grey;
+	-fx-text-fill: white;
 }
 
 #incomplete-label {
-	-fx-text-fill: grey;
+	-fx-text-fill: white;
 }

@@ -46,12 +46,12 @@ public class SearchSpacePageController extends Controller {
     	
     	// Draw Triangle
 		gc.setStroke(Color.BLACK);
-		gc.setLineWidth(2);
+		gc.setLineWidth(4);
 		
 		gc.save();
 		      
-		double[] x = {width/6.0 - 5, width/2.0, 5*width/6.0 + 5};
-		double[] y = {7.0*height/8.0, height/8.0 - 5, 7.0*height/8.0};
+		double[] x = {width/6.0, width/2.0, 5*width/6.0};
+		double[] y = {7.0*height/8.0, height/8.0, 7.0*height/8.0};
 		int n = 3;
 		      
 		gc.strokePolygon(x, y, n);

@@ -9,7 +9,7 @@
    <children>
       <HBox alignment="CENTER_RIGHT">
          <children>
-            <Label fx:id="graphNameLabel" maxWidth="600.0">
+            <Label fx:id="graphNameLabel" maxWidth="500.0" prefWidth="500.0">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding></Label>

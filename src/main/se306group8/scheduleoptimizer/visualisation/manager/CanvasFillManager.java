@@ -1,10 +1,11 @@
 package se306group8.scheduleoptimizer.visualisation.manager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -12,6 +13,8 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import se306group8.scheduleoptimizer.algorithm.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
+import se306group8.scheduleoptimizer.taskgraph.Dependency;
+import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
@@ -50,21 +53,21 @@ public class CanvasFillManager extends Manager {
 			return;
 		}
 
-		double[][] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
+		double[][] coordinates = scheduleToPixels(monitor.getBestSchedule());
 		// Method call to draw out a given partial/full schedule (light blue if incomplete, green if complete)
 		
 		if (FXApplication.getMonitor().hasFinished()) {
-			drawPixels(this.canvas, Color.rgb(0, 166, 118, 1.0), coordinates[0], coordinates[1], 3);
+			drawPixels(this.canvas, Color.rgb(0, 166, 118, 1.0), coordinates[0], coordinates[1], 5);
 			//this.label.setTextFill(Color.rgb(68, 96, 140, 1.0));
 		} else {
-			drawPixels(this.canvas, Color.rgb(117, 149, 198, 1.0), coordinates[0], coordinates[1], 1);
+			drawPixels(this.canvas, Color.rgb(117, 149, 198, 1.0), coordinates[0], coordinates[1], 2);
 		}		
 
 	}
 	
 	// Method that translates an input partial schedule, into a series of x/y coordinates
 	// representing task allocations at given points
-    private double[][] scheduleToPixels(TreeSchedule schedule, int numberOfProcessors) {
+    private double[][] scheduleToPixels(TreeSchedule schedule) {
     	
     	// List of Parents, populated in reverse order from the deepest child
     	List<TreeSchedule> parents = new ArrayList<>();
@@ -90,8 +93,22 @@ public class CanvasFillManager extends Manager {
     	double scalingFactor = 1;
     	
     	for (int i = parents.size() - 2; i >= 0; i--) {
-    		xValues[i] = xValues[i + 1] + convertToNumber(parents.get(i).getMostRecentAllocation(), schedule.getGraph().getAll().size()) * scalingFactor;
-    		scalingFactor /= (numberOfProcessors * schedule.getGraph().getAll().size() / 4);
+    		ProcessorAllocation allocation = parents.get(i).getMostRecentAllocation();
+        	Collection<Task> allocSet = new HashSet<>(parents.get(i).getAllocatable());
+        	
+        	//Add the task and remove all children of it to get the allocatable tasks.
+        	allocSet.add(allocation.task);
+        	allocSet.removeAll(allocation.task.getChildren().stream().map(Dependency::getTarget).collect(Collectors.toSet()));
+        	
+        	List<Task> allocatable = new ArrayList<>(allocSet);
+        	allocatable.sort((a, b) -> a.getId() - b.getId());
+    		
+        	int numberOfProcessors = parents.get(i).getNumberOfUsedProcessors();
+        	
+        	int optionsAtThisLevel = numberOfProcessors * allocatable.size();
+        	xValues[i] = xValues[i + 1] * (1.0 - scalingFactor) + convertToNumber(allocation, allocatable, numberOfProcessors) * scalingFactor;
+    		
+    		scalingFactor /= optionsAtThisLevel;
     		yValues[i] = (1.0 / schedule.getGraph().getAll().size()) * (parents.size() - 1 - i);
     	}
     
@@ -99,9 +116,13 @@ public class CanvasFillManager extends Manager {
     }
 
     // Convert allocation to number (as per pseudocode)
-    private double convertToNumber(ProcessorAllocation allocation, int totalNumberOfTasks) {
-    	return (double)(allocation.processor - 1)/(double)FXApplication.getMonitor().getNumberOfProcessors()*totalNumberOfTasks 
-    			+ (double)allocation.task.getId()/(FXApplication.getMonitor().getNumberOfProcessors());
+    private double convertToNumber(ProcessorAllocation allocation, List<Task> allocatable, int processors) {
+    	double taskContribution = (double) allocatable.indexOf(allocation.task) / allocatable.size();
+    	double processorContribution = (double) (allocation.processor - 1) / processors / allocatable.size();
+    	double result =  taskContribution + processorContribution;
+    	
+    	//This corrects the value to 1.0 if there is the max processor and task allocated
+    	return result / (1.0 - 1.0 / processors / allocatable.size());
     }
     
     // Calculates the horizontal length by which to section up, at any given depth in the triangle
@@ -112,32 +133,22 @@ public class CanvasFillManager extends Manager {
     
 	// Method to draw a set of dots, and interconnected lines, from arrays passed to it (representing a schedule)
 	private void drawPixels(Canvas canvas, Color color, double[] x, double[] y, int width) {
-		PixelWriter pixelWriter = this.gc.getPixelWriter();
-		
-		double max = Arrays.stream(x).max().orElse(1.0);
-		
 		for (int j = 0; j < x.length; j++) {
-			x[j] /= max + 0.0001;
+			y[j] = Math.max(0.0, Math.min(y[j], 1.0));
+			x[j] = Math.max(0.0, Math.min(x[j], 1.0));
+			
 			y[j] = this.startPointY + y[j] * this.totalTriangleHeight;
 			x[j] = this.startPointX - horizontalLength(y[j] - this.startPointY) / 2.0 + x[j] * horizontalLength(y[j] - this.startPointY);
 		}
 	
 		// Loop through all points
-		for (int i = 0; i < x.length; i++) {
-
-			// Both draw a point, then a line to the next point, as you traverse coordinates
-			pixelWriter.setColor((int)x[i], (int)y[i], color);
-			if ((i + 1) == x.length) {
-			} else {
-				drawLine(x[i], y[i], x[i + 1], y[i + 1], color, width);
-			}
-		}
+		gc.setStroke(color);
+		gc.setLineWidth(width);
+		gc.strokePolyline(x, y, x.length);
+		
+		gc.setFill(Color.rgb(255, 255, 255, 0.02));
+		gc.fillPolygon(new double[] { startPointX, startPointX - totalTriangleWidth / 2, startPointX + totalTriangleWidth / 2 }, 
+				new double[] { startPointY, startPointY + totalTriangleHeight, startPointY + totalTriangleHeight }, 
+				3);
 	}
-    
-    // Method to draw line with input color/width
-    private void drawLine(double x1, double y1, double x2, double y2, Color color, int width) {
-    	this.gc.setLineWidth(width);
-    	this.gc.setStroke(color);
-    	this.gc.strokeLine(x1, y1, x2, y2);
-    }
 }

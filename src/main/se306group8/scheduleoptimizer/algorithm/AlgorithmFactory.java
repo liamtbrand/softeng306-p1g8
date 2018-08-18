@@ -46,7 +46,7 @@ public class AlgorithmFactory {
 		if (config.coresToUseForExecution() == 1) {
 			if(config.visualize()) {
 				// If not parallel and visualised, use
-				return new AStarSchedulingAlgorithm(new DuplicateRemovingChildFinder(config.processorsToScheduleOn()), heuristic, monitor, new BlockScheduleStorage());
+				return new AStarSchedulingAlgorithm(new DuplicateRemovingChildFinder(config.processorsToScheduleOn()), heuristic, monitor);
 			} else {
 				return new BranchBoundSchedulingAlgorithm(new DuplicateRemovingChildFinder(config.processorsToScheduleOn()), heuristic, monitor);
 			}
