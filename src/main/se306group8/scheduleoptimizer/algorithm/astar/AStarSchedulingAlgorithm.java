@@ -20,7 +20,9 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	private final MinimumHeuristic heuristic;
 	private ScheduleStorage queue;
 	private int explored = 0;
+	
 	private TreeSchedule dfsBest;
+	private long maxQueueSize;
 	
 	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor, ScheduleStorage storage) {
 		super(monitor);
@@ -77,19 +79,16 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		getMonitor().updateBestSchedule(greedySoln);
 		
 		Runtime memory = Runtime.getRuntime();
-		long maxMemory = (long) (memory.maxMemory() * 0.65);
+		maxQueueSize = (long) (memory.maxMemory() * 0.65) / 10;
 		
 		while (!best.isComplete()) {
 			
 			queue.signalMonitor(getMonitor());
-			
-			long queuememory = queue.size() * 10L;
-			
 			if (getMonitor().isInterupted()) {
 				throw new InterruptedException();
 			}
-			
-			if ( queuememory < maxMemory) {
+						
+			if (queue.size() < maxQueueSize) {
 				if (contingency) {
 					contingency = false;
 					getMonitor().logMessage("Switching back to A*");
@@ -126,27 +125,36 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		return "A*";
 	}
 
-	TreeSchedule explore(TreeSchedule best) throws InterruptedException {
+	void explore(TreeSchedule best) throws InterruptedException {
 		if (getMonitor().isInterupted()) {
 			throw new InterruptedException();
 		}
 		
-		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
+		if(queue.getBestSchedule().getRuntime() <= best.getLowerBound()) {
+			return; //We are done, someone has already found the solution
+		}
+		
+		if(queue.size() >= maxQueueSize) {
+			queue.put(best);
+			return; //Early exit to avoid filling up the queue
+		}
 		
 		if(best.isComplete()) {
 			queue.put(best);
-			return best;
+			return; //Exit algorithm
 		}
+		
+		if(Thread.interrupted()) {
+			throw new InterruptedException();
+		}
+		
+		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
 
 		explored += children.size();
 		
 		for(TreeSchedule child : children) {
 			if(child.getLowerBound() == best.getLowerBound()) {				
-				TreeSchedule s = explore(child);
-				
-				if(s != null) {
-					return s;
-				}
+				explore(child);
 			} else {
 				queue.put(child);
 			}
@@ -155,8 +163,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		queue.signalMonitor(getMonitor());
 		getMonitor().updateBestSchedule(best);
 		getMonitor().setSchedulesExplored(explored);
-		
-		return null;
 	}
 	
 	

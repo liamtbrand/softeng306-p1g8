@@ -130,9 +130,11 @@ public final class ListSchedule implements Schedule {
 		}
 		
 		int startTime = 0;
+		ProcessorAllocation previousAllocation = null;
 		
 		if(index != 0) {
-			startTime = computeAllocation(taskLists.get(processor - 1).get(index - 1)).endTime;
+			previousAllocation = computeAllocation(taskLists.get(processor - 1).get(index - 1));
+			startTime = previousAllocation.endTime;
 		}
 		
 		for(Dependency dep : task.getParents()) {
@@ -152,7 +154,7 @@ public final class ListSchedule implements Schedule {
 			}
 		}
 		
-		alloc = new ProcessorAllocation(task, startTime, processor);
+		alloc = new ProcessorAllocation(task, startTime, processor, previousAllocation);
 		allocations.put(task, alloc);
 		
 		return alloc;
