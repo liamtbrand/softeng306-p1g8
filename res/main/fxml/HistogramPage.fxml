@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
@@ -10,45 +16,20 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.HistogramPageController">
+<AnchorPane maxHeight="490.0" maxWidth="700.0" minHeight="400.0" minWidth="600.0" prefHeight="500.0" prefWidth="650.0" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.HistogramPageController">
    <children>
-      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <left>
-      			<VBox fx:id="processors" alignment="CENTER" maxHeight="320.0" minHeight="320.0" prefHeight="320.0" spacing="10" BorderPane.alignment="CENTER">
-               <BorderPane.margin>
-                  <Insets left="30.0" top="40.0" />
-               </BorderPane.margin></VBox>
-         </left>
-         <center>
-            <StackPane alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
-               <children>
-                  <BarChart fx:id="chart" maxHeight="20.0" maxWidth="610.0" minHeight="320.0" minWidth="610.0" prefHeight="320.0" prefWidth="610.0">
-                    <xAxis>
-                      <CategoryAxis side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                     <StackPane.margin>
-                        <Insets left="-10.0" top="40.0" />
-                     </StackPane.margin>
-                     <padding>
-                        <Insets right="20.0" top="20.0" />
-                     </padding>
-                  </BarChart>
-                  <VBox fx:id="tasks" alignment="CENTER" spacing="10">
-            </VBox>
-               </children>
-            </StackPane>
-         </center>
-         <top>
-            <Label fx:id="scheduleTitle" styleClass="page-title" text="Schedule Distribution" BorderPane.alignment="TOP_LEFT">
-               <BorderPane.margin>
-                  <Insets bottom="-40.0" left="40.0" top="15.0" />
-               </BorderPane.margin>
-            </Label>
-         </top>
-      </BorderPane>
+      <Label fx:id="scheduleTitle" styleClass="page-title" text="Schedule Distribution" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="15.0" />
+      <BarChart fx:id="chart" alternativeColumnFillVisible="true" alternativeRowFillVisible="false" animated="false" barGap="0.0" categoryGap="0.0" horizontalZeroLineVisible="false" layoutX="19.0" layoutY="73.0" legendVisible="false" maxHeight="380.0" maxWidth="610.0" minHeight="320.0" minWidth="610.0" prefHeight="380.0" prefWidth="610.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false" AnchorPane.leftAnchor="19.0" AnchorPane.topAnchor="75.0">
+        <xAxis>
+          <CategoryAxis label="Lower Bound" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis label="Number of Schedules" side="LEFT" />
+        </yAxis>
+         <padding>
+            <Insets right="20.0" top="20.0" />
+         </padding>
+      </BarChart>
+      <Label id="explanation" layoutX="344.0" layoutY="15.0" prefHeight="45.0" prefWidth="269.0" styleClass="page-title" text="This graph shows the distribution of the lower bound of schedules in the storage array. It does not show schedules that have been pruned." wrapText="true" />
    </children>
 </AnchorPane>

@@ -52,7 +52,7 @@ public class FXApplication extends Application {
 		// Get the reference to the main controller.
 		mainController = loader.<MainController>getController();
 		
-		primaryStage.setTitle("Visualisation");
+		primaryStage.setTitle("Visualisation - '" + Main.config.inputFile() + "' (" + Main.config.processorsToScheduleOn() + " processors)");
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.show();
@@ -74,7 +74,7 @@ public class FXApplication extends Application {
 	@Override
 	public void stop() {
 		// Stop the algorithm.
-		algorithmThread.interrupt();
+		monitor.interuptAlgorithm();
 		try {
 			algorithmThread.join();
 		} catch (InterruptedException e) {

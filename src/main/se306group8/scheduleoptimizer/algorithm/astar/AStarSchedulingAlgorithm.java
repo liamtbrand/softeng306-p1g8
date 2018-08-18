@@ -6,6 +6,7 @@ import se306group8.scheduleoptimizer.algorithm.Algorithm;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.algorithm.childfinder.ChildScheduleFinder;
+import se306group8.scheduleoptimizer.algorithm.childfinder.DuplicateRemovingChildFinder;
 import se306group8.scheduleoptimizer.algorithm.childfinder.GreedyChildScheduleFinder;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.algorithm.storage.BlockScheduleStorage;
@@ -17,7 +18,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	
 	private final ChildScheduleFinder childGenerator;
 	private final MinimumHeuristic heuristic;
-	private final ScheduleStorage queue;
+	private ScheduleStorage queue;
 	private int explored = 0;
 	
 	private TreeSchedule dfsBest;
@@ -31,21 +32,32 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		this.queue = storage;
 	}
 
+	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
+		super(monitor);
+		
+		this.childGenerator = childGenerator;
+		this.heuristic = heuristic;
+	}
+
 	public AStarSchedulingAlgorithm(ChildScheduleFinder childGenerator, MinimumHeuristic heuristic) {
 		super();
 		
 		this.childGenerator = childGenerator;
 		this.heuristic = heuristic;
-		this.queue = new BlockScheduleStorage();
 	}
 
 	@Override
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		getMonitor().logMessage("Starting A*.");
+		
+		//used for the console output
+		boolean contingency = false;
 
+		getMonitor();
+		
 		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
 
-		queue.signalStorageSizes(getMonitor());
+		
 		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
@@ -53,7 +65,16 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		while (!greedySoln.isComplete()) {
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
 		}
-
+		
+		if(queue == null) {
+			int range = greedySoln.getRuntime() - best.getLowerBound();
+			int granularity = range / 200 + 1; //This caps our memory losses at 100Mb
+			int blockSize = 100_000;
+			
+			queue = new BlockScheduleStorage(granularity, blockSize);
+		}
+		
+		queue.signalStorageSizes(getMonitor());
 		queue.put(greedySoln);
 		getMonitor().updateBestSchedule(greedySoln);
 		
@@ -63,12 +84,24 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		while (!best.isComplete()) {
 			
 			queue.signalMonitor(getMonitor());
+			if (getMonitor().isInterupted()) {
+				throw new InterruptedException();
+			}
 						
 			if (queue.size() < maxQueueSize) {
+				if (contingency) {
+					contingency = false;
+					getMonitor().logMessage("Switching back to A*");
+				}
 				explore(best);
 			} else {
+				
+				if (!contingency) {
+					contingency = true;
+					getMonitor().logMessage("Using contingency plan Branch and Bound");
+				}
 				//System.out.println("Using contingency plan");
-				//getMonitor().logMessage("Using contingency plan");
+				
 				dfsBest = queue.getBestSchedule();
 				queue.put(branchAndBound(best));		
 				
@@ -82,10 +115,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			queue.signalMonitor(getMonitor());
 			getMonitor().updateBestSchedule(best);
 			getMonitor().setSchedulesExplored(explored);
-			
-			if(Thread.interrupted()) {
-				throw new InterruptedException();
-			}
 		}
 		
 		return best.getFullSchedule();
@@ -97,9 +126,14 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	}
 
 	void explore(TreeSchedule best) throws InterruptedException {
+		if (getMonitor().isInterupted()) {
+			throw new InterruptedException();
+		}
+		
 		if(queue.getBestSchedule().getRuntime() <= best.getLowerBound()) {
 			return; //We are done, someone has already found the solution
 		}
+		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
 		
 		if(queue.size() >= maxQueueSize) {
 			queue.put(best);
@@ -134,6 +168,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	
 	
 	private TreeSchedule branchAndBound(TreeSchedule schedule) throws InterruptedException {
+		if(getMonitor().isInterupted()) {
+			throw new InterruptedException();
+		}
+		
 		// Get all children in order from best lower bound to worst
 		List<TreeSchedule> childSchedules = childGenerator.getChildSchedules(schedule);
 		childSchedules.sort(null);
@@ -152,10 +190,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			} else {
 				break;
 			}
-		}
-
-		if(Thread.interrupted()) {
-			throw new InterruptedException();
 		}
 		
 		getMonitor().setSchedulesExplored(explored);

@@ -67,6 +67,15 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	public void setScheduleOnDiskStorageSize(int bytes) {
 		runtimeMonitors.forEach(m -> m.setScheduleOnDiskStorageSize(bytes));
 	}
+	
+	@Override
+	public boolean isInterupted() {
+		boolean interupted = false;
+		for (RuntimeMonitor m:runtimeMonitors) {
+			interupted = interupted || m.isInterupted();
+		}
+		return interupted;
+	}
 
 	@Override
 	public void setBucketSize(int size) {

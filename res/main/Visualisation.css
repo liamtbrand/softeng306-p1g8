@@ -97,3 +97,7 @@
 .label {
     -fx-font-family: 'Menlo';
 }
+
+#explanation {
+	-fx-font-size: 10px;
+}
