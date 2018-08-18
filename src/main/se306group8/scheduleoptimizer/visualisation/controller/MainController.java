@@ -1,45 +1,50 @@
 package se306group8.scheduleoptimizer.visualisation.controller;
 
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import java.util.Timer;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import javafx.fxml.FXML;
+import se306group8.scheduleoptimizer.visualisation.FXApplication;
+import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
+import se306group8.scheduleoptimizer.visualisation.manager.Manager;
 
 /**
  * The purpose of main controller is to keep references to the controllers for each page.
  */
-public class MainController implements Initializable {
-
+public class MainController {
+	private final Timer updateTimer;
+	
 	// The controllers are injected here. Convention is: fx:id+Controller.
 	@FXML
-	DashboardPageController dashboardPageController;
+	private DashboardPageController dashboardPageController;
 	@FXML
-	TaskGraphPageController taskGraphPageController;
+	private TaskGraphPageController taskGraphPageController;
 	@FXML
-	SearchSpacePageController searchSpacePageController;
+	private SearchSpacePageController searchSpacePageController;
 	@FXML
-	ConsolePageController consolePageController;
+	private ConsolePageController consolePageController;
 	@FXML
-	HistogramController histogramPageController;
+	private HistogramPageController histogramPageController;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-
+	public MainController() {
+		updateTimer = new Timer("Display Polling Timer", true);
+	}
+	
+	@FXML
+	private void initialize() {
+		dashboardPageController.setMainController(this);
+		taskGraphPageController.setMainController(this);
+		searchSpacePageController.setMainController(this);
+		consolePageController.setMainController(this);
+		histogramPageController.setMainController(this);
+		
+		FXApplication.getMonitor().addListener(new FinishMessageBoxController());
 	}
 
-	/**
-	 * This method is called by application when the visualiser is closed.
-	 * This must call stop on all the children controllers.
-	 * Each child should ensure that they clean up any threads they have created.
-	 * This includes timers.
-	 */
-	public void stop() {
-		dashboardPageController.stop();
-		taskGraphPageController.stop();
-		searchSpacePageController.stop();
-		consolePageController.stop();
-		histogramPageController.stop();
+	public void addToUpdate(Manager manager) {
+		updateTimer.schedule(manager, 0, UpdateFrequency.SLOW.period);
 	}
-
+	
+	public void addToUpdate(Manager manager, UpdateFrequency frequency) {
+		updateTimer.schedule(manager, 0, frequency.period);
+	}
 }

@@ -42,18 +42,16 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	}
 	
 	@Override
-	public void start() {
+	public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
 		// Start timing variable
 		this.startTime = System.nanoTime();
 		
 		// Print out number of processors to stdout (the top row)
 		logMessage(seperator);
 		logMessage("TEAM: 'Team Name is Trivial and Left as a Exercise for the Reader'");
-		logMessage("Welcome! You are running the Greedy Algorithm.\nA valid (greedy) schedule will be returned shortly.");
+		logMessage("Welcome! You are running " + name + ".\nA valid schedule will be returned shortly.");
 		logMessage(seperator);
-		logMessage(header);
-		logMessage(seperator);
-
+		logMessage("Log:");
 	}
 	
 	// Method that prints out final schedule to stdout
@@ -139,6 +137,10 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 		this.finishTime = System.nanoTime();
 		this.duration = this.finishTime - this.startTime;
 		
+		logMessage(seperator);
+		logMessage(header);
+		logMessage(seperator);
+		
 		printSchedule(optimalSchedule, 40);
 		
 		logMessage(seperator);
@@ -154,66 +156,16 @@ public class CLIRuntimeMonitor implements RuntimeMonitor {
 	
 	@Override
 	public void logMessage(String message) {
-		// Print messages to stdout.
 		System.out.println(message);
 		
 	}
 
-	@Override
-	public void updateBestSchedule(TreeSchedule optimalSchedule) {
-		//Take no action.
-	}
-
-	@Override
-	public void setSchedulesExplored(int number) {
-		//Take no action.
-		
-	}
-
-	@Override
-	public void setSchedulesInArray(int number) {
-		// TODO
-	}
-
-	@Override
-	public void setScheduleInArrayStorageSize(int bytes) {
-		// TODO
-	}
-
-	@Override
-	public void setSchedulesInQueue(int number) {
-		// TODO
-	}
-
-	@Override
-	public void setScheduleInQueueStorageSize(int bytes) {
-		// TODO
-	}
-
-	@Override
-	public void setSchedulesOnDisk(int number) {
-		// TODO
-	}
-
-	@Override
-	public void setScheduleOnDiskStorageSize(int bytes) {
-		// TODO
-	}
-
-	@Override
-	public void setNumberOfProcessors(int processors) {
-		// TODO 
-		
-	}
-
-	@Override
-	public void setAlgorithmName(String name) {
-		// TODO
-	}
-
-	@Override
-	public void setParallelized(int cores) {
-		// TODO
-	}
-
+	@Override public void updateBestSchedule(TreeSchedule optimalSchedule) {  }
+	@Override public void setSchedulesExplored(int number) {  }
+	@Override public void setSchedulesInArray(int number) {  }
+	@Override public void setScheduleInArrayStorageSize(int bytes) {  }
+	@Override public void setSchedulesInQueue(int number) {  }
+	@Override public void setScheduleInQueueStorageSize(int bytes) {  }
+	@Override public void setSchedulesOnDisk(int number) {  }
+	@Override public void setScheduleOnDiskStorageSize(int bytes) {  }
 }

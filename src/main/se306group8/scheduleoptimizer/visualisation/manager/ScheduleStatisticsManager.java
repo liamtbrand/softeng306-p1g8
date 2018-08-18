@@ -1,6 +1,5 @@
 package se306group8.scheduleoptimizer.visualisation.manager;
 
-import javafx.application.Platform;
 import javafx.scene.control.Label;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.HumanReadableFormatter;
@@ -44,10 +43,7 @@ public class ScheduleStatisticsManager extends Manager {
 	}
 
 	@Override
-	protected void updateHook() {
-
-		ObservableRuntimeMonitor monitor = FXApplication.getMonitor();
-
+	protected void updateHook(ObservableRuntimeMonitor monitor) {
 		int schedulesExplored = monitor.getSchedulesExplored();
 
 		int schedulesInArray = monitor.getSchedulesInArray();
@@ -68,13 +64,10 @@ public class ScheduleStatisticsManager extends Manager {
 		lastScheduleCountSampleTime = currentSampleTime;
 		lastScheduleCount = schedulesExplored;
 
-		Platform.runLater(() -> {
-
-			schedulesExploredLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesExplored," ", 1));
-			schedulesInArrayLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInArray," ", 1));
-			schedulesInQueueLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInQueue," ", 1));
-			schedulesOnDiskLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesOnDisk," ",1));
-			schedulesPerSecondLabel.textProperty().setValue(HumanReadableFormatter.format((int)schedulesPerSecond," ", 1));
-		});
+		schedulesExploredLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesExplored," "));
+		schedulesInArrayLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInArray," "));
+		schedulesInQueueLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInQueue," "));
+		schedulesOnDiskLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesOnDisk," "));
+		schedulesPerSecondLabel.textProperty().setValue(HumanReadableFormatter.format((int)schedulesPerSecond," "));
 	}
 }

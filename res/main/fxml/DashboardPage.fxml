@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -42,9 +41,9 @@
                         </HBox>
                         <HBox>
                            <children>
-                              <Label style="-fx-font-family: menlo;" text="Parallelized:" />
+                              <Label style="-fx-font-family: menlo;" text="Cores for Execution:" />
                               <Region HBox.hgrow="ALWAYS" />
-                              <CheckBox fx:id="parallelizedCheckbox" disable="true" mnemonicParsing="false" />
+                              <Label fx:id="parallelizedLabel" />
                            </children>
                         </HBox>
                      </children>

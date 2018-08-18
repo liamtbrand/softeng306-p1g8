@@ -19,8 +19,8 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void start() {
-		runtimeMonitors.forEach(m -> m.start());
+	public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
+		runtimeMonitors.forEach(m -> m.start(name, numberOfProcessors, coresToUseForExecution));
 	}
 
 	@Override
@@ -69,8 +69,12 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 	
 	@Override
-	public void setNumberOfProcessors(int processors) {
-		runtimeMonitors.forEach(m -> m.setNumberOfProcessors(processors));
+	public boolean isInterupted() {
+		boolean interupted = false;
+		for (RuntimeMonitor m:runtimeMonitors) {
+			interupted = interupted || m.isInterupted();
+		}
+		return interupted;
 	}
 
 	@Override
@@ -82,15 +86,4 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	public void setScheduleDistribution(int[] distribution, int limit) {
 		runtimeMonitors.forEach(m -> m.setScheduleDistribution(distribution, limit));
 	}
-	
-	@Override
-	public void setAlgorithmName(String name) {
-		runtimeMonitors.forEach(m -> m.setAlgorithmName(name));
-	}
-
-	@Override
-	public void setParallelized(int cores) {
-		runtimeMonitors.forEach(m -> m.setParallelized(cores));
-	}
-
 }

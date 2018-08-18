@@ -2,7 +2,6 @@ package se306group8.scheduleoptimizer.visualisation.manager;
 
 import java.util.Collection;
 
-import javafx.application.Platform;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Label;
@@ -21,15 +20,13 @@ public class HistogramManager extends Manager {
 	}
 
 	@Override
-	protected void updateHook() {
-		ObservableRuntimeMonitor monitor = FXApplication.getMonitor();
+	protected void updateHook(ObservableRuntimeMonitor monitor) {
 		Collection<Data<String, Number>> col = monitor.getHistogramData();
 		
-		Platform.runLater(() -> {
-			if (FXApplication.getMonitor().hasFinished()) {
-				this.label.setTextFill(Color.rgb(68, 96, 140, 1.0));
-			}
-			chart.getData().get(0).getData().setAll(col);
-		});
+		if (FXApplication.getMonitor().hasFinished()) {
+			this.label.setTextFill(Color.rgb(68, 96, 140, 1.0));
+		}
+		
+		chart.getData().get(0).getData().setAll(col);
 	}
 }

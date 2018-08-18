@@ -73,12 +73,8 @@ public class FXApplication extends Application {
 
 	@Override
 	public void stop() {
-
-		// Stop the main controller, this will stop everything in the gui.
-		mainController.stop();
-
 		// Stop the algorithm.
-		algorithmThread.interrupt();
+		monitor.interuptAlgorithm();
 		try {
 			algorithmThread.join();
 		} catch (InterruptedException e) {

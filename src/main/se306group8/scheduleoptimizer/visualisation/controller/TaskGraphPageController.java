@@ -6,9 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import se306group8.scheduleoptimizer.visualisation.manager.ScheduleManager;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 public class TaskGraphPageController extends Controller {
 
 	@FXML private VBox tasks;
@@ -17,11 +14,11 @@ public class TaskGraphPageController extends Controller {
 	@FXML private Label scheduleTitle;
 
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void setup() {
 		
 		startManager(new ScheduleManager(
 				tasks, processors, chart, scheduleTitle
-		),0l,1000l);
+		));
 
 	}
 

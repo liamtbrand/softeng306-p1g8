@@ -16,7 +16,7 @@ public interface RuntimeMonitor {
 	/**
 	 * Method to be called upon algorithm-start
 	 */
-	public void start();
+	public void start(String name, int numberOfProcessors, int coresToUseForExecution);
 	
 	/**
 	 * Method to be called upon algorithm-finish
@@ -43,11 +43,12 @@ public interface RuntimeMonitor {
 
 	public void setSchedulesOnDisk(int number);
 	public void setScheduleOnDiskStorageSize(int bytes);
-	
-	public void setNumberOfProcessors(int processors);
 
+
+	public default void interuptAlgorithm() {throw new UnsupportedOperationException();};
+	public default boolean isInterupted() {return false;};
+	
 	default void setScheduleDistribution(int[] distribution, int limit) {  }
 	default void setBucketSize(int granularity) {  }
-	void setAlgorithmName(String name);
-	void setParallelized(int cores);
+
 }
