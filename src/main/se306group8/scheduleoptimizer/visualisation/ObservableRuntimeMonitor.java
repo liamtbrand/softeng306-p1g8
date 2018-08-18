@@ -49,6 +49,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int granularity = 0;
 	
 	private final List<InvalidationListener> listeners;
+	private volatile boolean interupted = false;
 	
 	public ObservableRuntimeMonitor() {
 
@@ -224,6 +225,16 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		listeners.remove(listener);
 	}
 
+	@Override
+	public void interuptAlgorithm() {
+		interupted  = true;
+	}
+	
+	@Override
+	public boolean isInterupted() {
+		return interupted;
+	}
+	
 	public Collection<Data<String, Number>> getHistogramData() {
 		Collection<Data<String, Number>> col = new ArrayList<>();
 		
@@ -250,6 +261,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		} else {
 			return Integer.toString(i * granularity) + " - " + Integer.toString((i + 1) * granularity - 1);
 		}
+
 	}
 
 	public String getAlgorithmName() {
