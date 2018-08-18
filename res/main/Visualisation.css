@@ -12,6 +12,7 @@
 * {
    -colour-1: #44608c;
    -colour-2: #7595c6;
+   -green: #00a676;
    -sidebar-color: #eee;
 }
 
@@ -118,4 +119,12 @@
 
 #explanation {
 	-fx-font-size: 10px;
+}
+
+#complete-label {
+	-fx-text-fill: grey;
+}
+
+#incomplete-label {
+	-fx-text-fill: grey;
 }

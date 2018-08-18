@@ -42,13 +42,16 @@
                </children>
             </StackPane>
          </center>
+         <bottom>
+            <Label id="explanation" styleClass="page-title" text="This is a graphical epresentation of the current schedule being examined by the algorithm." BorderPane.alignment="CENTER" />
+         </bottom>
          <top>
-            <Label fx:id="title" styleClass="page-title" text="Task Schedule" BorderPane.alignment="TOP_LEFT">
+			<Label fx:id="title" styleClass="page-title" text="Task Schedule" BorderPane.alignment="TOP_LEFT">
                <BorderPane.margin>
                   <Insets bottom="-40.0" left="40.0" top="30.0" />
                </BorderPane.margin>
             </Label>
-         </top>
+     	</top>
       </BorderPane>
    </children>
 </AnchorPane>

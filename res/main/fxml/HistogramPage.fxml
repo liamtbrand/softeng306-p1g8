@@ -41,7 +41,7 @@
                </children>
             </StackPane>
          </center>
-         <top>
+    	<top>
             <Label fx:id="scheduleTitle" styleClass="page-title" text="Schedule Distribution" BorderPane.alignment="TOP_LEFT">
                <BorderPane.margin>
                   <Insets bottom="-40.0" left="40.0" top="30.0" />

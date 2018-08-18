@@ -24,6 +24,8 @@ public class MainController {
 	private ConsolePageController consolePageController;
 	@FXML
 	private HistogramPageController histogramPageController;
+	@FXML
+	private StatusTitleController statusTitleController;
 
 	public MainController() {
 		updateTimer = new Timer("Display Polling Timer", true);
@@ -36,6 +38,7 @@ public class MainController {
 		searchSpacePageController.setMainController(this);
 		consolePageController.setMainController(this);
 		histogramPageController.setMainController(this);
+		statusTitleController.setMainController(this);
 		
 		FXApplication.getMonitor().addListener(new FinishMessageBoxController());
 	}
