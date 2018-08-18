@@ -31,7 +31,12 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int scheduleInQueueStorageSize;
 	private volatile int schedulesOnDisk;
 	private volatile int scheduleOnDiskStorageSize;
-
+	
+	private volatile long startTime;
+	private volatile long finishTime;
+	
+	private volatile Schedule finishedSolution;
+	
 	//Set in the start method
 	private volatile boolean started;
 	private volatile String algorithmName;
@@ -87,6 +92,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		algorithmName = name;
 		this.numberOfProcessors = numberOfProcessors;
 		this.coresToUseForExecution = coresToUseForExecution;
+		this.startTime = System.currentTimeMillis();
 		
 		invalidateListeners();
 	}
@@ -94,9 +100,16 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	@Override
 	public void finish(Schedule solution) {
 		finished = true;
+		finishedSolution = solution;
+		finishTime = System.currentTimeMillis();
 		invalidateListeners();
 	}
 
+	/** Returns the time taken in ms */
+	public long timeTaken() {
+		return finishTime - startTime;
+	}
+	
 	@Override
 	public void logMessage(String message) {
 		LocalDateTime now = LocalDateTime.now();
@@ -243,4 +256,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		return algorithmName;
 	}
 
+	public Schedule getFinishedSolution() {
+		return finishedSolution;
+	}
 }
