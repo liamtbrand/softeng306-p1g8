@@ -3,6 +3,7 @@ package se306group8.scheduleoptimizer.visualisation.manager;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -17,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
+import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
 public class ScheduleManager extends Manager {
@@ -109,13 +111,17 @@ public class ScheduleManager extends Manager {
 			taskPanes.add(taskPane);
 		}
 		
-		processors.getChildren().setAll(processorLabels);
-		processors.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-		tasks.getChildren().setAll(taskPanes);
-		NumberAxis runtimeAxis = (NumberAxis) chart.getXAxis();
-		runtimeAxis.setUpperBound(runtime);
-		
-		
+		Platform.runLater(() -> {
+			processors.getChildren().setAll(processorLabels);
+			processors.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+			tasks.getChildren().setAll(taskPanes);
+			NumberAxis runtimeAxis = (NumberAxis) chart.getXAxis();
+			runtimeAxis.setUpperBound(runtime);
+			
+			if (FXApplication.getMonitor().hasFinished()) {
+				this.title.setTextFill(Color.rgb(68, 96, 140, 1.0));
+			}
+		});
 	}
 
 }

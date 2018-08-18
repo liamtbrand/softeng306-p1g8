@@ -11,6 +11,7 @@ import java.util.Random;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -25,6 +26,8 @@ public class CanvasFillManager extends Manager {
 	private Canvas canvas;
 	private GraphicsContext gc;
 	
+	private Label label;
+	
 	// Coordinates for starting point of rendering searchSpace
 	private double startPointX;
 	private double startPointY;
@@ -35,8 +38,9 @@ public class CanvasFillManager extends Manager {
 	
 	private boolean keepDrawing = true;
 
-	public CanvasFillManager(Canvas canvas) {
+	public CanvasFillManager(Canvas canvas, Label label) {
 		this.canvas = canvas;
+		this.label = label;
 		
 		// Computed from chosen points of triangle
 		this.startPointX = canvas.getWidth()/2.0;
@@ -54,22 +58,24 @@ public class CanvasFillManager extends Manager {
 			return;
 		}
 		
-		// Currently a debug line
-		//System.out.println("RUNTIME: " + monitor.getBestSchedule().getRuntime() + ", IS COMPLETE: " + monitor.getBestSchedule().isComplete());
-
-    double[][] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
-
-		// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
-		if (keepDrawing) {
-			if (monitor.getBestSchedule().isComplete()) {
-				drawPixels(this.canvas, Color.DARKBLUE, coordinates[0], coordinates[1], 3);
-				this.keepDrawing = false;
-			} else {
-				drawPixels(this.canvas, Color.GREY, coordinates[0], coordinates[1], 1);
-			}
-		} else {
-			// Stop drawing
-		}
+		// Called and run once every second
+		Platform.runLater(() -> {
+			
+			double[][] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
+		
+			// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
+			//if (keepDrawing) {
+				if (FXApplication.getMonitor().hasFinished()) {
+					drawPixels(this.canvas, Color.rgb(68, 96, 140, 1.0), coordinates[0], coordinates[1], 3);
+					this.label.setTextFill(Color.rgb(68, 96, 140, 1.0));
+					this.keepDrawing = false;
+				} else {
+					drawPixels(this.canvas, Color.rgb(117, 149, 198, 1.0), coordinates[0], coordinates[1], 1);
+				}
+			//} else {
+				// Stop drawing
+			//}			
+		});
 	}
 	
 	// Method that translates an input partial schedule, into a series of x/y coordinates
