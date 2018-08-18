@@ -12,7 +12,7 @@
 * {
    -colour-1: #44608c;
    -colour-2: #7595c6;
-   -sidebar-colour: #eee;
+   -sidebar-color: #eee;
 }
 
 .rectangle {
@@ -22,7 +22,7 @@
 /* SIDEBAR STYLING */
 
 .sidebar {
-    -fx-background-color: -sidebar-colour;
+    -fx-background-color: -sidebar-color;
 }
 
 /* CHART STYLING */
@@ -30,11 +30,11 @@
 .chart-legend {
 	-fx-background-radius: 0;
 	-fx-border-radius: 0;
-	-fx-background-color: -sidebar-colour;
+	-fx-background-color: -sidebar-color;
 }
 
 .chart {
-	-fx-background-color: -sidebar-colour;
+	-fx-background-color: -sidebar-color;
 	-fx-font-family: 'Menlo';
 }
 
@@ -54,7 +54,11 @@
 /* TAB STYLING */
 
 .tab-pane *.tab-header-background {
-    -fx-background-color: white;
+    -fx-background-color: lightgrey;
+}
+
+.tab-pane {
+	-fx-background-color: white;
 }
 
 .tab {
@@ -97,6 +101,20 @@
 .label {
     -fx-font-family: 'Menlo';
 }
+
+.split-pane:vertical > .split-pane-divider {
+	-fx-padding: 0 0.2em 0 0.2em; 
+  	-fx-background-color: lightgrey;
+}
+
+.text-area {
+	-fx-background-radius: 0, 0, 0, 0;
+	-fx-text-box-border: 0;
+}
+
+.text-area .content{
+  	-fx-background-color: transparent;
+  }
 
 #explanation {
 	-fx-font-size: 10px;
