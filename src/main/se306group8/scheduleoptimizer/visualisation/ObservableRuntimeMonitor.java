@@ -31,7 +31,12 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int scheduleInQueueStorageSize;
 	private volatile long schedulesOnDisk;
 	private volatile int scheduleOnDiskStorageSize;
-
+	
+	private volatile long startTime;
+	private volatile long finishTime;
+	
+	private volatile Schedule finishedSolution;
+	
 	//Set in the start method
 	private volatile boolean started;
 	private volatile String algorithmName;
@@ -44,6 +49,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int granularity = 0;
 	
 	private final List<InvalidationListener> listeners;
+	private volatile boolean interupted = false;
 	
 	public ObservableRuntimeMonitor() {
 
@@ -87,6 +93,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		algorithmName = name;
 		this.numberOfProcessors = numberOfProcessors;
 		this.coresToUseForExecution = coresToUseForExecution;
+		this.startTime = System.currentTimeMillis();
 		
 		invalidateListeners();
 	}
@@ -94,9 +101,16 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	@Override
 	public void finish(Schedule solution) {
 		finished = true;
+		finishedSolution = solution;
+		finishTime = System.currentTimeMillis();
 		invalidateListeners();
 	}
 
+	/** Returns the time taken in ms */
+	public long timeTaken() {
+		return finishTime - startTime;
+	}
+	
 	@Override
 	public void logMessage(String message) {
 		LocalDateTime now = LocalDateTime.now();
@@ -211,6 +225,16 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		listeners.remove(listener);
 	}
 
+	@Override
+	public void interuptAlgorithm() {
+		interupted  = true;
+	}
+	
+	@Override
+	public boolean isInterupted() {
+		return interupted;
+	}
+	
 	public Collection<Data<String, Number>> getHistogramData() {
 		Collection<Data<String, Number>> col = new ArrayList<>();
 		
@@ -237,10 +261,14 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		} else {
 			return Integer.toString(i * granularity) + " - " + Integer.toString((i + 1) * granularity - 1);
 		}
+
 	}
 
 	public String getAlgorithmName() {
 		return algorithmName;
 	}
 
+	public Schedule getFinishedSolution() {
+		return finishedSolution;
+	}
 }

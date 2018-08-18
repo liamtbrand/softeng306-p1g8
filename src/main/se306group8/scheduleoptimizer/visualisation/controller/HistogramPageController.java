@@ -10,10 +10,10 @@ import se306group8.scheduleoptimizer.visualisation.manager.HistogramManager;
 public class HistogramPageController extends Controller {
 	@FXML
 	private BarChart<String, Number> chart;
-	
+
 	@FXML
 	private Label scheduleTitle;
-
+	
 	@Override
 	public void setup() {
 		startManager(new HistogramManager(chart, scheduleTitle), UpdateFrequency.FAST);

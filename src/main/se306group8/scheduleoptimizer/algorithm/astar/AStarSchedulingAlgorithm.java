@@ -41,6 +41,11 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	public Schedule produceCompleteScheduleHook(TaskGraph graph, int numberOfProcessors) throws InterruptedException {
 		getMonitor().logMessage("Starting A*.");
 		
+		//used for the console output
+		boolean contingency = false;
+
+		getMonitor();
+
 		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
 
 		queue.signalStorageSizes(getMonitor());
@@ -63,12 +68,25 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			queue.signalMonitor(getMonitor());
 			
 			long queuememory = queue.size() * 10L;
-						
+			
+			if (getMonitor().isInterupted()) {
+				throw new InterruptedException();
+			}
+			
 			if ( queuememory < maxMemory) {
+				if (contingency) {
+					contingency = false;
+					getMonitor().logMessage("Switching back to A*");
+				}
 				explore(best);
 			} else {
+				
+				if (!contingency) {
+					contingency = true;
+					getMonitor().logMessage("Using contingency plan Branch and Bound");
+				}
 				//System.out.println("Using contingency plan");
-				//getMonitor().logMessage("Using contingency plan");
+				
 				dfsBest = queue.getBestSchedule();
 				queue.put(branchAndBound(best));		
 				
@@ -82,10 +100,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			queue.signalMonitor(getMonitor());
 			getMonitor().updateBestSchedule(best);
 			getMonitor().setSchedulesExplored(explored);
-			
-			if(Thread.interrupted()) {
-				throw new InterruptedException();
-			}
 		}
 		
 		return best.getFullSchedule();
@@ -97,6 +111,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	}
 
 	TreeSchedule explore(TreeSchedule best) throws InterruptedException {
+		if (getMonitor().isInterupted()) {
+			throw new InterruptedException();
+		}
+		
 		List<TreeSchedule> children = childGenerator.getChildSchedules(best);
 		
 		if(best.isComplete()) {
@@ -122,15 +140,15 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		getMonitor().updateBestSchedule(best);
 		getMonitor().setSchedulesExplored(explored);
 		
-		if(Thread.interrupted()) {
-			throw new InterruptedException();
-		}
-		
 		return null;
 	}
 	
 	
 	private TreeSchedule branchAndBound(TreeSchedule schedule) throws InterruptedException {
+		if(getMonitor().isInterupted()) {
+			throw new InterruptedException();
+		}
+		
 		// Get all children in order from best lower bound to worst
 		List<TreeSchedule> childSchedules = childGenerator.getChildSchedules(schedule);
 		childSchedules.sort(null);
@@ -149,10 +167,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			} else {
 				break;
 			}
-		}
-
-		if(Thread.interrupted()) {
-			throw new InterruptedException();
 		}
 		
 		getMonitor().setSchedulesExplored(explored);

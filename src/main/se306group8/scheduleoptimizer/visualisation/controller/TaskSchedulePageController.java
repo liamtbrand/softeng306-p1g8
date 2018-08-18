@@ -15,7 +15,6 @@ public class TaskSchedulePageController extends Controller {
 
 	@Override
 	public void setup() {
-		
 		startManager(new ScheduleManager(tasks, processors, chart, title), UpdateFrequency.SLOW);
 
 	}

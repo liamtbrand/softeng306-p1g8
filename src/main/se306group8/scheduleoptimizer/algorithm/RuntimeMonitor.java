@@ -43,6 +43,9 @@ public interface RuntimeMonitor {
 
 	public void setSchedulesOnDisk(long number);
 	public void setScheduleOnDiskStorageSize(int bytes);
+
+	public default void interuptAlgorithm() {throw new UnsupportedOperationException();};
+	public default boolean isInterupted() {return false;};
 	
 	default void setScheduleDistribution(int[] distribution, int limit) {  }
 	default void setBucketSize(int granularity) {  }

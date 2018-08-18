@@ -3,6 +3,8 @@ package se306group8.scheduleoptimizer.visualisation.controller;
 import java.util.Timer;
 
 import javafx.fxml.FXML;
+import se306group8.scheduleoptimizer.visualisation.FXApplication;
+import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 import se306group8.scheduleoptimizer.visualisation.manager.Manager;
 
 /**
@@ -34,6 +36,8 @@ public class MainController {
 		searchSpacePageController.setMainController(this);
 		consolePageController.setMainController(this);
 		histogramPageController.setMainController(this);
+		
+		FXApplication.getMonitor().addListener(new FinishMessageBoxController());
 	}
 
 	public void addToUpdate(Manager manager) {

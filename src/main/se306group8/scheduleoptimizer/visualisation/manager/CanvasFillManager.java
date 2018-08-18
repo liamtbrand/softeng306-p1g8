@@ -2,11 +2,7 @@ package se306group8.scheduleoptimizer.visualisation.manager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
@@ -14,10 +10,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import se306group8.scheduleoptimizer.algorithm.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
-import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
@@ -35,12 +29,11 @@ public class CanvasFillManager extends Manager {
 	// Required for multiple methods within the CanvasFillManager
 	private double totalTriangleWidth;
 	private double totalTriangleHeight;
-	
-	private boolean keepDrawing = true;
 
 	public CanvasFillManager(Canvas canvas, Label label) {
 		this.canvas = canvas;
 		this.label = label;
+		this.gc = canvas.getGraphicsContext2D();
 		
 		// Computed from chosen points of triangle
 		this.startPointX = canvas.getWidth()/2.0;
@@ -50,32 +43,23 @@ public class CanvasFillManager extends Manager {
 		this.totalTriangleHeight = 6.0*canvas.getHeight()/8.0;
 	}
 	
-	
 	@Override
 	protected void updateHook(ObservableRuntimeMonitor monitor) {
 		
 		if (monitor.getBestSchedule() == null) {
 			return;
 		}
+
+		double[][] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
+		// Method call to draw out a given partial/full schedule (light blue if incomplete, green if complete)
 		
-		// Called and run once every second
-		Platform.runLater(() -> {
-			
-			double[][] coordinates = scheduleToPixels(monitor.getBestSchedule(), monitor.getNumberOfProcessors());
-		
-			// Method call to draw out a given partial/full schedule (red if incomplete, green if complete)
-			//if (keepDrawing) {
-				if (FXApplication.getMonitor().hasFinished()) {
-					drawPixels(this.canvas, Color.rgb(68, 96, 140, 1.0), coordinates[0], coordinates[1], 3);
-					this.label.setTextFill(Color.rgb(68, 96, 140, 1.0));
-					this.keepDrawing = false;
-				} else {
-					drawPixels(this.canvas, Color.rgb(117, 149, 198, 1.0), coordinates[0], coordinates[1], 1);
-				}
-			//} else {
-				// Stop drawing
-			//}			
-		});
+		if (FXApplication.getMonitor().hasFinished()) {
+			drawPixels(this.canvas, Color.rgb(0, 166, 118, 1.0), coordinates[0], coordinates[1], 3);
+			this.label.setTextFill(Color.rgb(68, 96, 140, 1.0));
+		} else {
+			drawPixels(this.canvas, Color.rgb(117, 149, 198, 1.0), coordinates[0], coordinates[1], 1);
+		}		
+
 	}
 	
 	// Method that translates an input partial schedule, into a series of x/y coordinates
@@ -107,15 +91,14 @@ public class CanvasFillManager extends Manager {
     	
     	for (int i = parents.size() - 2; i >= 0; i--) {
     		xValues[i] = xValues[i + 1] + convertToNumber(parents.get(i).getMostRecentAllocation(), schedule.getGraph().getAll().size()) * scalingFactor;
-    		scalingFactor /= (numberOfProcessors * schedule.getGraph().getAll().size()/4);
+    		scalingFactor /= (numberOfProcessors * schedule.getGraph().getAll().size() / 4);
     		yValues[i] = (1.0 / schedule.getGraph().getAll().size()) * (parents.size() - 1 - i);
     	}
     
     	return new double[][]{xValues, yValues};
     }
 
-    
-    // Convert allocation to number (as per James' pseudocode)
+    // Convert allocation to number (as per pseudocode)
     private double convertToNumber(ProcessorAllocation allocation, int totalNumberOfTasks) {
     	return (double)(allocation.processor - 1)/(double)FXApplication.getMonitor().getNumberOfProcessors()*totalNumberOfTasks 
     			+ (double)allocation.task.getId()/(FXApplication.getMonitor().getNumberOfProcessors());
@@ -129,15 +112,14 @@ public class CanvasFillManager extends Manager {
     
 	// Method to draw a set of dots, and interconnected lines, from arrays passed to it (representing a schedule)
 	private void drawPixels(Canvas canvas, Color color, double[] x, double[] y, int width) {
-		PixelWriter pixelWriter = canvas.getGraphicsContext2D().getPixelWriter();
+		PixelWriter pixelWriter = this.gc.getPixelWriter();
 		
 		double max = Arrays.stream(x).max().orElse(1.0);
 		
 		for (int j = 0; j < x.length; j++) {
-			x[j] /= max + 0.01;
-			y[j] = this.startPointY + y[j]*this.totalTriangleHeight;
-			x[j] = this.startPointX - horizontalLength(y[j] - this.startPointY)/2.0 + x[j]*horizontalLength(y[j] - this.startPointY);
-			
+			x[j] /= max + 0.0001;
+			y[j] = this.startPointY + y[j] * this.totalTriangleHeight;
+			x[j] = this.startPointX - horizontalLength(y[j] - this.startPointY) / 2.0 + x[j] * horizontalLength(y[j] - this.startPointY);
 		}
 	
 		// Loop through all points
@@ -154,8 +136,8 @@ public class CanvasFillManager extends Manager {
     
     // Method to draw line with input color/width
     private void drawLine(double x1, double y1, double x2, double y2, Color color, int width) {
-    	this.canvas.getGraphicsContext2D().setLineWidth(width);
-    	this.canvas.getGraphicsContext2D().setStroke(color);
-    	this.canvas.getGraphicsContext2D().strokeLine(x1, y1, x2, y2);
+    	this.gc.setLineWidth(width);
+    	this.gc.setStroke(color);
+    	this.gc.strokeLine(x1, y1, x2, y2);
     }
 }

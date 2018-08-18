@@ -106,7 +106,7 @@ public class ScheduleManager extends Manager {
 			taskPane.getChildren().addAll(taskNames);
 			taskPanes.add(taskPane);
 		}
-		
+
 		Platform.runLater(() -> {
 			processors.getChildren().setAll(processorLabels);
 			processors.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
