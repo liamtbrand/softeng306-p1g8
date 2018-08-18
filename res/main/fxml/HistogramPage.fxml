@@ -22,5 +22,6 @@
          </padding>
       </BarChart>
       <Label id="explanation" layoutX="344.0" layoutY="15.0" prefHeight="60.0" prefWidth="269.0" styleClass="page-title" text="This graph shows the distribution of the lower bound of schedules in the storage array. It does not show schedules that have been pruned." wrapText="true" />
+      <Label fx:id="noDataLabel" layoutX="284.0" layoutY="237.0" styleClass="no-data-label" text="No schedules in array." AnchorPane.rightAnchor="260.0" AnchorPane.topAnchor="250.0" />
    </children>
 </AnchorPane>

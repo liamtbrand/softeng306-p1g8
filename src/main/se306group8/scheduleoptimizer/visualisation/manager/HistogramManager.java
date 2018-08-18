@@ -13,19 +13,23 @@ public class HistogramManager extends Manager {
 	private final BarChart<String, Number> chart;
 	
 	private final Label label;
+	private final Label noDataLabel;
 	
-	public HistogramManager(BarChart<String, Number> chart, Label label) {
+	public HistogramManager(BarChart<String, Number> chart, Label label, Label noDataLabel) {
 		this.chart = chart;
 		this.label = label;
+		this.noDataLabel = noDataLabel;
 	}
 
 	@Override
 	protected void updateHook(ObservableRuntimeMonitor monitor) {
 		Collection<Data<String, Number>> col = monitor.getHistogramData();
 		
-		/*if (FXApplication.getMonitor().hasFinished()) {
-			this.label.setTextFill(Color.rgb(68, 96, 140, 1.0));
-		}*/
+		if (col.isEmpty()) {
+			noDataLabel.visibleProperty().setValue(true);
+		} else {
+			noDataLabel.visibleProperty().setValue(false);
+		}
 		
 		chart.getData().get(0).getData().setAll(col);
 	}

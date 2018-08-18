@@ -42,6 +42,11 @@
 .default-color1.chart-bar { -fx-background-color: -blue-2; }
 .default-color2.chart-bar { -fx-background-color: lightgrey; }
 
+.no-data-label {
+	-fx-font-size: 16;
+	-fx-text-fill: grey;
+}
+
 
 
 /* TAB STYLING */

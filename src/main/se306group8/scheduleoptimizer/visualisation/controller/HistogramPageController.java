@@ -11,12 +11,12 @@ public class HistogramPageController extends Controller {
 	@FXML
 	private BarChart<String, Number> chart;
 
-	@FXML
-	private Label scheduleTitle;
+	@FXML private Label scheduleTitle;
+	@FXML private Label noDataLabel;
 	
 	@Override
 	public void setup() {
-		startManager(new HistogramManager(chart, scheduleTitle), UpdateFrequency.FAST);
+		startManager(new HistogramManager(chart, scheduleTitle, noDataLabel), UpdateFrequency.FAST);
 		
 		chart.getData().add(new Series<>("Lower Bound", FXCollections.observableArrayList()));
 	}
