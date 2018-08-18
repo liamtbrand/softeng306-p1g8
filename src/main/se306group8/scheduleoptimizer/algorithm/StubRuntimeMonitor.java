@@ -58,4 +58,10 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	public void setScheduleOnDiskStorageSize(int bytes) {
 		// Do Nothing
 	}
+
+	@Override
+	public void setNumberOfProcessors(int processors) {
+		// Do Nothing
+		
+	}
 }

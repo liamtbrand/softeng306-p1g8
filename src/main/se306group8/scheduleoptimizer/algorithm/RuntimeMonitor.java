@@ -43,6 +43,8 @@ public interface RuntimeMonitor {
 
 	public void setSchedulesOnDisk(int number);
 	public void setScheduleOnDiskStorageSize(int bytes);
+	
+	public void setNumberOfProcessors(int processors);
 
 	default void setScheduleDistribution(int[] distribution, int limit) {  }
 	default void setBucketSize(int granularity) {  }

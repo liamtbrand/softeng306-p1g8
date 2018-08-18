@@ -67,8 +67,8 @@
 }
 
 .page-title {
-	-fx-font-size: 30;
-	-fx-text-fill: darkgrey;
+	-fx-font-size: 20;
+	-fx-text-fill: grey;
 }
 
 .tab:hover .tab-label {
