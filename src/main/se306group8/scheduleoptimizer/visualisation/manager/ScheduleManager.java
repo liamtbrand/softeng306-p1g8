@@ -63,7 +63,8 @@ public class ScheduleManager extends Manager {
 			Label label = new Label("P"+currentProcessor);
 			label.setMinWidth(50);
 			label.setMinHeight(taskHeight);
-			label.setAlignment(Pos.TOP_CENTER);
+			label.setAlignment(Pos.CENTER);
+			label.setFont(new Font(8));
 			processorLabels.add(label);
 			
 			currentProcessor++;
@@ -109,6 +110,7 @@ public class ScheduleManager extends Manager {
 		}
 
 		Platform.runLater(() -> {
+			
 			if (bestRuntimeLabel.textProperty().get().equals("Searching ...") ||
 					monitor.getBestSchedule().getRuntime() > Integer.parseInt((bestRuntimeLabel.textProperty().get()))) {
 				
@@ -120,8 +122,8 @@ public class ScheduleManager extends Manager {
 				}
 			}
 			processors.getChildren().setAll(processorLabels);
-			processors.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 			tasks.getChildren().setAll(taskPanes);
+			
 			NumberAxis runtimeAxis = (NumberAxis) chart.getXAxis();
 			runtimeAxis.setUpperBound(runtime);
 			runtimeAxis.setTickUnit(runtime/10);

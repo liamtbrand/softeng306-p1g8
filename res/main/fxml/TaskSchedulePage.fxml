@@ -16,9 +16,9 @@
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <left>
-      			<VBox fx:id="processors" alignment="CENTER" maxHeight="320.0" minHeight="320.0" prefHeight="320.0" spacing="10" BorderPane.alignment="CENTER">
+      			<VBox fx:id="processors" alignment="CENTER" spacing="11.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
                <BorderPane.margin>
-                  <Insets left="25.0" top="40.0" />
+                  <Insets left="25.0" top="30.0" />
                </BorderPane.margin></VBox>
          </left>
          <center>
