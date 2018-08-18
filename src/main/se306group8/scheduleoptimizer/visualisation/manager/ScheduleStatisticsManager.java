@@ -10,7 +10,6 @@ public class ScheduleStatisticsManager extends Manager {
 	private Label schedulesExploredLabel;
 	private Label schedulesInArrayLabel;
 	private Label schedulesInQueueLabel;
-	private Label schedulesOnDiskLabel;
 	private Label schedulesPerSecondLabel;
 
 	private double schedulesPerSecond;
@@ -22,7 +21,6 @@ public class ScheduleStatisticsManager extends Manager {
 			Label schedulesExploredLabel,
 			Label schedulesInArrayLabel,
 			Label schedulesInQueueLabel,
-			Label schedulesOnDiskLabel,
 			Label schedulesPerSecondLabel,
 			double schedulesPerSecondAdjustmentFactor
 	) {
@@ -30,7 +28,6 @@ public class ScheduleStatisticsManager extends Manager {
 		this.schedulesExploredLabel = schedulesExploredLabel;
 		this.schedulesInArrayLabel = schedulesInArrayLabel;
 		this.schedulesInQueueLabel = schedulesInQueueLabel;
-		this.schedulesOnDiskLabel = schedulesOnDiskLabel;
 		this.schedulesPerSecondLabel = schedulesPerSecondLabel;
 
 		this.schedulesPerSecondAdjustmentFactor = schedulesPerSecondAdjustmentFactor;
@@ -48,7 +45,6 @@ public class ScheduleStatisticsManager extends Manager {
 
 		long schedulesInArray = monitor.getSchedulesInArray();
 		long schedulesInQueue = monitor.getSchedulesInQueue();
-		long schedulesOnDisk = monitor.getSchedulesOnDisk();
 
 		long currentSampleTime = System.nanoTime();
 		long newScheduleCount = schedulesExplored - lastScheduleCount;
@@ -67,7 +63,6 @@ public class ScheduleStatisticsManager extends Manager {
 		schedulesExploredLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesExplored," "));
 		schedulesInArrayLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInArray," "));
 		schedulesInQueueLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInQueue," "));
-		schedulesOnDiskLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesOnDisk," "));
 		schedulesPerSecondLabel.textProperty().setValue(HumanReadableFormatter.format((int)schedulesPerSecond," "));
 	}
 }

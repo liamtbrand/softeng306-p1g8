@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxWidth="300.0" minWidth="300.0" styleClass="sidebar" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.DashboardPageController">
+<AnchorPane maxWidth="300.0" minWidth="300.0" styleClass="sidebar" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.DashboardPageController">
    <children>
       <VBox spacing="10.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
          <children>
@@ -161,21 +161,6 @@
                               </Label>
                               <Region HBox.hgrow="ALWAYS" />
                               <Label fx:id="schedulesInArrayLabel" alignment="CENTER_RIGHT" minWidth="50.0" prefHeight="16.0" textAlignment="RIGHT">
-                                 <font>
-                                    <Font name="Menlo Regular" size="13.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <HBox>
-                           <children>
-                              <Label text="Schedules on Disk:">
-                                 <font>
-                                    <Font name="Menlo Regular" size="13.0" />
-                                 </font>
-                              </Label>
-                              <Region HBox.hgrow="ALWAYS" />
-                              <Label fx:id="schedulesOnDiskLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="50.0" prefHeight="16.0">
                                  <font>
                                     <Font name="Menlo Regular" size="13.0" />
                                  </font>
