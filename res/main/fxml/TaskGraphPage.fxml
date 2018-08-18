@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="400.0" maxWidth="660.0" minHeight="400.0" minWidth="660.0" prefHeight="400.0" prefWidth="660.0" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.TaskGraphPageController">
+<AnchorPane maxHeight="400.0" maxWidth="660.0" minHeight="400.0" minWidth="660.0" prefHeight="400.0" prefWidth="660.0" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.TaskGraphPageController">
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <left>
@@ -45,7 +45,7 @@
          <top>
             <Label fx:id="title" styleClass="page-title" text="Best schedule found!" BorderPane.alignment="TOP_LEFT">
                <BorderPane.margin>
-                  <Insets bottom="-40.0" left="30.0" top="30.0" />
+                  <Insets bottom="-40.0" left="40.0" top="30.0" />
                </BorderPane.margin>
             </Label>
          </top>
