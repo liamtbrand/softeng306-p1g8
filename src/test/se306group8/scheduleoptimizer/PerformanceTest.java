@@ -178,8 +178,8 @@ public class PerformanceTest {
 				}
 
 				RuntimeMonitor monitor = new RuntimeMonitor() {
-					int millionSolutions;
-					int numberOfSolutions;
+					long millionSolutions;
+					long numberOfSolutions;
 					long startTime;
 
 					@Override
@@ -197,7 +197,7 @@ public class PerformanceTest {
 					}
 
 					@Override
-					public void setSchedulesExplored(int number) {
+					public void setSchedulesExplored(long number) {
 						numberOfSolutions = number;
 
 						if(number / 1_000_000 > millionSolutions) {
@@ -216,7 +216,7 @@ public class PerformanceTest {
 					}
 
 					@Override
-					public void setSchedulesInArray(int number) {
+					public void setSchedulesInArray(long number) {
 						// TODO Auto-generated method stub
 
 					}
@@ -228,7 +228,7 @@ public class PerformanceTest {
 					}
 
 					@Override
-					public void setSchedulesInQueue(int number) {
+					public void setSchedulesInQueue(long number) {
 						// TODO Auto-generated method stub
 
 					}
@@ -240,7 +240,7 @@ public class PerformanceTest {
 					}
 
 					@Override
-					public void setSchedulesOnDisk(int number) {
+					public void setSchedulesOnDisk(long number) {
 						// TODO Auto-generated method stub
 
 					}

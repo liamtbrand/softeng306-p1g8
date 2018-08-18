@@ -45,9 +45,9 @@ public class StackedBarChartManager extends Manager {
 
 	@Override
 	protected void updateHook(ObservableRuntimeMonitor monitor) {
-		int schedulesInArray = monitor.getSchedulesInArray();
-		int schedulesInQueue = monitor.getSchedulesInQueue();
-		int schedulesOnDisk = monitor.getSchedulesOnDisk();
+		long schedulesInArray = monitor.getSchedulesInArray();
+		long schedulesInQueue = monitor.getSchedulesInQueue();
+		long schedulesOnDisk = monitor.getSchedulesOnDisk();
 
 		long totalSchedules = schedulesInArray + schedulesInQueue + schedulesOnDisk;
 

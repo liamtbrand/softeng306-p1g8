@@ -13,7 +13,7 @@ public class HumanReadableFormatter {
 	 * @param extraPlaces
 	 * @return
 	 */
-	public static String format(int number, String unit, int minimumPlaces) {
+	public static String format(long number, String unit, int minimumPlaces) {
 		int minimum = 1;
 		for(int i = 1; i < minimumPlaces; i++) {
 			minimum *= 10;
@@ -28,7 +28,7 @@ public class HumanReadableFormatter {
 		return String.valueOf(number) + " " + orderOfMagnitude[mag] + unit;
 	}
 
-	public static String format(int number, String unit) {
+	public static String format(long number, String unit) {
 		return format(number,unit,2);
 	}
 

@@ -44,11 +44,11 @@ public class ScheduleStatisticsManager extends Manager {
 
 	@Override
 	protected void updateHook(ObservableRuntimeMonitor monitor) {
-		int schedulesExplored = monitor.getSchedulesExplored();
+		long schedulesExplored = monitor.getSchedulesExplored();
 
-		int schedulesInArray = monitor.getSchedulesInArray();
-		int schedulesInQueue = monitor.getSchedulesInQueue();
-		int schedulesOnDisk = monitor.getSchedulesOnDisk();
+		long schedulesInArray = monitor.getSchedulesInArray();
+		long schedulesInQueue = monitor.getSchedulesInQueue();
+		long schedulesOnDisk = monitor.getSchedulesOnDisk();
 
 		long currentSampleTime = System.nanoTime();
 		long newScheduleCount = schedulesExplored - lastScheduleCount;

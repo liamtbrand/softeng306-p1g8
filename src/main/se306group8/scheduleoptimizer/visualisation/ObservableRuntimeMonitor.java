@@ -24,12 +24,12 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile TreeSchedule bestSchedule;
 	private volatile Queue<String> messages;
 
-	private volatile int schedulesExplored;
-	private volatile int schedulesInArray;
+	private volatile long schedulesExplored;
+	private volatile long schedulesInArray;
 	private volatile int scheduleInArrayStorageSize;
-	private volatile int schedulesInQueue;
+	private volatile long schedulesInQueue;
 	private volatile int scheduleInQueueStorageSize;
-	private volatile int schedulesOnDisk;
+	private volatile long schedulesOnDisk;
 	private volatile int scheduleOnDiskStorageSize;
 
 	//Set in the start method
@@ -105,20 +105,20 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void setSchedulesExplored(int number) {
+	public void setSchedulesExplored(long number) {
 		schedulesExplored = number;
 	}
 
-	public int getSchedulesExplored() {
+	public long getSchedulesExplored() {
 		return schedulesExplored;
 	}
 
 	@Override
-	public void setSchedulesInArray(int number) {
+	public void setSchedulesInArray(long number) {
 		schedulesInArray = number;
 	}
 
-	public int getSchedulesInArray() {
+	public long getSchedulesInArray() {
 		return schedulesInArray;
 	}
 
@@ -132,11 +132,11 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void setSchedulesInQueue(int number) {
+	public void setSchedulesInQueue(long number) {
 		schedulesInQueue = number;
 	}
 
-	public int getSchedulesInQueue() {
+	public long getSchedulesInQueue() {
 		return schedulesInQueue;
 	}
 
@@ -150,11 +150,11 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void setSchedulesOnDisk(int number) {
+	public void setSchedulesOnDisk(long number) {
 		schedulesOnDisk = number;
 	}
 
-	public int getSchedulesOnDisk() {
+	public long getSchedulesOnDisk() {
 		return schedulesOnDisk;
 	}
 	
