@@ -29,7 +29,7 @@ public class ScheduleManager extends Manager {
 	private final Label title;
 
 	private final double GRAPH_WIDTH = 521;
-	private final int GRAPH_HEIGHT = 180;
+	private final int GRAPH_HEIGHT = 200;
 
 	private final Paint BLUE = Color.web("#7595c6");
 	private final Paint GREEN = Color.web("#00a676");
@@ -52,7 +52,8 @@ public class ScheduleManager extends Manager {
 		}
 		
 		int runtime = bestSchedule.getRuntime();
-		int taskHeight = GRAPH_HEIGHT/bestSchedule.getNumberOfUsedProcessors();
+		int noP = bestSchedule.getNumberOfUsedProcessors();
+		int taskHeight = (GRAPH_HEIGHT - 10*(noP-1))/noP;
 		
 		List<AnchorPane> taskPanes = new ArrayList<AnchorPane>();
 		List<Label> processorLabels = new ArrayList<Label>();

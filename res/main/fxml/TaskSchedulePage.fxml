@@ -39,7 +39,7 @@
                   </LineChart>
                   <VBox fx:id="tasks" alignment="CENTER" spacing="10">
                      <StackPane.margin>
-                        <Insets top="15.0" />
+                        <Insets top="30.0" />
                      </StackPane.margin></VBox>
                </children>
             </StackPane>
