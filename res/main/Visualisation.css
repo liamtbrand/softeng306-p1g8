@@ -1,30 +1,19 @@
-.title {  }
-.stat-name-label {  }
-.stat-value-label {  }
-.axis-label {  }
-.axis-tick-label {  }
-.key-label {  }
-.task-chart-label-incomplete {  }
-.task-chart-rectangle-complete {  }
-.task-name-label {  }
-.console-text {  }
-
+/* GLOBAL COLOURS */
 * {
-   -colour-1: #44608c;
-   -colour-2: #7595c6;
-   -green: #00a676;
+   -blue-1: #44608c;
+   -blue-2: #7595c6;
    -sidebar-color: #eee;
 }
 
-.rectangle {
-	-fx-fill: white;
-}
+
 
 /* SIDEBAR STYLING */
 
 .sidebar {
     -fx-background-color: -sidebar-color;
 }
+
+
 
 /* CHART STYLING */
 
@@ -44,13 +33,15 @@
 }
 
 
-.default-color0.chart-pie { -fx-background-color: -colour-1; }
-.default-color1.chart-pie { -fx-background-color: -colour-2; }
+.default-color0.chart-pie { -fx-background-color: -blue-1; }
+.default-color1.chart-pie { -fx-background-color: -blue-2; }
 .default-color2.chart-pie { -fx-background-color: lightgrey; }
 
-.default-color0.chart-bar { -fx-background-color: -colour-1; }
-.default-color1.chart-bar { -fx-background-color: -colour-2; }
+.default-color0.chart-bar { -fx-background-color: -blue-1; }
+.default-color1.chart-bar { -fx-background-color: -blue-2; }
 .default-color2.chart-bar { -fx-background-color: lightgrey; }
+
+
 
 /* TAB STYLING */
 
@@ -69,11 +60,6 @@
 
 .tab:hover {
 	-fx-background-color: darkgrey;
-}
-
-.page-title {
-	-fx-font-size: 20;
-	-fx-text-fill: grey;
 }
 
 .tab:hover .tab-label {
@@ -99,13 +85,26 @@
     -fx-text-fill: white;
 }
 
-.label {
-    -fx-font-family: 'Menlo';
-}
+
+
+/* SPLIT PANE STYLING */
 
 .split-pane:vertical > .split-pane-divider {
 	-fx-padding: 0 0.2em 0 0.2em; 
   	-fx-background-color: lightgrey;
+}
+
+
+
+/* GENERAL STYLING */
+
+.page-title {
+	-fx-font-size: 20;
+	-fx-text-fill: grey;
+}
+
+.label {
+    -fx-font-family: 'Menlo';
 }
 
 .text-area {
@@ -116,16 +115,16 @@
 .text-area .content{
   	-fx-background-color: transparent;
   }
-
+  
 #explanation {
 	-fx-font-size: 10px;
 	-fx-text-fill: grey;
 }
 
 #complete-label {
-	-fx-text-fill: white;
+	-fx-text-fill: -blue-1;
 }
 
 #incomplete-label {
-	-fx-text-fill: white;
+	-fx-text-fill: grey;
 }
