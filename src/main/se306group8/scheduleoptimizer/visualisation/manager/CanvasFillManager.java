@@ -139,7 +139,6 @@ public class CanvasFillManager extends Manager {
 			
 			y[j] = this.startPointY + y[j] * this.totalTriangleHeight;
 			x[j] = this.startPointX - horizontalLength(y[j] - this.startPointY) / 2.0 + x[j] * horizontalLength(y[j] - this.startPointY);
-			
 		}
 		
 		// Loop through all points
