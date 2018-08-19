@@ -68,12 +68,13 @@ public class ScheduleManager extends Manager {
 			return;
 		}
 		
-		// Get information
+		// Get information about current schedule
 		int numberOfTasks = bestSchedule.getGraph().getAll().size();
 		int runtime = bestSchedule.getRuntime();
 		int allocated = bestSchedule.getAllocated().size();
 		int percentAllocated = allocated*100/numberOfTasks;
 		
+		// Get information about previous schedule seen
 		String previousRuntime = bestRuntimeLabel.textProperty().get();
 		int previousPercentAllocated = Integer.parseInt(percentTasksLabel.textProperty().get());
 		
@@ -88,13 +89,17 @@ public class ScheduleManager extends Manager {
 		}
 		
 		int noP = bestSchedule.getNumberOfUsedProcessors();
+		
+		// Scale tasks to fit in graph with 10px spacing
 		int taskHeight = (GRAPH_HEIGHT - 10*(noP-1))/noP;
 		
 		List<AnchorPane> taskPanes = new ArrayList<AnchorPane>();
 		List<Label> processorLabels = new ArrayList<Label>();
 		
+		// Loop through all processors used in schedule
 		for (List<Task> list : bestSchedule.computeTaskLists()) {
 			
+			// Create y-axis label for current processor and add to list
 			Label label = new Label("P"+currentProcessor);
 			label.setId("task-label");
 			label.setMinWidth(50);
@@ -104,16 +109,21 @@ public class ScheduleManager extends Manager {
 			
 			currentProcessor++;
 			
+			// Create list of tasks and names to pt on graph
 			AnchorPane taskPane = new AnchorPane();
 			List<Rectangle> rectangles = new ArrayList<Rectangle>();
 			List<Label> taskNames = new ArrayList<Label>();
 			
+			// Loop through each task in list and add to graph
 			for (Task task : list) {
 
 				int startTime = bestSchedule.getAllocationFor(task).startTime;
+				
+				// Scale the task's start time and cost to fit on graph
 				double graphStartTime = startTime*GRAPH_WIDTH/runtime;
 				double graphCost = task.getCost()*GRAPH_WIDTH/runtime;
 				
+				// Create rectangle with correct size and start time
 				Rectangle rectangle = new Rectangle(graphStartTime, 0, graphCost, taskHeight);
 				rectangle.setStroke(Color.WHITE);
 				
@@ -131,7 +141,7 @@ public class ScheduleManager extends Manager {
 				name.setLayoutX(graphStartTime);
 				name.setMinWidth(graphCost);
 				name.setMinHeight(taskHeight);
-				name.setFont(new Font(8));
+				name.setId("task-label");
 				
 				rectangles.add(rectangle);
 				taskNames.add(name);
