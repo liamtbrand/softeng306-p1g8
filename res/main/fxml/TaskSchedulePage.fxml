@@ -58,7 +58,7 @@
             <Rectangle fill="DARKGRAY" height="15.0" smooth="false" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="15.0" />
             <Rectangle fill="#7595c6" height="15.0" layoutY="22.0" smooth="false" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="15.0" />
             <Label id="explanation" layoutX="23.0" text="Partial Schedule" />
-            <Label id="explanation" layoutX="23.0" layoutY="22.0" text="Complete Schedule" />
+            <Label id="explanation" layoutX="23.0" layoutY="22.0" text="Current Best Schedule" />
             <Rectangle fill="#00a676" height="15.0" layoutY="44.0" smooth="false" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="15.0" />
             <Label id="explanation" layoutX="23.0" layoutY="44.0" text="Optimal Schedule" />
          </children>
@@ -68,6 +68,12 @@
          <children>
             <Label id="best-runtime-label" text="Best Runtime: " />
             <Label id="best-runtime-label" fx:id="bestRuntimeLabel" text="Searching ..." />
+         </children>
+      </HBox>
+      <HBox layoutX="380.0" layoutY="60.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="55.0">
+         <children>
+            <Label id="best-runtime-label" text="\% Tasks Allocated: " />
+            <Label id="best-runtime-label" fx:id="percentTasksLabel" text="0" />
          </children>
       </HBox>
    </children>

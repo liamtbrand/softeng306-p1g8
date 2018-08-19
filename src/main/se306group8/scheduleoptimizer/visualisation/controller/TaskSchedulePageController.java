@@ -12,10 +12,17 @@ public class TaskSchedulePageController extends Controller {
 	@FXML private VBox processors;
 	@FXML private LineChart chart;
 	@FXML private Label bestRuntimeLabel;
+	@FXML private Label percentTasksLabel;
 
 	@Override
 	public void setup() {
-		startManager(new ScheduleManager(tasks, processors, chart, bestRuntimeLabel), UpdateFrequency.SLOW);
+		startManager(new ScheduleManager(
+				tasks, 
+				processors, 
+				chart, 
+				bestRuntimeLabel, 
+				percentTasksLabel), 
+				UpdateFrequency.SLOW);
 	}
 
 }
