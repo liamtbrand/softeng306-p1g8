@@ -96,10 +96,10 @@ public class ScheduleManager extends Manager {
 		for (List<Task> list : bestSchedule.computeTaskLists()) {
 			
 			Label label = new Label("P"+currentProcessor);
+			label.setId("task-label");
 			label.setMinWidth(50);
 			label.setMinHeight(taskHeight);
 			label.setAlignment(Pos.CENTER);
-			label.setFont(new Font(8));
 			processorLabels.add(label);
 			
 			currentProcessor++;

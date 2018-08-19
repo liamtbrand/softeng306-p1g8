@@ -43,7 +43,7 @@
 .default-color2.chart-bar { -fx-background-color: lightgrey; }
 
 .no-data-label {
-	-fx-font-size: 16;
+	-fx-font-size: 16px;
 	-fx-text-fill: grey;
 }
 
@@ -101,11 +101,40 @@
 }
 
 
+/* TASK SCHEDULE PAGE */
+
+#task-label {
+	-fx-font-size: 8px;
+}
+
+#complete-label {
+	-fx-text-fill: grey;
+}
+
+#incomplete-label {
+	-fx-text-fill: grey;
+}
+
+#best-label {
+	-fx-text-fill: grey;
+	-fx-font-size: 12px;
+}
+
+#best-label-found {
+	-fx-text-fill: -blue-1;
+	-fx-font-size: 12px;
+}
+
+#best-label-complete {
+	-fx-text-fill: -green;
+	-fx-font-size: 12px;
+}
+
 
 /* GENERAL STYLING */
 
 .page-title {
-	-fx-font-size: 20;
+	-fx-font-size: 20px;
 	-fx-text-fill: grey;
 }
 
@@ -125,27 +154,4 @@
 #explanation {
 	-fx-font-size: 10px;
 	-fx-text-fill: grey;
-}
-
-#complete-label {
-	-fx-text-fill: grey;
-}
-
-#incomplete-label {
-	-fx-text-fill: grey;
-}
-
-#best-label {
-	-fx-text-fill: grey;
-	-fx-font-size: 12;
-}
-
-#best-label-found {
-	-fx-text-fill: -blue-1;
-	-fx-font-size: 12;
-}
-
-#best-label-complete {
-	-fx-text-fill: -green;
-	-fx-font-size: 12;
 }
