@@ -77,7 +77,7 @@ public class ScheduleStatisticsManager extends Manager {
 		schedulesExploredLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesExplored," "));
 		schedulesPerSecondLabel.textProperty().setValue(HumanReadableFormatter.format((int)schedulesPerSecond," "));
 		
-		lowerBoundLabel.textProperty().setValue(monitor.getBestSchedule() == null ? "No bound" : Integer.toString(monitor.getBestSchedule().getLowerBound()));
+		lowerBoundLabel.textProperty().setValue(monitor.getLowerBound() == 0 ? "No bound" : Integer.toString(monitor.getLowerBound()));
 		upperBoundLabel.textProperty().setValue(monitor.getUpperBound() == Integer.MAX_VALUE ? "No bound" : Integer.toString(monitor.getUpperBound()));
 	}
 }

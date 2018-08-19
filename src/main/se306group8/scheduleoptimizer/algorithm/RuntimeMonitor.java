@@ -51,4 +51,5 @@ public interface RuntimeMonitor {
 	default void setBucketSize(int granularity) {  }
 
 	default void setUpperBound(int bound) {  }
+	default void setLowerBound(int lowerBound) {  }
 }
