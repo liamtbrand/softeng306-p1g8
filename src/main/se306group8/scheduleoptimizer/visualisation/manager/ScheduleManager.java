@@ -101,7 +101,7 @@ public class ScheduleManager extends Manager {
 			
 			// Create y-axis label for current processor and add to list
 			Label label = new Label("P"+currentProcessor);
-			label.setId("task-label");
+			label.setId("processor-label");
 			label.setMinWidth(50);
 			label.setMinHeight(taskHeight);
 			label.setAlignment(Pos.CENTER);
@@ -109,7 +109,7 @@ public class ScheduleManager extends Manager {
 			
 			currentProcessor++;
 			
-			// Create list of tasks and names to pt on graph
+			// Create list of tasks and names to put on graph
 			AnchorPane taskPane = new AnchorPane();
 			List<Rectangle> rectangles = new ArrayList<Rectangle>();
 			List<Label> taskNames = new ArrayList<Label>();
@@ -127,6 +127,7 @@ public class ScheduleManager extends Manager {
 				Rectangle rectangle = new Rectangle(graphStartTime, 0, graphCost, taskHeight);
 				rectangle.setStroke(Color.WHITE);
 				
+				// Change colour of tasks based on whether schedule is optimal or the current best
 				if (bestSchedule.isComplete() && monitor.hasFinished()) {
 					rectangle.setFill(GREEN);
 				} else if (updateBest){
@@ -135,6 +136,7 @@ public class ScheduleManager extends Manager {
 					rectangle.setFill(Color.DARKGREY);
 				}
 
+				// Create the task name label
 				Label name = new Label(task.getName());
 				name.setTextFill(Color.WHITE);
 				name.setAlignment(Pos.CENTER);
