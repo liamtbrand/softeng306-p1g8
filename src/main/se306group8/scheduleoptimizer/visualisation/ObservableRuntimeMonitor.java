@@ -17,6 +17,11 @@ import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
+
+/**
+ * An observable implementation of the RuntimeMonitor interface, 
+ * It is used to pass information to the visualisation.
+ */
 public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 
 	

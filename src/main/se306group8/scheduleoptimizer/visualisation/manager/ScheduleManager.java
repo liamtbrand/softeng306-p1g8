@@ -18,6 +18,11 @@ import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
+/**
+ * Manager class for the visualisation's task schedule graph. 
+ * Implements majority of task schedule functionality.
+ */
+
 public class ScheduleManager extends Manager {
 
 	private final VBox tasks;
@@ -26,6 +31,7 @@ public class ScheduleManager extends Manager {
 	private final Label bestRuntimeLabel;
 	private final Label percentTasksLabel;
 
+	// Dimensions for task schedule graph.
 	private final double GRAPH_WIDTH = 521;
 	private final int GRAPH_HEIGHT = 200;
 
@@ -51,15 +57,18 @@ public class ScheduleManager extends Manager {
 	@Override
 	protected void updateHook(ObservableRuntimeMonitor monitor) {
 		
+		// Set default of updateBest to true for each iteration.
 		updateBest = true;
 		
 		int currentProcessor = 1;
 		TreeSchedule bestSchedule = monitor.getBestSchedule();
 		
+		// Do not update the visualisation if the schedule is empty of null.
 		if (bestSchedule == null || bestSchedule.isEmpty()) {
 			return;
 		}
 		
+		// Get information
 		int numberOfTasks = bestSchedule.getGraph().getAll().size();
 		int runtime = bestSchedule.getRuntime();
 		int allocated = bestSchedule.getAllocated().size();
@@ -136,13 +145,18 @@ public class ScheduleManager extends Manager {
 		Platform.runLater(() -> {
 				
 			if (updateBest || bestRuntimeLabel.textProperty().get().equals("Searching ...")) {
+				bestRuntimeLabel.setId("best-label-found");
+				percentTasksLabel.setId("best-label-found");
 				bestRuntimeLabel.textProperty().setValue(Integer.toString(bestSchedule.getRuntime()));
 				percentTasksLabel.textProperty().setValue(Integer.toString((int)(100*(double)allocated/(double)numberOfTasks)));
+			} else {
+				bestRuntimeLabel.setId("best-label");
+				percentTasksLabel.setId("best-label");
 			}
 				
 			if (monitor.hasFinished()) {
-				bestRuntimeLabel.setId("best-runtime-label-complete");
-				percentTasksLabel.setId("best-runtime-label-complete");
+				bestRuntimeLabel.setId("best-label-complete");
+				percentTasksLabel.setId("best-label-complete");
 			}
 				
 			processors.getChildren().setAll(processorLabels);

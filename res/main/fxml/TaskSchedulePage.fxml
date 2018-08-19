@@ -64,17 +64,22 @@
          </children>
       </Group>
       <Label id="explanation" contentDisplay="TOP" layoutX="52.0" layoutY="408.0" prefHeight="40.0" prefWidth="300.0" styleClass="page-title" text="This is a graphical representation of the current schedule being examined by the algorithm." wrapText="true" />
-      <HBox layoutX="360.0" layoutY="40.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="35.0">
+      <Group layoutX="423.0" layoutY="35.0" AnchorPane.rightAnchor="85.5" AnchorPane.topAnchor="40.0">
          <children>
-            <Label id="best-runtime-label" text="Best Runtime: " />
-            <Label id="best-runtime-label" fx:id="bestRuntimeLabel" text="Searching ..." />
+            <HBox layoutX="78.5">
+               <children>
+                  <Label id="best-label" text="Runtime: " />
+                  <Label id="best-label" fx:id="bestRuntimeLabel" text="0" />
+               </children>
+            </HBox>
+            <HBox layoutX="7.0" layoutY="15.0">
+               <children>
+                  <Label id="best-label" text="\% Tasks Allocated: " />
+                  <Label id="best-label" fx:id="percentTasksLabel" text="0" />
+               </children>
+            </HBox>
          </children>
-      </HBox>
-      <HBox layoutX="380.0" layoutY="60.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="55.0">
-         <children>
-            <Label id="best-runtime-label" text="\% Tasks Allocated: " />
-            <Label id="best-runtime-label" fx:id="percentTasksLabel" text="0" />
-         </children>
-      </HBox>
+      </Group>
+      <Label id="explanation" contentDisplay="TOP" layoutX="62.0" layoutY="418.0" prefHeight="20.0" prefWidth="340.0" styleClass="page-title" text="(Stats for the best schedule seen so far are shown here)" wrapText="true" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="17.0" />
    </children>
 </AnchorPane>

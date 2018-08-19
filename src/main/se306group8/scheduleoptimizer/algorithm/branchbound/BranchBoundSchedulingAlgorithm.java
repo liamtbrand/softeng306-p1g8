@@ -11,6 +11,9 @@ import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
+/**
+ * A recursive DFS search of the solution tree. 
+ */
 public class BranchBoundSchedulingAlgorithm extends Algorithm {
   
 	private final ChildScheduleFinder finder;
