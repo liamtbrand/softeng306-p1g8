@@ -71,6 +71,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 		return childrenSchedules;
 	}
 	
+	/** As fixing the global order is dependent on many conditions. We also enforce local ordering of the tasks. */
 	private boolean checkFixedOrder(Task task, int processor, TreeSchedule schedule) {
 		ProcessorAllocation alloc = schedule.getLastAllocationForProcessor(processor);
 		
@@ -152,6 +153,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 		return ForkJoinOrderResult.UNSURE; //The orders conflicted, we cannot be definitive
 	}
 	
+	//This would be used if we had time to add it. It is mostly implemented.
 	/*private boolean checkHorizon(Task task, int processor, TreeSchedule schedule) {
 		//If these two tasks can be swapped
 		int positionOfNewTask = schedule.getNumberOfTasksOnProcessor(processor); //The 0 indexed position of the new task
@@ -208,7 +210,7 @@ public class DuplicateRemovingChildFinder implements ChildScheduleFinder {
 		}
 	}*/
 	
-	//Ensures that the parent schedule is the earliest schedule that can produce this child.
+	//Ensures that the parent schedule is the earliest schedule that can produce this child. This is our stateless duplicate removal.
 	private boolean isBestParent(Task task, int processor, TreeSchedule schedule) {
 		//Look at each task on the top of the processor, if it is a later task then the schedule is not valid, provided removing it leaves a valid schedule.
 		for(int p = 1; p <= schedule.getNumberOfUsedProcessors(); p++) {

@@ -171,6 +171,7 @@ class ScheduleArray {
 		return add(schedule, true);
 	}
 	
+	/** Gets a block with free space for the supplied schedule */
 	ScheduleBlock getBlockFor(TreeSchedule schedule) {
 		if(blocks.isEmpty()) {
 			return allocateNewBlock();

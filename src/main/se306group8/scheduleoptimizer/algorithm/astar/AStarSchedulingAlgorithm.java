@@ -14,6 +14,12 @@ import se306group8.scheduleoptimizer.algorithm.storage.ScheduleStorage;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
+/**
+ * Produce a optimal schedule using A* algorithm. Requires you to provide your
+ * own heuristics. This algorithm may consume a lot of memory protections are in
+ * place to prevent crashing by switching to a DFS branch and bound algorithm
+ * when memory is too high.
+ */
 public class AStarSchedulingAlgorithm extends Algorithm {
 	
 	private final ChildScheduleFinder childGenerator;
@@ -57,8 +63,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
 
+		//Compute a greedy upper bound for pruning 
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
+		//Calculate an initial bound
 		TreeSchedule greedySoln = best;
 		while (!greedySoln.isComplete()) {
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
@@ -78,8 +86,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		getMonitor().setUpperBound(greedySoln.getRuntime());
 		
 		Runtime memory = Runtime.getRuntime();
+		//A conservative amount of the memory to use
 		maxQueueSize = (long) (memory.maxMemory() * 0.65) / 10;
 		
+		//In A* once a complete schedule comes out of the queue we are
 		while (!best.isComplete()) {
 			
 			queue.signalMonitor(getMonitor());
@@ -87,6 +97,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 				throw new InterruptedException();
 			}
 						
+			//Run A* if we have enough memory overwise DFS
 			if (queue.size() < maxQueueSize) {
 				if (contingency) {
 					contingency = false;
@@ -126,6 +137,10 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		return "A*";
 	}
 
+	/**
+	 * To help the queue we recursively search until the children have a different
+	 * lower bound than the @param schedule
+	 */
 	void explore(TreeSchedule best) throws InterruptedException {
 		if (getMonitor().isInterupted()) {
 			throw new InterruptedException();
@@ -166,7 +181,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		getMonitor().setSchedulesExplored(explored);
 	}
 	
-	
+	/** The contingency plan. Use BnB if we are low on memory. */
 	private TreeSchedule branchAndBound(TreeSchedule schedule) throws InterruptedException {
 		if(getMonitor().isInterupted()) {
 			throw new InterruptedException();
