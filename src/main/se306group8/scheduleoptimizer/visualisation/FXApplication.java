@@ -52,8 +52,8 @@ public class FXApplication extends Application {
 
 		// Get the reference to the main controller.
 		mainController = loader.<MainController>getController();
-		
-		primaryStage.setTitle("Visualisation - '" + Main.config.inputFile() + "' (" + Main.config.processorsToScheduleOn() + " processors)");
+
+		primaryStage.setTitle("Visualisation - '" + Main.config.inputFile() + "' (" + Main.config.processorsToScheduleOn() + (Main.config.processorsToScheduleOn() > 1 ? " processors)" : " processor)"));
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.show();
