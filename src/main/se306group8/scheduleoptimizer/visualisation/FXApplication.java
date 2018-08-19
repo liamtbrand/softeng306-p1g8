@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import se306group8.scheduleoptimizer.Main;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitorAggregator;
@@ -56,6 +57,7 @@ public class FXApplication extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.show();
+		primaryStage.getIcons().add(new Image(FXApplication.class.getResourceAsStream("/images/icon.png")));
 
 		// Start the algorithm on its own thread.
 
