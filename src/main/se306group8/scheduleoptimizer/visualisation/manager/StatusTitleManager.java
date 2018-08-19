@@ -16,11 +16,11 @@ public class StatusTitleManager extends Manager {
 
 	@Override
 	protected void updateHook(ObservableRuntimeMonitor monitor) {
+		this.graphNameLabel.textProperty().setValue(monitor.getGraphName());
+		
 			if (monitor.hasFinished()) {
-				this.graphNameLabel.textProperty().setValue(monitor.getBestSchedule().getGraph().getName());
 				this.graphNameLabel.setId("complete-label");
 			} else {
-				this.graphNameLabel.textProperty().setValue(monitor.getBestSchedule().getGraph().getName());
 				this.graphNameLabel.setId("incomplete-label");
 			}	
 	}

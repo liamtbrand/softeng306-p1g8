@@ -186,7 +186,7 @@ public class PerformanceTest {
 					public void updateBestSchedule(TreeSchedule optimalSchedule) {}
 
 					@Override
-					public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
+					public void start(String name, String graphName, int numberOfProcessors, int coresToUseForExecution) {
 						millionSolutions = 0;
 						startTime = System.nanoTime();
 					}

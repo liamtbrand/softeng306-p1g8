@@ -16,7 +16,7 @@ public interface RuntimeMonitor {
 	/**
 	 * Method to be called upon algorithm-start
 	 */
-	public void start(String name, int numberOfProcessors, int coresToUseForExecution);
+	public void start(String name, String graphName, int numberOfProcessors, int coresToUseForExecution);
 	
 	/**
 	 * Method to be called upon algorithm-finish
@@ -51,5 +51,4 @@ public interface RuntimeMonitor {
 	default void setBucketSize(int granularity) {  }
 
 	default void setUpperBound(int bound) {  }
-
 }

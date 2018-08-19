@@ -10,7 +10,7 @@ public class StubRuntimeMonitor implements RuntimeMonitor {
 	}
 
 	@Override
-	public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
+	public void start(String name, String graphName, int numberOfProcessors, int coresToUseForExecution) {
 		// Do Nothing
 	}
 

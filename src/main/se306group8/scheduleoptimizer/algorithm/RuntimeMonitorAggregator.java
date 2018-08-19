@@ -19,8 +19,8 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
-		runtimeMonitors.forEach(m -> m.start(name, numberOfProcessors, coresToUseForExecution));
+	public void start(String name, String graphName, int numberOfProcessors, int coresToUseForExecution) {
+		runtimeMonitors.forEach(m -> m.start(name, graphName, numberOfProcessors, coresToUseForExecution));
 	}
 
 	@Override
