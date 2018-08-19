@@ -34,6 +34,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	
 	private volatile long startTime;
 	private volatile long finishTime;
+	private volatile int upperBound = Integer.MAX_VALUE;
 	
 	private volatile Schedule finishedSolution;
 	
@@ -47,6 +48,8 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int[] histogramData = new int[0];
 	private volatile int slots = 0;
 	private volatile int granularity = 0;
+	
+	private volatile String graphName = "";
 	
 	private final List<InvalidationListener> listeners;
 	private volatile boolean interupted = false;
@@ -88,9 +91,10 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
+	public void start(String name, String graphName, int numberOfProcessors, int coresToUseForExecution) {
 		started = true;
 		algorithmName = name;
+		this.graphName = graphName;
 		this.numberOfProcessors = numberOfProcessors;
 		this.coresToUseForExecution = coresToUseForExecution;
 		this.startTime = System.currentTimeMillis();
@@ -254,6 +258,11 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		this.granularity = granularity;
 	}
 	
+	@Override
+	public void setUpperBound(int bound) {
+		upperBound = bound;
+	}
+	
 	private String getName(int i) {
 
 		if(granularity == 1) {
@@ -270,5 +279,13 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 
 	public Schedule getFinishedSolution() {
 		return finishedSolution;
+	}
+
+	public int getUpperBound() {
+		return upperBound;
+	}
+
+	public String getGraphName() {
+		return graphName;
 	}
 }

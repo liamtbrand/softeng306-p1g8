@@ -21,7 +21,10 @@ public class DashboardPageController extends Controller {
 	@FXML private Label schedulesInArrayLabel;
 	@FXML private Label schedulesInQueueLabel;
 	@FXML private Label schedulesPerSecondLabel;
-
+	
+	@FXML private Label lowerBoundLabel;
+	@FXML private Label upperBoundLabel;
+	
 	@FXML private Label availableProcessorsLabel;
 	@FXML private Label maxMemoryLabel;
 	@FXML private Label usedMemoryLabel;
@@ -45,6 +48,8 @@ public class DashboardPageController extends Controller {
 				schedulesInArrayLabel,
 				schedulesInQueueLabel,
 				schedulesPerSecondLabel,
+				lowerBoundLabel,
+				upperBoundLabel,
 				1
 		));
 

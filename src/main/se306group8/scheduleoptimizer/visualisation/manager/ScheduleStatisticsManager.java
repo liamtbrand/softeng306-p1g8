@@ -1,7 +1,6 @@
 package se306group8.scheduleoptimizer.visualisation.manager;
 
 import javafx.scene.control.Label;
-import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.HumanReadableFormatter;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
@@ -11,7 +10,10 @@ public class ScheduleStatisticsManager extends Manager {
 	private Label schedulesInArrayLabel;
 	private Label schedulesInQueueLabel;
 	private Label schedulesPerSecondLabel;
-
+	
+	private Label lowerBoundLabel;
+	private Label upperBoundLabel;
+	
 	private double schedulesPerSecond;
 	private long lastScheduleCount;
 	private long lastScheduleCountSampleTime;
@@ -22,6 +24,8 @@ public class ScheduleStatisticsManager extends Manager {
 			Label schedulesInArrayLabel,
 			Label schedulesInQueueLabel,
 			Label schedulesPerSecondLabel,
+			Label lowerBoundLabel,
+			Label upperBoundLabel,
 			double schedulesPerSecondAdjustmentFactor
 	) {
 
@@ -29,7 +33,9 @@ public class ScheduleStatisticsManager extends Manager {
 		this.schedulesInArrayLabel = schedulesInArrayLabel;
 		this.schedulesInQueueLabel = schedulesInQueueLabel;
 		this.schedulesPerSecondLabel = schedulesPerSecondLabel;
-
+		this.lowerBoundLabel = lowerBoundLabel;
+		this.upperBoundLabel = upperBoundLabel;
+		
 		this.schedulesPerSecondAdjustmentFactor = schedulesPerSecondAdjustmentFactor;
 
 		// Setup schedules per second data.
@@ -59,10 +65,19 @@ public class ScheduleStatisticsManager extends Manager {
 
 		lastScheduleCountSampleTime = currentSampleTime;
 		lastScheduleCount = schedulesExplored;
-
+		if (monitor.getAlgorithmName().equals("A*")) {
+			
+			schedulesInArrayLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInArray," "));
+			schedulesInQueueLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInQueue," "));			
+		} else {
+			schedulesInArrayLabel.textProperty().setValue("N/A");
+			schedulesInQueueLabel.textProperty().setValue("N/A");
+		}
+		
 		schedulesExploredLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesExplored," "));
-		schedulesInArrayLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInArray," "));
-		schedulesInQueueLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInQueue," "));
 		schedulesPerSecondLabel.textProperty().setValue(HumanReadableFormatter.format((int)schedulesPerSecond," "));
+		
+		lowerBoundLabel.textProperty().setValue(monitor.getBestSchedule() == null ? "No bound" : Integer.toString(monitor.getBestSchedule().getLowerBound()));
+		upperBoundLabel.textProperty().setValue(monitor.getUpperBound() == Integer.MAX_VALUE ? "No bound" : Integer.toString(monitor.getUpperBound()));
 	}
 }

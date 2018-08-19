@@ -44,5 +44,10 @@ public class PieChartManager extends Manager {
 		//diskData.setPieValue(percentOnDisk);
 		arrayData.setPieValue(percentInArray);
 		queueData.setPieValue(percentInQueue);
+		if (schedulesInArray == 0 && schedulesInQueue ==0) {
+			pieChart.setVisible(false);
+		}else {
+			pieChart.setVisible(true);
+		}
 	}
 }

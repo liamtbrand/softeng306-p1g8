@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox minHeight="-Infinity" minWidth="-Infinity" prefWidth="272.0" xmlns="http://javafx.com/javafx/8" stylesheets="@../Visualisation.css" xmlns:fx="http://javafx.com/fxml/1">
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="300.0" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Region VBox.vgrow="ALWAYS" />
       <Label fx:id="introText" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" text="'2p_InTree_B complete!'" textAlignment="CENTER" wrapText="true" />

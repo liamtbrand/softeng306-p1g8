@@ -1,8 +1,10 @@
 package se306group8.scheduleoptimizer.visualisation.controller;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Tab;
 import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 import se306group8.scheduleoptimizer.visualisation.manager.Manager;
@@ -26,6 +28,8 @@ public class MainController {
 	private HistogramPageController histogramPageController;
 	@FXML
 	private StatusTitleController statusTitleController;
+	@FXML
+	private Tab scheduleDistributionTab;
 
 	public MainController() {
 		updateTimer = new Timer("Display Polling Timer", true);
@@ -39,6 +43,19 @@ public class MainController {
 		consolePageController.setMainController(this);
 		histogramPageController.setMainController(this);
 		statusTitleController.setMainController(this);
+
+		scheduleDistributionTab.setDisable(true);
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				if( FXApplication.getMonitor().getAlgorithmName().equals("DFS Branch & Bound") && FXApplication.getMonitor().getCoresToUseForExecution() > 1 ) {
+					scheduleDistributionTab.setDisable(true);
+				} else {
+					scheduleDistributionTab.setDisable(false);
+				}
+			}
+		};
+		updateTimer.schedule(task,0l,1000l);
 		
 		FXApplication.getMonitor().addListener(new FinishMessageBoxController());
 	}

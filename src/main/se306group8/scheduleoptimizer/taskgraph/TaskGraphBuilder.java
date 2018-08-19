@@ -16,17 +16,15 @@ public class TaskGraphBuilder {
 	private Map<String, Collection<Dependency>> parentMap;
 	private Map<String, Collection<Dependency>> childMap;
 	private String name;
-	private int id;
 	
 	public TaskGraphBuilder(){
-		id = 0;
 		taskMap = new HashMap<String,Task>();
 		parentMap = new HashMap<String, Collection<Dependency>>();
 		childMap = new HashMap<String, Collection<Dependency>>();
 	}
 	
 	public TaskGraphBuilder addTask(String name, int cost){
-		taskMap.put(name, new Task(name,cost,id++));
+		taskMap.put(name, new Task(name,cost));
 		parentMap.put(name, new ArrayList<Dependency>());
 		childMap.put(name, new ArrayList<Dependency>());
 		return this;

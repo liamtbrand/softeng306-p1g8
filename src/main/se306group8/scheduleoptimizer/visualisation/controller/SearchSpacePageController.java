@@ -58,6 +58,8 @@ public class SearchSpacePageController extends Controller {
 		      
 		// Draw axes
 		
+		gc.setLineWidth(2);
+		
 		int offset = 20;
 		
 		int x1 = (int) (width / 6.0);
@@ -79,7 +81,7 @@ public class SearchSpacePageController extends Controller {
     }
     
     // Method, as found on: https://stackoverflow.com/questions/35751576/javafx-draw-line-with-arrow-canvas
-    private final int ARR_SIZE = 4;
+    private final int ARR_SIZE = 6;
     
     void drawArrow(GraphicsContext gc, int x1, int y1, int x2, int y2) {
         gc.setFill(Color.BLACK);

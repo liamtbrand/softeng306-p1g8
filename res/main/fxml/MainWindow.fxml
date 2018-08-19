@@ -24,7 +24,7 @@
                                <fx:include fx:id="taskSchedulePage" source="TaskSchedulePage.fxml" />
                            </content>
                         </Tab>
-                        <Tab text="Schedule Distribution">
+                        <Tab text="Schedule Distribution" fx:id="scheduleDistributionTab">
                             <content>
                                <fx:include fx:id="histogramPage" source="HistogramPage.fxml" />
                            </content>

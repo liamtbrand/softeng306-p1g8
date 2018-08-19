@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
-import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import se306group8.scheduleoptimizer.algorithm.ProcessorAllocation;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
@@ -122,7 +121,7 @@ public class CanvasFillManager extends Manager {
     	double result =  taskContribution + processorContribution;
     	
     	//This corrects the value to 1.0 if there is the max processor and task allocated
-    	return result / (1.0 - 1.0 / processors / allocatable.size());
+    	return result + 0.5 / processors / allocatable.size();
     }
     
     // Calculates the horizontal length by which to section up, at any given depth in the triangle
@@ -133,6 +132,7 @@ public class CanvasFillManager extends Manager {
     
 	// Method to draw a set of dots, and interconnected lines, from arrays passed to it (representing a schedule)
 	private void drawPixels(Canvas canvas, Color color, double[] x, double[] y, int width) {
+
 		for (int j = 0; j < x.length; j++) {
 			y[j] = Math.max(0.0, Math.min(y[j], 1.0));
 			x[j] = Math.max(0.0, Math.min(x[j], 1.0));
@@ -140,11 +140,18 @@ public class CanvasFillManager extends Manager {
 			y[j] = this.startPointY + y[j] * this.totalTriangleHeight;
 			x[j] = this.startPointX - horizontalLength(y[j] - this.startPointY) / 2.0 + x[j] * horizontalLength(y[j] - this.startPointY);
 		}
-	
+		
 		// Loop through all points
 		gc.setStroke(color);
 		gc.setLineWidth(width);
-		gc.strokePolyline(x, y, x.length);
+		
+		// Draw each individual line (fixed problem!)
+		for (int j = 1; j < x.length; j++) {
+			
+			//System.out.println("x: " + x[j] + ", y: " + y[j]);
+			
+			gc.strokeLine(x[j - 1], y[j - 1], x[j], y[j]);
+		}
 		
 		gc.setFill(Color.rgb(255, 255, 255, 0.02));
 		gc.fillPolygon(new double[] { startPointX, startPointX - totalTriangleWidth / 2, startPointX + totalTriangleWidth / 2 }, 
