@@ -7,13 +7,11 @@
 }
 
 
-
 /* SIDEBAR STYLING */
 
 .sidebar {
     -fx-background-color: -sidebar-color;
 }
-
 
 
 /* CHART STYLING */
@@ -91,8 +89,6 @@
     -fx-text-fill: white;
 }
 
-
-
 /* SPLIT PANE STYLING */
 
 .split-pane:vertical > .split-pane-divider {
@@ -150,6 +146,7 @@
 .text-area {
 	-fx-background-radius: 0, 0, 0, 0;
 	-fx-text-box-border: 0;
+	-fx-background-color: -sidebar-color;
 }
 
 .text-area .content{
