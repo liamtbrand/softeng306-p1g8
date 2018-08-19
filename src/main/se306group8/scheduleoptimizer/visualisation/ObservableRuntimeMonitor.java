@@ -17,6 +17,11 @@ import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
+
+/**
+ * An observable implementation of the RuntimeMonitor interface, 
+ * It is used to pass information to the visualisation.
+ */
 public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 
 	
@@ -24,14 +29,20 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile TreeSchedule bestSchedule;
 	private volatile Queue<String> messages;
 
-	private volatile int schedulesExplored;
-	private volatile int schedulesInArray;
+	private volatile long schedulesExplored;
+	private volatile long schedulesInArray;
 	private volatile int scheduleInArrayStorageSize;
-	private volatile int schedulesInQueue;
+	private volatile long schedulesInQueue;
 	private volatile int scheduleInQueueStorageSize;
-	private volatile int schedulesOnDisk;
+	private volatile long schedulesOnDisk;
 	private volatile int scheduleOnDiskStorageSize;
-
+	
+	private volatile long startTime;
+	private volatile long finishTime;
+	private volatile int upperBound = Integer.MAX_VALUE;
+	
+	private volatile Schedule finishedSolution;
+	
 	//Set in the start method
 	private volatile boolean started;
 	private volatile String algorithmName;
@@ -43,7 +54,11 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	private volatile int slots = 0;
 	private volatile int granularity = 0;
 	
+	private volatile String graphName = "";
+	
 	private final List<InvalidationListener> listeners;
+	private volatile boolean interupted = false;
+	private volatile int lowerBound = 0;
 	
 	public ObservableRuntimeMonitor() {
 
@@ -82,11 +97,13 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
+	public void start(String name, String graphName, int numberOfProcessors, int coresToUseForExecution) {
 		started = true;
 		algorithmName = name;
+		this.graphName = graphName;
 		this.numberOfProcessors = numberOfProcessors;
 		this.coresToUseForExecution = coresToUseForExecution;
+		this.startTime = System.currentTimeMillis();
 		
 		invalidateListeners();
 	}
@@ -94,9 +111,16 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	@Override
 	public void finish(Schedule solution) {
 		finished = true;
+		finishedSolution = solution;
+		finishTime = System.currentTimeMillis();
 		invalidateListeners();
 	}
 
+	/** Returns the time taken in ms */
+	public long timeTaken() {
+		return finishTime - startTime;
+	}
+	
 	@Override
 	public void logMessage(String message) {
 		LocalDateTime now = LocalDateTime.now();
@@ -105,20 +129,20 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void setSchedulesExplored(int number) {
+	public void setSchedulesExplored(long number) {
 		schedulesExplored = number;
 	}
 
-	public int getSchedulesExplored() {
+	public long getSchedulesExplored() {
 		return schedulesExplored;
 	}
 
 	@Override
-	public void setSchedulesInArray(int number) {
+	public void setSchedulesInArray(long number) {
 		schedulesInArray = number;
 	}
 
-	public int getSchedulesInArray() {
+	public long getSchedulesInArray() {
 		return schedulesInArray;
 	}
 
@@ -132,11 +156,11 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void setSchedulesInQueue(int number) {
+	public void setSchedulesInQueue(long number) {
 		schedulesInQueue = number;
 	}
 
-	public int getSchedulesInQueue() {
+	public long getSchedulesInQueue() {
 		return schedulesInQueue;
 	}
 
@@ -150,11 +174,11 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	}
 
 	@Override
-	public void setSchedulesOnDisk(int number) {
+	public void setSchedulesOnDisk(long number) {
 		schedulesOnDisk = number;
 	}
 
-	public int getSchedulesOnDisk() {
+	public long getSchedulesOnDisk() {
 		return schedulesOnDisk;
 	}
 	
@@ -211,6 +235,16 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		listeners.remove(listener);
 	}
 
+	@Override
+	public void interuptAlgorithm() {
+		interupted  = true;
+	}
+	
+	@Override
+	public boolean isInterupted() {
+		return interupted;
+	}
+	
 	public Collection<Data<String, Number>> getHistogramData() {
 		Collection<Data<String, Number>> col = new ArrayList<>();
 		
@@ -230,6 +264,11 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		this.granularity = granularity;
 	}
 	
+	@Override
+	public void setUpperBound(int bound) {
+		upperBound = bound;
+	}
+	
 	private String getName(int i) {
 
 		if(granularity == 1) {
@@ -237,10 +276,31 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		} else {
 			return Integer.toString(i * granularity) + " - " + Integer.toString((i + 1) * granularity - 1);
 		}
+
 	}
 
 	public String getAlgorithmName() {
 		return algorithmName;
 	}
 
+	public Schedule getFinishedSolution() {
+		return finishedSolution;
+	}
+
+	public int getUpperBound() {
+		return upperBound;
+	}
+
+	public String getGraphName() {
+		return graphName;
+	}
+
+	public int getLowerBound() {
+		return lowerBound;
+	}
+	
+	@Override
+	public void setLowerBound(int lowerBound) {
+		this.lowerBound = lowerBound;
+	}
 }

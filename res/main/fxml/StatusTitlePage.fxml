@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.StatusTitleController">
+   <children>
+      <HBox alignment="CENTER_RIGHT" AnchorPane.rightAnchor="10.0">
+         <children>
+            <Label id="graph-name-label" fx:id="graphNameLabel" contentDisplay="RIGHT" maxHeight="33.0" maxWidth="500.0" minHeight="33.0" prefHeight="33.0" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

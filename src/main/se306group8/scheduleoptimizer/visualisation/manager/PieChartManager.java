@@ -27,9 +27,9 @@ public class PieChartManager extends Manager {
 
 	@Override
 	protected void updateHook(ObservableRuntimeMonitor monitor) {
-		int schedulesInArray = monitor.getSchedulesInArray();
-		int schedulesInQueue = monitor.getSchedulesInQueue();
-		int schedulesOnDisk = monitor.getSchedulesOnDisk();
+		long schedulesInArray = monitor.getSchedulesInArray();
+		long schedulesInQueue = monitor.getSchedulesInQueue();
+		long schedulesOnDisk = monitor.getSchedulesOnDisk();
 
 		long totalSchedules = schedulesInArray + schedulesInQueue + schedulesOnDisk;
 
@@ -44,5 +44,10 @@ public class PieChartManager extends Manager {
 		//diskData.setPieValue(percentOnDisk);
 		arrayData.setPieValue(percentInArray);
 		queueData.setPieValue(percentInQueue);
+		if (schedulesInArray == 0 && schedulesInQueue ==0) {
+			pieChart.setVisible(false);
+		}else {
+			pieChart.setVisible(true);
+		}
 	}
 }

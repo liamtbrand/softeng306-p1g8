@@ -25,7 +25,7 @@ class ScheduleArray {
 		/** Stores the task that each schedule allocates */
 		final byte[] taskArray = new byte[blockSize];
 		/** Pre-computes the result of the heuristic */
-		final short[] lowerBound = new short[blockSize];
+		final int[] lowerBound = new int[blockSize];
 		/** Counts the number of tasks that have been scheduled on this schedule */
 		final byte[] tasks = new byte[blockSize];
 		/** Whether this schedule needs to be added to the queue. */
@@ -41,7 +41,7 @@ class ScheduleArray {
 			int index = size;
 			size++;
 			
-			lowerBound[index] = (short) schedule.getLowerBound();
+			lowerBound[index] = schedule.getLowerBound();
 			parentsArray[index] = ScheduleArray.this.add(schedule.getParent(), false);
 			taskArray[index] = (byte) schedule.getMostRecentAllocation().task.getId();
 			processorArray[index] = (byte) schedule.getMostRecentAllocation().processor;
@@ -106,8 +106,8 @@ class ScheduleArray {
 			return 0;
 		}
 		
-		ScheduleBlock block = blocks.get(id / blockSize);
-		int subIndex = id % blockSize;
+		ScheduleBlock block = blocks.get(Integer.divideUnsigned(id, blockSize));
+		int subIndex = Integer.remainderUnsigned(id, blockSize);
 		
 		return block.tasks[subIndex];
 	}
@@ -125,13 +125,13 @@ class ScheduleArray {
 			return rootSchedule;
 		}
 		
-		ScheduleBlock block = blocks.get(id / blockSize);
-		int subIndex = id % blockSize;
+		ScheduleBlock block = blocks.get(Integer.divideUnsigned(id, blockSize));
+		int subIndex = Integer.remainderUnsigned(id, blockSize);
 		
 		int parent = block.parentsArray[subIndex];
 		int task = Byte.toUnsignedInt(block.taskArray[subIndex]);
 		int processor = Byte.toUnsignedInt(block.processorArray[subIndex]);
-		int lowerBound = Short.toUnsignedInt(block.lowerBound[subIndex]);
+		int lowerBound = block.lowerBound[subIndex];
 		
 		return new TreeSchedule(lowerBound, id, rootSchedule.getGraph().getTask(task), processor, get(parent));
 	}

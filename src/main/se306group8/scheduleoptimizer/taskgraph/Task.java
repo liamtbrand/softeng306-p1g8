@@ -13,14 +13,18 @@ public final class Task implements GraphEquality<Task> {
 	private List<Dependency> children;
 	private List<Dependency> parents;
 	private final int cost;
-	private final int id;
+	private int id;
 	private boolean[] isParent;
 	private boolean[] isChild;
 	private boolean isIndependant = true;
 	
-	Task(String name, int cost, int id){
+	Task(String name, int cost){
 		this.name = name;
 		this.cost = cost;
+	}
+	
+	// Used to create the topological ordering required by the ids.
+	void setId(int id) {
 		this.id = id;
 	}
 	
@@ -113,6 +117,10 @@ public final class Task implements GraphEquality<Task> {
 			return true;
 		
 		return other.name.equals(name) && other.cost == cost && GraphEqualityUtils.setsEqualIgnoringChildren(parents, other.parents);
+	}
+	
+	public boolean isForkJoinCandidate() {
+		return parents.size() <= 1 && children.size() <= 1;
 	}
 	
 	public boolean isIndependant() {

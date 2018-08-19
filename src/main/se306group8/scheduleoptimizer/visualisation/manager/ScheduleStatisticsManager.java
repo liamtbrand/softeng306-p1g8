@@ -1,7 +1,6 @@
 package se306group8.scheduleoptimizer.visualisation.manager;
 
 import javafx.scene.control.Label;
-import se306group8.scheduleoptimizer.visualisation.FXApplication;
 import se306group8.scheduleoptimizer.visualisation.HumanReadableFormatter;
 import se306group8.scheduleoptimizer.visualisation.ObservableRuntimeMonitor;
 
@@ -10,9 +9,11 @@ public class ScheduleStatisticsManager extends Manager {
 	private Label schedulesExploredLabel;
 	private Label schedulesInArrayLabel;
 	private Label schedulesInQueueLabel;
-	private Label schedulesOnDiskLabel;
 	private Label schedulesPerSecondLabel;
-
+	
+	private Label lowerBoundLabel;
+	private Label upperBoundLabel;
+	
 	private double schedulesPerSecond;
 	private long lastScheduleCount;
 	private long lastScheduleCountSampleTime;
@@ -22,17 +23,19 @@ public class ScheduleStatisticsManager extends Manager {
 			Label schedulesExploredLabel,
 			Label schedulesInArrayLabel,
 			Label schedulesInQueueLabel,
-			Label schedulesOnDiskLabel,
 			Label schedulesPerSecondLabel,
+			Label lowerBoundLabel,
+			Label upperBoundLabel,
 			double schedulesPerSecondAdjustmentFactor
 	) {
 
 		this.schedulesExploredLabel = schedulesExploredLabel;
 		this.schedulesInArrayLabel = schedulesInArrayLabel;
 		this.schedulesInQueueLabel = schedulesInQueueLabel;
-		this.schedulesOnDiskLabel = schedulesOnDiskLabel;
 		this.schedulesPerSecondLabel = schedulesPerSecondLabel;
-
+		this.lowerBoundLabel = lowerBoundLabel;
+		this.upperBoundLabel = upperBoundLabel;
+		
 		this.schedulesPerSecondAdjustmentFactor = schedulesPerSecondAdjustmentFactor;
 
 		// Setup schedules per second data.
@@ -44,11 +47,10 @@ public class ScheduleStatisticsManager extends Manager {
 
 	@Override
 	protected void updateHook(ObservableRuntimeMonitor monitor) {
-		int schedulesExplored = monitor.getSchedulesExplored();
+		long schedulesExplored = monitor.getSchedulesExplored();
 
-		int schedulesInArray = monitor.getSchedulesInArray();
-		int schedulesInQueue = monitor.getSchedulesInQueue();
-		int schedulesOnDisk = monitor.getSchedulesOnDisk();
+		long schedulesInArray = monitor.getSchedulesInArray();
+		long schedulesInQueue = monitor.getSchedulesInQueue();
 
 		long currentSampleTime = System.nanoTime();
 		long newScheduleCount = schedulesExplored - lastScheduleCount;
@@ -63,11 +65,19 @@ public class ScheduleStatisticsManager extends Manager {
 
 		lastScheduleCountSampleTime = currentSampleTime;
 		lastScheduleCount = schedulesExplored;
-
-		schedulesExploredLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesExplored," ", 1));
-		schedulesInArrayLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInArray," ", 1));
-		schedulesInQueueLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInQueue," ", 1));
-		schedulesOnDiskLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesOnDisk," ",1));
-		schedulesPerSecondLabel.textProperty().setValue(HumanReadableFormatter.format((int)schedulesPerSecond," ", 1));
+		if (monitor.getAlgorithmName().equals("A*")) {
+			
+			schedulesInArrayLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInArray," "));
+			schedulesInQueueLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesInQueue," "));			
+		} else {
+			schedulesInArrayLabel.textProperty().setValue("N/A");
+			schedulesInQueueLabel.textProperty().setValue("N/A");
+		}
+		
+		schedulesExploredLabel.textProperty().setValue(HumanReadableFormatter.format(schedulesExplored," "));
+		schedulesPerSecondLabel.textProperty().setValue(HumanReadableFormatter.format((int)schedulesPerSecond," "));
+		
+		lowerBoundLabel.textProperty().setValue(monitor.getLowerBound() == 0 ? "No bound" : Integer.toString(monitor.getLowerBound()));
+		upperBoundLabel.textProperty().setValue(monitor.getUpperBound() == Integer.MAX_VALUE ? "No bound" : Integer.toString(monitor.getUpperBound()));
 	}
 }

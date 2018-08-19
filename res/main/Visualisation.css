@@ -1,40 +1,31 @@
-.title {  }
-.stat-name-label {  }
-.stat-value-label {  }
-.axis-label {  }
-.axis-tick-label {  }
-.key-label {  }
-.task-chart-label-incomplete {  }
-.task-chart-rectangle-complete {  }
-.task-name-label {  }
-.console-text {  }
-
+/* GLOBAL COLOURS */
 * {
-   -colour-1: #44608c;
-   -colour-2: #7595c6;
-   -sidebar-colour: #eee;
+   -blue-1: #44608c;
+   -blue-2: #7595c6;
+   -green: #00a676;
+   -sidebar-color: #eee;
 }
 
-.rectangle {
-	-fx-fill: white;
-}
+
 
 /* SIDEBAR STYLING */
 
 .sidebar {
-    -fx-background-color: -sidebar-colour;
+    -fx-background-color: -sidebar-color;
 }
+
+
 
 /* CHART STYLING */
 
 .chart-legend {
 	-fx-background-radius: 0;
 	-fx-border-radius: 0;
-	-fx-background-color: -sidebar-colour;
+	-fx-background-color: -sidebar-color;
 }
 
 .chart {
-	-fx-background-color: -sidebar-colour;
+	-fx-background-color: -sidebar-color;
 	-fx-font-family: 'Menlo';
 }
 
@@ -43,18 +34,29 @@
 }
 
 
-.default-color0.chart-pie { -fx-background-color: -colour-1; }
-.default-color1.chart-pie { -fx-background-color: -colour-2; }
+.default-color0.chart-pie { -fx-background-color: -blue-1; }
+.default-color1.chart-pie { -fx-background-color: -blue-2; }
 .default-color2.chart-pie { -fx-background-color: lightgrey; }
 
-.default-color0.chart-bar { -fx-background-color: -colour-1; }
-.default-color1.chart-bar { -fx-background-color: -colour-2; }
+.default-color0.chart-bar { -fx-background-color: -blue-1; }
+.default-color1.chart-bar { -fx-background-color: -blue-2; }
 .default-color2.chart-bar { -fx-background-color: lightgrey; }
+
+.no-data-label {
+	-fx-font-size: 16px;
+	-fx-text-fill: grey;
+}
+
+
 
 /* TAB STYLING */
 
 .tab-pane *.tab-header-background {
-    -fx-background-color: white;
+    -fx-background-color: lightgrey;
+}
+
+.tab-pane {
+	-fx-background-color: white;
 }
 
 .tab {
@@ -64,11 +66,6 @@
 
 .tab:hover {
 	-fx-background-color: darkgrey;
-}
-
-.page-title {
-	-fx-font-size: 30;
-	-fx-text-fill: darkgrey;
 }
 
 .tab:hover .tab-label {
@@ -94,6 +91,72 @@
     -fx-text-fill: white;
 }
 
+
+
+/* SPLIT PANE STYLING */
+
+.split-pane:vertical > .split-pane-divider {
+	-fx-padding: 0 0.2em 0 0.2em; 
+  	-fx-background-color: lightgrey;
+}
+
+
+/* TASK SCHEDULE PAGE */
+
+#task-label {
+	-fx-font-size: 8px;
+}
+
+#processor-label {
+	-fx-font-size: 8px;
+}
+
+#complete-label {
+	-fx-text-fill: grey;
+}
+
+#incomplete-label {
+	-fx-text-fill: grey;
+}
+
+#best-label {
+	-fx-text-fill: grey;
+	-fx-font-size: 12px;
+}
+
+#best-label-found {
+	-fx-text-fill: -blue-1;
+	-fx-font-size: 12px;
+}
+
+#best-label-complete {
+	-fx-text-fill: -green;
+	-fx-font-size: 12px;
+}
+
+
+
+/* GENERAL STYLING */
+
+.page-title {
+	-fx-font-size: 20px;
+	-fx-text-fill: grey;
+}
+
 .label {
     -fx-font-family: 'Menlo';
+}
+
+.text-area {
+	-fx-background-radius: 0, 0, 0, 0;
+	-fx-text-box-border: 0;
+}
+
+.text-area .content{
+  	-fx-background-color: transparent;
+  }
+  
+#explanation {
+	-fx-font-size: 10px;
+	-fx-text-fill: grey;
 }

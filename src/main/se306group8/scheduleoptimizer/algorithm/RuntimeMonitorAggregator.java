@@ -19,8 +19,8 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void start(String name, int numberOfProcessors, int coresToUseForExecution) {
-		runtimeMonitors.forEach(m -> m.start(name, numberOfProcessors, coresToUseForExecution));
+	public void start(String name, String graphName, int numberOfProcessors, int coresToUseForExecution) {
+		runtimeMonitors.forEach(m -> m.start(name, graphName, numberOfProcessors, coresToUseForExecution));
 	}
 
 	@Override
@@ -34,12 +34,12 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSchedulesExplored(int number) {
+	public void setSchedulesExplored(long number) {
 		runtimeMonitors.forEach(m -> m.setSchedulesExplored(number));
 	}
 
 	@Override
-	public void setSchedulesInArray(int number) {
+	public void setSchedulesInArray(long number) {
 		runtimeMonitors.forEach(m -> m.setSchedulesInArray(number));
 	}
 
@@ -49,7 +49,7 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSchedulesInQueue(int number) {
+	public void setSchedulesInQueue(long number) {
 		runtimeMonitors.forEach(m -> m.setSchedulesInQueue(number));
 	}
 
@@ -59,13 +59,22 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	}
 
 	@Override
-	public void setSchedulesOnDisk(int number) {
+	public void setSchedulesOnDisk(long number) {
 		runtimeMonitors.forEach(m -> m.setSchedulesOnDisk(number));
 	}
 
 	@Override
 	public void setScheduleOnDiskStorageSize(int bytes) {
 		runtimeMonitors.forEach(m -> m.setScheduleOnDiskStorageSize(bytes));
+	}
+	
+	@Override
+	public boolean isInterupted() {
+		boolean interupted = false;
+		for (RuntimeMonitor m:runtimeMonitors) {
+			interupted = interupted || m.isInterupted();
+		}
+		return interupted;
 	}
 
 	@Override
@@ -76,5 +85,15 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	@Override
 	public void setScheduleDistribution(int[] distribution, int limit) {
 		runtimeMonitors.forEach(m -> m.setScheduleDistribution(distribution, limit));
+	}
+
+	@Override
+	public void setUpperBound(int bound) {
+		runtimeMonitors.forEach(m -> m.setUpperBound(bound));
+	}
+	
+	@Override
+	public void setLowerBound(int lowerBound) {
+		runtimeMonitors.forEach(m -> m.setLowerBound(lowerBound));
 	}
 }

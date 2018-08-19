@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="300.0" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Region VBox.vgrow="ALWAYS" />
+      <Label fx:id="introText" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" text="'2p_InTree_B complete!'" textAlignment="CENTER" wrapText="true" />
+      <HBox alignment="BOTTOM_CENTER" minWidth="-Infinity" spacing="20.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label fx:id="introText1" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="20.0" text="Time Taken" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+            <Label fx:id="introText11" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="20.0" text="Solution Length" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+         </children>
+         <VBox.margin>
+            <Insets left="5.0" right="5.0" top="5.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="TOP_CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label fx:id="timeTaken" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" text="30s" textFill="#4d4d4d" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="Calibri Bold" size="60.0" />
+               </font>
+            </Label>
+            <Label fx:id="solutionLength" alignment="CENTER" maxWidth="1.7976931348623157E308" text="689" textFill="#4d4d4d" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="Calibri Bold" size="60.0" />
+               </font>
+            </Label>
+         </children>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>

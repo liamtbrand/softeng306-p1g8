@@ -16,7 +16,7 @@ public interface RuntimeMonitor {
 	/**
 	 * Method to be called upon algorithm-start
 	 */
-	public void start(String name, int numberOfProcessors, int coresToUseForExecution);
+	public void start(String name, String graphName, int numberOfProcessors, int coresToUseForExecution);
 	
 	/**
 	 * Method to be called upon algorithm-finish
@@ -33,18 +33,23 @@ public interface RuntimeMonitor {
 	/** 
 	 * Sets the number of solutions found so far.
 	 **/
-	public void setSchedulesExplored(int number);
+	public void setSchedulesExplored(long number);
 
-	public void setSchedulesInArray(int number);
+	public void setSchedulesInArray(long number);
 	public void setScheduleInArrayStorageSize(int bytes);
 
-	public void setSchedulesInQueue(int number);
+	public void setSchedulesInQueue(long number);
 	public void setScheduleInQueueStorageSize(int bytes);
 
-	public void setSchedulesOnDisk(int number);
+	public void setSchedulesOnDisk(long number);
 	public void setScheduleOnDiskStorageSize(int bytes);
 
+	public default void interuptAlgorithm() {throw new UnsupportedOperationException();};
+	public default boolean isInterupted() {return false;};
+	
 	default void setScheduleDistribution(int[] distribution, int limit) {  }
 	default void setBucketSize(int granularity) {  }
 
+	default void setUpperBound(int bound) {  }
+	default void setLowerBound(int lowerBound) {  }
 }

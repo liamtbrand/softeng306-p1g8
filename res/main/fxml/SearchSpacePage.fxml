@@ -1,15 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.SearchSpacePageController">
+<AnchorPane stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.SearchSpacePageController">
    <children>
-      <Group>
-         <children>
-            <Canvas fx:id="canvas" height="450.0" width="800.0" />
-         </children>
-      </Group>
+      <BorderPane prefHeight="500.0" prefWidth="660.0">
+		<top>
+            <Label fx:id="searchSpaceTitle" styleClass="page-title" text="Search Space" BorderPane.alignment="TOP_LEFT">
+               <BorderPane.margin>
+                  <Insets bottom="-40.0" left="40.0" top="30.0" />
+               </BorderPane.margin>
+          	</Label>
+         </top>
+         <center>
+            <Group BorderPane.alignment="CENTER">
+               <children>
+                  <Canvas fx:id="canvas" height="500.0" width="660" />
+                  <Label id="explanation" fx:id="explanation" layoutX="41.0" layoutY="41.0" prefHeight="75.0" prefWidth="213.0" styleClass="page-title" text="This is a representation of the Search Space of the Algorithm; the lines produced, represent the best schedule at that current time." wrapText="true">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Label id="explanation" alignment="CENTER" layoutX="270.0" layoutY="462.0" prefHeight="19.0" prefWidth="120.0" styleClass="page-title" text="Permutations" wrapText="true" fx:id="xAxis">
+                     <font>
+                        <Font size="4.0" />
+                     </font>
+                  </Label>
+                  <Label id="explanation" fx:id="yAxis" layoutX="583.0" layoutY="227.0" prefHeight="47.0" prefWidth="52.0" styleClass="page-title" text="Schedule Depth" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="4.0" />
+                     </font>
+                  </Label>
+                  <Label id="explanation" fx:id="yAxis1" layoutX="583.0" layoutY="422.0" prefHeight="19.0" prefWidth="52.0" styleClass="page-title" text="Complete" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="4.0" />
+                     </font>
+                  </Label>
+                  <Label id="explanation" fx:id="yAxis11" layoutX="583.0" layoutY="50.0" prefHeight="30.0" prefWidth="52.0" styleClass="page-title" text="Empty Solution" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font size="4.0" />
+                     </font>
+                  </Label>
+                  <Label id="explanation" fx:id="explanation2" layoutX="41.0" layoutY="112.0" prefHeight="75.0" prefWidth="213.0" styleClass="page-title" text="The completeness of this schedule is modelled by it's depth, and the horizontal position of the points model the specific permutation of allocations made in that schedule." wrapText="true">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Group>
+         </center>
+      </BorderPane>
    </children>
 </AnchorPane>

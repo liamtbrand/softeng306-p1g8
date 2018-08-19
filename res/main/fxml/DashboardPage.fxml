@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxWidth="300.0" minWidth="300.0" styleClass="sidebar" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.DashboardPageController">
+<AnchorPane maxWidth="300.0" minWidth="300.0" styleClass="sidebar" stylesheets="@../Visualisation.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se306group8.scheduleoptimizer.visualisation.controller.DashboardPageController">
    <children>
       <VBox spacing="10.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0">
          <children>
@@ -169,21 +169,6 @@
                         </HBox>
                         <HBox>
                            <children>
-                              <Label text="Schedules on Disk:">
-                                 <font>
-                                    <Font name="Menlo Regular" size="13.0" />
-                                 </font>
-                              </Label>
-                              <Region HBox.hgrow="ALWAYS" />
-                              <Label fx:id="schedulesOnDiskLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" minWidth="50.0" prefHeight="16.0">
-                                 <font>
-                                    <Font name="Menlo Regular" size="13.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <HBox>
-                           <children>
                               <Label text="Schedules per Second:">
                                  <font>
                                     <Font name="Menlo Regular" size="13.0" />
@@ -201,7 +186,45 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <PieChart fx:id="storageBreakdown" labelLineLength="10.0" minHeight="225.0" minWidth="250.0" prefHeight="225.0" prefWidth="250.0" title="Storage Breakdown" />
+            <AnchorPane>
+               <children>
+                  <VBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label text="Lower Bound:">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="lowerBoundLabel" alignment="CENTER_RIGHT" minWidth="50.0" prefHeight="16.0" textAlignment="RIGHT">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label text="Upper Bound:">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="upperBoundLabel" alignment="CENTER_RIGHT" minWidth="50.0" prefHeight="16.0" textAlignment="RIGHT">
+                                 <font>
+                                    <Font name="Menlo Regular" size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <PieChart fx:id="storageBreakdown" labelLineLength="10.0" legendVisible="false" minHeight="200.0" minWidth="250.0" prefHeight="200.0" prefWidth="250.0" title="Storage Breakdown" />
          </children>
       </VBox>
    </children>

@@ -5,7 +5,7 @@ public class HumanReadableFormatter {
 	private static final String[] orderOfMagnitude = {" ","k","M","G","T","P","Y"};
 
 	/**
-	 * Format a given integer to three places,
+	 * Format a given integer to a number of decimal places,
 	 * including the magnitude and unit.
 	 * Extra places can be configured.
 	 * @param number
@@ -13,19 +13,23 @@ public class HumanReadableFormatter {
 	 * @param extraPlaces
 	 * @return
 	 */
-	public static String format(int number, String unit, int extraPlaces) {
-		int mag = (int)Math.floor(Math.log10(number)/3);
-
-		// Verify correct range.
-		if(mag < 0 || mag >= orderOfMagnitude.length) {
-			mag = 0;
+	public static String format(long number, String unit, int minimumPlaces) {
+		int minimum = 1;
+		for(int i = 1; i < minimumPlaces; i++) {
+			minimum *= 10;
 		}
 
-		return String.valueOf((int) Math.floor(number / (Math.pow(10, mag * 3 -extraPlaces)))) + " " + orderOfMagnitude[mag] + unit;
+		int mag = 0;
+		while(mag + 1 < orderOfMagnitude.length && number / 1000 >= minimum) {
+			number /= 1000;
+			mag++;
+		}
+		
+		return String.valueOf(number) + " " + orderOfMagnitude[mag] + unit;
 	}
 
-	public static String format(int number, String unit) {
-		return format(number,unit,0);
+	public static String format(long number, String unit) {
+		return format(number,unit,2);
 	}
 
 }
