@@ -93,6 +93,9 @@ public class BlockScheduleStorage implements ScheduleStorage {
 
 	@Override
 	public void signalMonitor(RuntimeMonitor monitor) {
+		if(bestComplete != null)
+			monitor.setUpperBound(bestComplete.getRuntime());
+		
 		monitor.setSchedulesInArray(array.size() - queue.size());
 		monitor.setSchedulesInQueue(queue.size());
 		monitor.setScheduleDistribution(array.getDistribution(), array.getNumberOfSlots());

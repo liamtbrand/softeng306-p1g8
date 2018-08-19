@@ -34,6 +34,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	
 	private volatile long startTime;
 	private volatile long finishTime;
+	private volatile int upperBound = Integer.MAX_VALUE;
 	
 	private volatile Schedule finishedSolution;
 	
@@ -254,6 +255,11 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 		this.granularity = granularity;
 	}
 	
+	@Override
+	public void setUpperBound(int bound) {
+		upperBound = bound;
+	}
+	
 	private String getName(int i) {
 
 		if(granularity == 1) {
@@ -270,5 +276,9 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 
 	public Schedule getFinishedSolution() {
 		return finishedSolution;
+	}
+
+	public int getUpperBound() {
+		return upperBound;
 	}
 }

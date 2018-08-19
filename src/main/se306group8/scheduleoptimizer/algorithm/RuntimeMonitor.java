@@ -50,4 +50,6 @@ public interface RuntimeMonitor {
 	default void setScheduleDistribution(int[] distribution, int limit) {  }
 	default void setBucketSize(int granularity) {  }
 
+	default void setUpperBound(int bound) {  }
+
 }

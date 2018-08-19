@@ -87,4 +87,8 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 		runtimeMonitors.forEach(m -> m.setScheduleDistribution(distribution, limit));
 	}
 
+	@Override
+	public void setUpperBound(int bound) {
+		runtimeMonitors.forEach(m -> m.setUpperBound(bound));
+	}
 }

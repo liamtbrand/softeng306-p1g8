@@ -75,6 +75,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		queue.signalStorageSizes(getMonitor());
 		queue.put(greedySoln);
 		getMonitor().updateBestSchedule(greedySoln);
+		getMonitor().setUpperBound(greedySoln.getRuntime());
 		
 		Runtime memory = Runtime.getRuntime();
 		maxQueueSize = (long) (memory.maxMemory() * 0.65) / 10;
@@ -179,12 +180,14 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 			// Only consider the child if its lower bound is better than current best
 			if (child.getLowerBound() < dfsBest.getRuntime()) {
 				if (child.isComplete()) {
+					getMonitor().updateBestSchedule(child);
 					dfsBest=child;
 				} else {
 					// Check if the child schedule is complete or not
 					dfsBest = branchAndBound(child);
 				}
 			} else {
+				getMonitor().updateBestSchedule(schedule);
 				break;
 			}
 		}
