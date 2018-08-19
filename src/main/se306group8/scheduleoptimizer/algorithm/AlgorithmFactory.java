@@ -8,13 +8,14 @@ import se306group8.scheduleoptimizer.algorithm.heuristic.CriticalPathHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.DataReadyTimeHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.MinimumHeuristic;
 import se306group8.scheduleoptimizer.algorithm.heuristic.NoIdleTimeHeuristic;
-import se306group8.scheduleoptimizer.algorithm.storage.BlockScheduleStorage;
 import se306group8.scheduleoptimizer.config.Config;
 
 public class AlgorithmFactory {
 	
 	public static Algorithm getAlgorithm(RuntimeMonitor monitor, Config config) {
 
+		//A version of the heuristic that combines the other heuristics.
+		//We don't use aggregate heuristic as it is slower.
 		MinimumHeuristic heuristic = new MinimumHeuristic() {
 
 			private final CriticalPathHeuristic criticalPathHeuristic;

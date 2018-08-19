@@ -1,16 +1,12 @@
 package se306group8.scheduleoptimizer.algorithm;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.Task;
-import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 
+/** A runtime monitor that outputs to the command line. */
 public class CLIRuntimeMonitor implements RuntimeMonitor {
 	
 	// Variables to store time values

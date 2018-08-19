@@ -1,6 +1,5 @@
 package se306group8.scheduleoptimizer.algorithm;
 
-import se306group8.scheduleoptimizer.Main;
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 import se306group8.scheduleoptimizer.taskgraph.TaskGraph;
 

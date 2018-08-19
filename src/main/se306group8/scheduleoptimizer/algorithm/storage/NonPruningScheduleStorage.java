@@ -3,6 +3,7 @@ package se306group8.scheduleoptimizer.algorithm.storage;
 import se306group8.scheduleoptimizer.algorithm.RuntimeMonitor;
 import se306group8.scheduleoptimizer.algorithm.TreeSchedule;
 
+/** A simple array storage that makes no attempt to prune schedules. */
 public class NonPruningScheduleStorage implements ScheduleStorage {
 	private final SchedulePriorityQueue queue;
 	private final ScheduleArray array;

@@ -2,6 +2,7 @@ package se306group8.scheduleoptimizer.algorithm;
 
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
+/** A runtime monitor that does nothing. */
 public class StubRuntimeMonitor implements RuntimeMonitor {
 
 	@Override

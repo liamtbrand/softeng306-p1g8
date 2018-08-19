@@ -15,7 +15,7 @@ final class BlockScheduleArray extends ScheduleArray {
 	/** The first width of lower bounds that has not been added to the queue. */
 	private int widthAfterQueue = 0;
 	
-	/** Width sizes */
+	/** Width sizes. A width is a group of schedules with similar lower bounds. */
 	private int[] widthSize = new int[1024];
 	
 	/** Any schedule with a lower bound greater than this can be purged. */
@@ -87,6 +87,8 @@ final class BlockScheduleArray extends ScheduleArray {
 	}
 	
 	@Override
+	/** Adds the schedule to this array. If addToQueue is true it will also be scheduled to 
+	 * added to the queue next time it is requested. */
 	int add(TreeSchedule schedule, boolean addToQueue) throws OutOfMemoryError {
 		int width = getWidth(schedule.getLowerBound());
 		

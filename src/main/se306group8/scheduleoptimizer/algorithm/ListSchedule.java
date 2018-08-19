@@ -112,6 +112,7 @@ public final class ListSchedule implements Schedule {
 		return true;
 	}
 
+	/** Computes the processor allocation of a task, assuming the the allocations of the parents have already been calculated. */
 	private ProcessorAllocation computeAllocation(Task task) {
 		ProcessorAllocation alloc = allocations.get(task);
 		

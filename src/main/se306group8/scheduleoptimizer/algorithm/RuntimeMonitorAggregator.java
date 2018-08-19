@@ -5,6 +5,7 @@ import java.util.List;
 
 import se306group8.scheduleoptimizer.taskgraph.Schedule;
 
+/** This is a runtime monitor that passes calls to an array of children monitors */
 public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	
 	private final List<RuntimeMonitor> runtimeMonitors;

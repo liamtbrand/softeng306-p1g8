@@ -66,6 +66,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		//Compute a greedy upper bound for pruning 
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
+		//Calculate an initial bound
 		TreeSchedule greedySoln = best;
 		while (!greedySoln.isComplete()) {
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
@@ -180,7 +181,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 		getMonitor().setSchedulesExplored(explored);
 	}
 	
-	
+	/** The contingency plan. Use BnB if we are low on memory. */
 	private TreeSchedule branchAndBound(TreeSchedule schedule) throws InterruptedException {
 		if(getMonitor().isInterupted()) {
 			throw new InterruptedException();

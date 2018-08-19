@@ -4,7 +4,8 @@ import java.util.Objects;
 
 import se306group8.scheduleoptimizer.taskgraph.Task;
 
-/** This class represents an allocation for a single task. It is used as an input to one of the constructors */
+/** This class represents an allocation for a single task. It is used as an input to one of the constructors,
+ * and is used internally within most of the algorithm systems. */
 public final class ProcessorAllocation {
 	public final int startTime;
 	public final int processor;

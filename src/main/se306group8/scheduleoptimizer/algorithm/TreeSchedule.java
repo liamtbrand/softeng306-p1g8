@@ -145,6 +145,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		numberOfUsedProcessors = Math.max(parent.numberOfUsedProcessors, processor);
 		allocatable = new ArrayList<>(graph.getAll().size());
 		
+		//Copy if we are not from the array. Else move, as we are the only child
 		if(hasId && !parent.isEmpty()) {
 			numberOfParentsUncheduled = parent.numberOfParentsUncheduled;
 			lastAllocationOnProcessor = parent.lastAllocationOnProcessor;
@@ -174,6 +175,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		
 		numberOfTasksOnProcessor[processor - 1]++;
 
+		//Find the new tasks to schedule by counting the number of parents they have left.
 		for (int i = 0; i < task.getChildren().size(); i++) {
 			Task child = task.getChildren().get(i).getTarget();
 			
@@ -238,6 +240,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 			}
 		}
 
+		//Sort the tasks to get a better order for schedule exploration.
 		allocatable.sort((a, b) -> a.getId() - b.getId());
 		
 		allocation = new ProcessorAllocation(task, startTime, processor, getLastAllocationForProcessor(processor));
@@ -251,6 +254,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 
 		runtime = Math.max(parent.runtime, allocation.endTime);
 
+		//Use the given bound if we are built from the array
 		if(!hasId) {
 			if (isComplete) {
 				this.lowerBound = runtime;
@@ -264,6 +268,7 @@ public class TreeSchedule implements Comparable<TreeSchedule> {
 		isFixed = isFixedOrder();
 	}
 	
+	/** Works out if we have the required characteristics to be a fixed order. */
 	private boolean isFixedOrder() {
 		int[] outWeight = new int[graph.getAll().size()];
 		int[] dataReadyTime = new int[graph.getAll().size()];
