@@ -92,6 +92,8 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 					contingency = false;
 					getMonitor().logMessage("Switching back to A*");
 				}
+				
+				getMonitor().setLowerBound(best.getLowerBound());
 				explore(best);
 			} else {
 				

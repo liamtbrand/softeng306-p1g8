@@ -91,4 +91,9 @@ public class RuntimeMonitorAggregator implements RuntimeMonitor {
 	public void setUpperBound(int bound) {
 		runtimeMonitors.forEach(m -> m.setUpperBound(bound));
 	}
+	
+	@Override
+	public void setLowerBound(int lowerBound) {
+		runtimeMonitors.forEach(m -> m.setLowerBound(lowerBound));
+	}
 }

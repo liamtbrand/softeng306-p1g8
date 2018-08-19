@@ -53,6 +53,7 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 	
 	private final List<InvalidationListener> listeners;
 	private volatile boolean interupted = false;
+	private volatile int lowerBound = 0;
 	
 	public ObservableRuntimeMonitor() {
 
@@ -287,5 +288,14 @@ public class ObservableRuntimeMonitor implements RuntimeMonitor, Observable {
 
 	public String getGraphName() {
 		return graphName;
+	}
+
+	public int getLowerBound() {
+		return lowerBound;
+	}
+	
+	@Override
+	public void setLowerBound(int lowerBound) {
+		this.lowerBound = lowerBound;
 	}
 }

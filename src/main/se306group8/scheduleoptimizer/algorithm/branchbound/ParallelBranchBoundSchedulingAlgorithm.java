@@ -64,7 +64,7 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 				if (child.getLowerBound() < best.getRuntime()) {
 					if (child.isComplete()) {
 						best = updateBest(child);
-						
+						getMonitor().setUpperBound(child.getRuntime());
 					} else {
 						// Check if the child schedule is complete or not
 						getMonitor().updateBestSchedule(child);
@@ -142,8 +142,9 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 		while (!greedySoln.isComplete()) {
 			greedySoln = greedyFinder.getChildSchedules(greedySoln).get(0);
 		}
+	
+		getMonitor().setUpperBound(greedySoln.getRuntime());
 		bestSoFar = new AtomicReference<TreeSchedule>(greedySoln);
-		
 		
 		pool.invoke(rootJob);
 		getMonitor().updateBestSchedule(bestSoFar.get());
