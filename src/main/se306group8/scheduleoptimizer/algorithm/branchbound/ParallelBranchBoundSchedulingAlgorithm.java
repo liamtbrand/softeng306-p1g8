@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import se306group8.scheduleoptimizer.algorithm.Algorithm;
@@ -27,7 +28,7 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 	
 	//These variables are updated in the threads so we have them atomic
 	private AtomicReference<TreeSchedule> bestSoFar;
-	private AtomicInteger explored;
+	private AtomicLong explored;
 	
 	private final ChildScheduleFinder finder;
 	private final MinimumHeuristic heuristic;

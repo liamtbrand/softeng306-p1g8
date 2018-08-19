@@ -25,7 +25,7 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 	private final ChildScheduleFinder childGenerator;
 	private final MinimumHeuristic heuristic;
 	private ScheduleStorage queue;
-	private int explored = 0;
+	private long explored = 0;
 	
 	private TreeSchedule dfsBest;
 	private long maxQueueSize;

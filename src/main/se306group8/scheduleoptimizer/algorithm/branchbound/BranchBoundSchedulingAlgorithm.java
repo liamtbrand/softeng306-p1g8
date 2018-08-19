@@ -19,7 +19,7 @@ public class BranchBoundSchedulingAlgorithm extends Algorithm {
 	private final ChildScheduleFinder finder;
 	private final MinimumHeuristic heuristic;
 	
-	private int visited = 0;
+	private long visited = 0;
 	
 	public BranchBoundSchedulingAlgorithm(ChildScheduleFinder finder, MinimumHeuristic heuristic, RuntimeMonitor monitor) {
 		super(monitor);
