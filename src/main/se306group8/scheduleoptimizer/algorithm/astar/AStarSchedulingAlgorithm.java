@@ -57,8 +57,6 @@ public class AStarSchedulingAlgorithm extends Algorithm {
 
 		TreeSchedule best = new TreeSchedule(graph, heuristic, numberOfProcessors);
 
-		
-		
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
 		
 		TreeSchedule greedySoln = best;

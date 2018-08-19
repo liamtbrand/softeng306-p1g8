@@ -121,7 +121,7 @@ public class CanvasFillManager extends Manager {
     	double result =  taskContribution + processorContribution;
     	
     	//This corrects the value to 1.0 if there is the max processor and task allocated
-    	return result / (1.0 - 1.0 / processors / allocatable.size());
+    	return result + 0.5 / processors / allocatable.size();
     }
     
     // Calculates the horizontal length by which to section up, at any given depth in the triangle
@@ -147,6 +147,9 @@ public class CanvasFillManager extends Manager {
 		
 		// Draw each individual line (fixed problem!)
 		for (int j = 1; j < x.length; j++) {
+			
+			//System.out.println("x: " + x[j] + ", y: " + y[j]);
+			
 			gc.strokeLine(x[j - 1], y[j - 1], x[j], y[j]);
 		}
 		
