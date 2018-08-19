@@ -73,7 +73,7 @@ public class ScheduleManager extends Manager {
 		int noP = bestSchedule.getNumberOfUsedProcessors();
 		
 		// Scale tasks to fit in graph with 10px spacing
-		taskHeight = (GRAPH_HEIGHT - 10*(noP-1))/noP;
+		taskHeight = (GRAPH_HEIGHT - 2*(noP-1))/noP;
 		
 		updateBest = checkIfNewBest(numberOfTasks, runtime, allocated);
 		
