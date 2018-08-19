@@ -151,7 +151,7 @@ public class ParallelBranchBoundSchedulingAlgorithm extends Algorithm{
 		pool = new ForkJoinPool(parallelism);
 		TreeSchedule emptySchedule = new TreeSchedule(graph, heuristic, numberOfProcessors);
 		ForkJob rootJob = new ForkJob(emptySchedule);
-		explored = new AtomicInteger();
+		explored = new AtomicLong();
 		
 		//calc greedy soln for upperbound
 		GreedyChildScheduleFinder greedyFinder = new GreedyChildScheduleFinder(numberOfProcessors);
