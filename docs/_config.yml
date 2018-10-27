@@ -13,11 +13,10 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Tatai 8
+title: Tātai 8
 #email: liamtbrand@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Tatai 8 solves difficult scheduling problems.
-  Developed by TNTLR (Team Name is Trivial and is Left as an Exercise for the Reader)
+  Tātai 8 solves difficult scheduling problems.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 #twitter_username: jekyllrb
