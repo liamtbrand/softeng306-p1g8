@@ -4,7 +4,7 @@ layout: default
 
 Winners of the Visualisation Contest, and Second Place in the Best Average Runtime, out of ~15/16 teams of 5, within the 2018 University of Auckland Software Engineering Part III cohort.
 
-Our Team, TNTLR - Team Name is Trivial and Left as an Exercise for the Reader - presents **Tātai 8**.
+Our Team, TNTLER - Team Name is Trivial and Left as an Exercise for the Reader - presents **Tātai 8**.
 
 ![Figure 1](image1.png?raw=true)
 Figure 1. Shows a visualisation of the search space of the algorithm, where the horizontal deviations refer to decisions made as to which tasks are processed when.
