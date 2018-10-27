@@ -22,3 +22,7 @@ This project is our implementation of the task scheduling system described by th
 The system is made up of multiple modules that can fit together to form the used algorithm. There are three heuristics, three child schedule generators, three storage systems and two algorithm implementations. This leads to a wide variety of customisation for the specific environment that the system is run in.
 
 The current executable Jar runs using the combination of these modules that leads to the best combination of speed and memory usage.
+
+# Thanks Team
+
+A huge thanks goes to James Brown, Molly Farrant, Robert Rewcastle, Liam Brand, and Cyrus Raitava-Kumar for making this project happen.
